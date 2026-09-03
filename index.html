@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="id">
 
 <head>
@@ -6,8 +7,9 @@
 <meta charset="utf-8">
 
 <meta
-  name="viewport"
-  content="width=device-width,initial-scale=1"
+name="viewport"
+content="width=device-width,initial-scale=1"
+
 >
 
 <title>
@@ -52,6 +54,14 @@
 .rk-head p{
   margin:6px 0 0;
   opacity:.9;
+}
+
+.rk-date{
+  display:block;
+  margin-top:8px;
+  font-size:13px;
+  font-weight:700;
+  opacity:.95;
 }
 
 .rk-controls{
@@ -222,112 +232,121 @@ th{
 
   <div class="rk-head">
 
-    <h1>
-      🔥 Pos Terpadu Karhutla Kecamatan Rakumpit
-    </h1>
+<h1>
+  🔥 Pos Terpadu Karhutla Kecamatan Rakumpit
+</h1>
 
-    <p>
-      GIS batas kelurahan + hotspot NASA FIRMS
-      • point-in-polygon
-    </p>
+<p>
+  GIS batas kelurahan + hotspot NASA FIRMS
+  • point-in-polygon
+</p>
+
+<span
+  id="rk-today"
+  class="rk-date"
+>
+  📅 Memuat tanggal...
+</span>
 
   </div>
-
 
   <div class="rk-controls">
 
-    <select id="rk-village">
-      <option value="">
-        Semua kelurahan
-      </option>
-    </select>
+<select id="rk-village">
 
-    <select id="rk-source">
+  <option value="">
+    Semua kelurahan
+  </option>
 
-      <option value="ALL">
-        Semua satelit
-      </option>
+</select>
 
-      <option value="TERRA">
-        Terra
-      </option>
+<select id="rk-source">
 
-      <option value="AQUA">
-        Aqua
-      </option>
+  <option value="ALL">
+    Semua satelit
+  </option>
 
-      <option value="N20">
-        NOAA-20
-      </option>
+  <option value="TERRA">
+    Terra
+  </option>
 
-      <option value="N21">
-        NOAA-21
-      </option>
+  <option value="AQUA">
+    Aqua
+  </option>
 
-      <option value="SNPP">
-        Suomi-NPP
-      </option>
+  <option value="N20">
+    NOAA-20
+  </option>
 
-    </select>
+  <option value="N21">
+    NOAA-21
+  </option>
 
+  <option value="SNPP">
+    Suomi-NPP
+  </option>
 
-    <select id="rk-days">
-
-      <option value="1">
-        1 hari
-      </option>
-
-      <option value="2">
-        2 hari
-      </option>
-
-      <option value="3">
-        3 hari
-      </option>
-
-      <option value="5">
-        5 hari
-      </option>
-
-    </select>
+</select>
 
 
-    <button
-      class="rk-primary"
-      id="rk-refresh"
-    >
-      🔄 Muat Hotspot
-    </button>
+<select id="rk-days">
+
+  <option value="1">
+    1 hari
+  </option>
+
+  <option value="2">
+    2 hari
+  </option>
+
+  <option value="3">
+    3 hari
+  </option>
+
+  <option value="5">
+    5 hari
+  </option>
+
+</select>
+
+
+<button
+  class="rk-primary"
+  id="rk-refresh"
+  type="button"
+>
+  🔄 Muat Hotspot
+</button>
 
   </div>
-
 
   <div
     class="rk-controls"
     style="grid-template-columns:1fr auto auto"
   >
 
-    <input
-      id="rk-msg"
-      placeholder="Pesan tambahan untuk WhatsApp..."
-    >
+<input
+  id="rk-msg"
+  placeholder="Pesan tambahan untuk WhatsApp..."
+>
 
-    <button
-      class="rk-primary"
-      id="rk-wa"
-    >
-      💬 WhatsApp
-    </button>
+<button
+  class="rk-primary"
+  id="rk-wa"
+  type="button"
+>
+  💬 WhatsApp
+</button>
 
-    <button
-      class="rk-gray"
-      id="rk-reset"
-    >
-      Reset
-    </button>
+<button
+  class="rk-gray"
+  id="rk-reset"
+  type="button"
+>
+  Reset
+</button>
 
   </div>
-
 
   <div
     id="rk-status"
@@ -336,91 +355,87 @@ th{
     Siap. Klik "Muat Hotspot" untuk mengambil data NASA FIRMS.
   </div>
 
-
   <div id="rakumpit-map"></div>
-
 
   <div class="rk-stats">
 
-    <div class="rk-card">
-      Total hotspot
-      <b id="st-total">0</b>
-    </div>
+<div class="rk-card">
+  Total hotspot
+  <b id="st-total">0</b>
+</div>
 
-    <div class="rk-card">
-      Confidence tinggi
-      <b id="st-high">0</b>
-    </div>
+<div class="rk-card">
+  Confidence tinggi
+  <b id="st-high">0</b>
+</div>
 
-    <div class="rk-card">
-      Kelurahan terdampak
-      <b id="st-vill">0</b>
-    </div>
+<div class="rk-card">
+  Kelurahan terdampak
+  <b id="st-vill">0</b>
+</div>
 
-    <div class="rk-card">
-      FRP maksimum
-      <b id="st-frp">0 MW</b>
-    </div>
+<div class="rk-card">
+  FRP maksimum
+  <b id="st-frp">0 MW</b>
+</div>
 
   </div>
-
 
   <div class="rk-table-wrap">
 
-    <table>
+<table>
 
-      <thead>
+  <thead>
 
-        <tr>
-          <th>Waktu</th>
-          <th>Kelurahan</th>
-          <th>Satelit</th>
-          <th>Confidence</th>
-          <th>FRP</th>
-          <th>Koordinat</th>
-        </tr>
+    <tr>
+      <th>Waktu</th>
+      <th>Kelurahan</th>
+      <th>Satelit</th>
+      <th>Confidence</th>
+      <th>FRP</th>
+      <th>Koordinat</th>
+    </tr>
 
-      </thead>
+  </thead>
 
-      <tbody id="rk-table">
+  <tbody id="rk-table">
 
-        <tr>
-          <td colspan="6">
-            Belum ada data.
-          </td>
-        </tr>
+    <tr>
+      <td colspan="6">
+        Belum ada data.
+      </td>
+    </tr>
 
-      </tbody>
+  </tbody>
 
-    </table>
+</table>
 
   </div>
 
-
   <p class="rk-footer">
 
-    Batas administratif:
-    GeoJSON Rakumpit (HDX-BPS-2020).
+```
+Batas administratif:
+GeoJSON Rakumpit (HDX-BPS-2020).
 
-    Hotspot:
-    NASA FIRMS.
+Hotspot:
+NASA FIRMS.
 
-    Bounding box hanya digunakan
-    untuk mengambil data awal.
+Bounding box hanya digunakan
+untuk mengambil data awal.
 
-    Hotspot final hanya ditampilkan
-    apabila berada di dalam polygon
-    kelurahan Kecamatan Rakumpit.
+Hotspot final hanya ditampilkan
+apabila berada di dalam polygon
+kelurahan Kecamatan Rakumpit.
+```
 
   </p>
 
 </div>
 
-
 <script
   src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
 ></script>
-
 
 <script>
 
@@ -445,6 +460,48 @@ const FIRMS_API =
 
 const BBOX =
   '113.48,-1.93,113.84,-1.62';
+
+
+/*
+=========================================================
+TANGGAL HARI INI
+=========================================================
+*/
+
+function setToday(){
+
+  const element =
+    document.getElementById(
+      'rk-today'
+    );
+
+  if(!element){
+    return;
+  }
+
+  const now =
+    new Date();
+
+  const options = {
+    weekday:'long',
+    day:'2-digit',
+    month:'long',
+    year:'numeric',
+    timeZone:'Asia/Jakarta'
+  };
+
+  const today =
+    now.toLocaleDateString(
+      'id-ID',
+      options
+    );
+
+  element.textContent =
+    '📅 ' + today;
+
+}
+
+setToday();
 
 
 /*
@@ -1571,6 +1628,7 @@ function normalizeRow(
    * Hotspot di luar polygon
    * Rakumpit langsung dibuang.
    */
+
   if(!village){
     return null;
   }
@@ -1847,6 +1905,7 @@ async function loadHotspots(){
     /*
      * Deduplikasi.
      */
+
     const seen =
       new Set();
 
