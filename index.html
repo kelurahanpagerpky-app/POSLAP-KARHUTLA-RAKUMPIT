@@ -2696,20 +2696,16 @@ document
                 confLabel(
                   r.confidence
                 ) +
-                ' | FRP ' +
-                (
-                  r.frp ||
-                  '-'
-                ) +
-                ' MW | ' +
-                Number(
-                  r.latitude
-                ).toFixed(6) +
-                ', ' +
-                Number(
-                  r.longitude
-                ).toFixed(6);
-
+' | FRP ' +
+(
+  r.frp ||
+  '-'
+) +
+' MW\n' +
+'📍 Google Maps: https://www.google.com/maps?q=' +
+Number(r.latitude).toFixed(6) +
+',' +
+Number(r.longitude).toFixed(6);
             }
           );
 
