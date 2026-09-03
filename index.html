@@ -1663,160 +1663,148 @@ JSONP NASA / APPS SCRIPT
 =========================================================
 */
 
-function fetchFirmsJSONP(
-  days
-){
+function fetchFirmsJSONP(days){
 
-  return new Promise(
-    (resolve,reject) => {
+  return new Promise((resolve,reject)=>{
 
-      if(
-        !FIRMS_API ||
-        FIRMS_API ===
-        'PASTE_URL_APPS_SCRIPT_ANDA'
-      ){
+    if(!FIRMS_API){
+      reject(
+        new Error(
+          'URL Google Apps Script belum diisi.'
+        )
+      );
+      return;
+    }
 
-        reject(
-          new Error(
-            'URL Google Apps Script belum diisi.'
-          )
-        );
+    const callbackName =
+      'rakumpitFirmsCallback_' +
+      Date.now() +
+      '_' +
+      (++jsonpCounter);
 
-        return;
+    const script =
+      document.createElement('script');
+
+    let finished = false;
+
+    const startedAt = Date.now();
+
+    function cleanup(){
+
+      if(script.parentNode){
+        script.parentNode.removeChild(script);
       }
 
-      const callbackName =
-        'rakumpitFirmsCallback_' +
-        Date.now() +
-        '_' +
-        (++jsonpCounter);
+      try{
+        delete window[callbackName];
+      }catch(e){}
 
-      const script =
-        document.createElement(
-          'script'
-        );
+    }
 
-      let finished =
-        false;
-
-      const cleanup =
-        () => {
-
-          if(
-            script.parentNode
-          ){
-            script.parentNode
-              .removeChild(
-                script
-              );
-          }
-
-          try{
-            delete window[
-              callbackName
-            ];
-          }catch(e){}
-
-        };
-
-      const timer =
-        setTimeout(
-          () => {
-
-            if(finished){
-              return;
-            }
-
-            finished =
-              true;
-
-            cleanup();
-
-            reject(
-              new Error(
-                'Timeout mengambil data Apps Script.'
-              )
-            );
-
-          },
-          120000
-        );
-
-
-      window[
-        callbackName
-      ] = data => {
+    const timer =
+      setTimeout(()=>{
 
         if(finished){
           return;
         }
 
-        finished =
-          true;
-
-        clearTimeout(
-          timer
-        );
+        finished = true;
 
         cleanup();
 
-        resolve(data);
-
-      };
-
-
-      script.onerror =
-        () => {
-
-          if(finished){
-            return;
-          }
-
-          finished =
-            true;
-
-          clearTimeout(
-            timer
-          );
-
-          cleanup();
-
-          reject(
-            new Error(
-              'Tidak dapat menghubungi Google Apps Script.'
-            )
-          );
-
-        };
-
-
-      const separator =
-        FIRMS_API.includes('?')
-          ? '&'
-          : '?';
-
-
-      script.src =
-        FIRMS_API +
-        separator +
-        'days=' +
-        encodeURIComponent(
-          days
-        ) +
-        '&callback=' +
-        encodeURIComponent(
-          callbackName
+        reject(
+          new Error(
+            'Timeout 120 detik. Apps Script tidak mengirim respons.'
+          )
         );
 
+      },120000);
 
-      document
-        .head
-        .appendChild(
-          script
-        );
 
-    }
-  );
+    window[callbackName] = data => {
+
+      if(finished){
+        return;
+      }
+
+      finished = true;
+
+      clearTimeout(timer);
+
+      const elapsed =
+        ((Date.now()-startedAt)/1000)
+        .toFixed(1);
+
+      cleanup();
+
+      console.log(
+        'Apps Script berhasil:',
+        elapsed + ' detik',
+        data
+      );
+
+      resolve(data);
+
+    };
+
+
+    script.onerror = event => {
+
+      if(finished){
+        return;
+      }
+
+      finished = true;
+
+      clearTimeout(timer);
+
+      cleanup();
+
+      console.error(
+        'JSONP ERROR',
+        event
+      );
+
+      reject(
+        new Error(
+          'Browser gagal memuat Apps Script. ' +
+          'Periksa URL deployment, akses publik, atau cache browser.'
+        )
+      );
+
+    };
+
+
+    const separator =
+      FIRMS_API.includes('?')
+        ? '&'
+        : '?';
+
+
+    const url =
+      FIRMS_API +
+      separator +
+      'days=' +
+      encodeURIComponent(days) +
+      '&callback=' +
+      encodeURIComponent(callbackName) +
+      '&_=' +
+      Date.now();
+
+
+    console.log(
+      'Memanggil Apps Script:',
+      url
+    );
+
+
+    script.src = url;
+
+    script.async = true;
+
+    document.head.appendChild(script);
+
+  });
 
 }
 
@@ -2794,10 +2782,10 @@ Number(r.longitude).toFixed(6);
        */
 
       window.open(
-        'https://wa.me/?text=' +
-        encodeURIComponent(msg),
-        '_blank'
-      );
+  'https://wa.me/?text=' +
+  encodeURIComponent(msg),
+  '_blank'
+);
 
     }
   );
