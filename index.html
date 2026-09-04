@@ -98,20 +98,20 @@
         }
         .gis-panel {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
         .gis-card {
             background: white;
-            border-left: 4px solid #d9534f;
+            border-left: 4px solid #198754;
             padding: 15px;
             border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .gis-card h3 {
             margin: 0 0 5px 0;
-            font-size: 14px;
+            font-size: 13px;
             color: #6b7280;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -120,7 +120,7 @@
             margin: 0;
             font-size: 22px;
             font-weight: bold;
-            color: #d9534f;
+            color: #1f2937;
         }
         .map-wrapper {
             position: relative;
@@ -131,9 +131,54 @@
             margin-bottom: 20px;
         }
         #gis-map {
-            height: 600px;
+            height: 500px;
             width: 100%;
             border-radius: 6px;
+        }
+        /* Tabel Data Hotspot */
+        .table-wrapper {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+        .table-wrapper h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #1f2937;
+        }
+        .hotspot-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+        .hotspot-table th, .hotspot-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .hotspot-table th {
+            background-color: #f9fafb;
+            color: #374151;
+            font-weight: 600;
+        }
+        .hotspot-table tr:hover {
+            background-color: #f9fafb;
+        }
+        .no-data {
+            text-align: center;
+            color: #6b7280;
+            font-style: italic;
+            padding: 20px !important;
+        }
+        .footer-note {
+            font-size: 12px;
+            color: #6b7280;
+            line-height: 1.5;
+            margin-bottom: 30px;
         }
     </style>
 </head>
@@ -173,23 +218,54 @@
         </div>
     </div>
 
+    <!-- 4 Cards Statistik -->
     <div class="gis-panel">
         <div class="gis-card">
-            <h3>Total Titik Panas Aktif</h3>
-            <p id="total-hotspot">Memuat...</p>
+            <h3>Total hotspot</h3>
+            <p id="total-hotspot">0</p>
         </div>
         <div class="gis-card" style="border-left-color: #f0ad4e;">
-            <h3>Tingkat Kepercayaan Tinggi</h3>
-            <p id="high-confidence" style="color: #f0ad4e;">Memuat...</p>
+            <h3>Confidence tinggi</h3>
+            <p id="high-confidence" style="color: #f0ad4e;">0</p>
         </div>
         <div class="gis-card" style="border-left-color: #0275d8;">
-            <h3>Sumber Satelit</h3>
-            <p style="font-size: 16px; color: #0275d8; margin-top: 4px;">MODIS / VIIRS (NASA)</p>
+            <h3>Kelurahan terdampak</h3>
+            <p id="affected-villages" style="color: #0275d8;">0</p>
+        </div>
+        <div class="gis-card" style="border-left-color: #d9534f;">
+            <h3>FRP maksimum</h3>
+            <p id="max-frp" style="color: #d9534f;">0 MW</p>
         </div>
     </div>
 
     <div class="map-wrapper">
         <div id="gis-map"></div>
+    </div>
+
+    <!-- Tabel Data Hotspot -->
+    <div class="table-wrapper">
+        <h3>Daftar Titik Panas Terdeteksi</h3>
+        <table class="hotspot-table">
+            <thead>
+                <tr>
+                    <th>Waktu</th>
+                    <th>Kelurahan</th>
+                    <th>Satelit</th>
+                    <th>Confidence</th>
+                    <th>FRP</th>
+                    <th>Koordinat</th>
+                </tr>
+            </thead>
+            <tbody id="hotspot-table-body">
+                <tr>
+                    <td colspan="6" class="no-data">Belum ada data.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="footer-note">
+        Batas administratif: GeoJSON Rakumpit (HDX-BPS-2020). Hotspot: NASA FIRMS. Bounding box hanya digunakan untuk mengambil data awal. Hotspot final hanya ditampilkan apabila berada di dalam polygon kelurahan Kecamatan Rakumpit.
     </div>
 </div>
 
@@ -427,7 +503,7 @@
             villageSelect.appendChild(option);
         });
 
-        // 4. Data Titik Panas (Hotspot)
+        // 4. Data Titik Panas (Hotspot) Contoh
         var hotspotData = [
             [-1.6852, 113.5410, 85, "MODIS", "2026-09-03 09:30", "Bukit Sua", 7.45],
             [-1.6421, 113.7650, 92, "VIIRS", "2026-09-03 10:15", "Mungku Baru", 8.12],
@@ -458,6 +534,9 @@
             hotspotGroup.clearLayers();
             var highConfCount = 0;
             var displayedCount = 0;
+            var affectedVillagesSet = new Set();
+            var maxFrpVal = 0;
+            var tableRowsHtml = '';
 
             hotspotData.forEach(function(item) {
                 var lat = item[0];
@@ -480,8 +559,12 @@
                 }
 
                 displayedCount++;
+                affectedVillagesSet.add(locationName);
                 if (confidence >= 80) {
                     highConfCount++;
+                }
+                if (frp > maxFrpVal) {
+                    maxFrpVal = frp;
                 }
 
                 var markerColor = confidence >= 80 ? '#d9534f' : '#f0ad4e';
@@ -503,10 +586,33 @@
                     `<b>Waktu:</b> ${esc(time)} WIB`
                 );
                 hotspotGroup.addLayer(marker);
+
+                // Tambahkan baris ke tabel
+                tableRowsHtml += `
+                    <tr>
+                        <td>${esc(time)}</td>
+                        <td>${esc(locationName)}</td>
+                        <td>${esc(satellite)}</td>
+                        <td>${confidence}% (${levelStr})</td>
+                        <td>${frp} MW</td>
+                        <td>${lat}, ${lng}</td>
+                    </tr>
+                `;
             });
 
+            // Update Metrics Cards
             document.getElementById('total-hotspot').textContent = displayedCount;
             document.getElementById('high-confidence').textContent = highConfCount;
+            document.getElementById('affected-villages').textContent = affectedVillagesSet.size;
+            document.getElementById('max-frp').textContent = maxFrpVal.toFixed(2) + ' MW';
+
+            // Update Table Body
+            var tbody = document.getElementById('hotspot-table-body');
+            if (displayedCount > 0) {
+                tbody.innerHTML = tableRowsHtml;
+            } else {
+                tbody.innerHTML = `<tr><td colspan="6" class="no-data">Belum ada data.</td></tr>`;
+            }
         }
 
         villageSelect.addEventListener('change', updateGISDisplay);
@@ -518,7 +624,6 @@
             btn.disabled = true;
             btn.innerHTML = '<span>⏳ Memuat...</span>';
 
-            // Simulasi proses sinkronisasi / pengambilan data baru
             setTimeout(function() {
                 updateGISDisplay();
                 btn.disabled = false;
