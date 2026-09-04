@@ -8,17 +8,15 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     
+    <!-- Tailwind CSS CDN untuk Form dan Komponen Tambahan -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f6f8;
-        }
         .gis-container {
             max-width: 1200px;
             margin: 20px auto;
             padding: 0 15px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
         .header-section {
             background: #198754;
@@ -69,7 +67,6 @@
             opacity: 0.7;
             cursor: not-allowed;
         }
-        /* Panel Filter Global di Atas */
         .global-filter-panel {
             background: white;
             padding: 15px 20px;
@@ -135,7 +132,6 @@
             width: 100%;
             border-radius: 6px;
         }
-        /* Tabel Data Hotspot */
         .table-wrapper {
             background: white;
             padding: 20px;
@@ -182,13 +178,13 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
 
 <div class="gis-container">
     <div class="header-section">
         <div class="header-text">
             <h2>POSLAP TERPADU KECAMATAN RAKUMPIT</h2>
-            <p>Peta interaktif wilayah administratif Kelurahan se-Kecamatan Rakumpit beserta sebaran titik panas (hotspot) satelit terkini.</p>
+            <p>Peta interaktif wilayah administratif Kelurahan se-Kecamatan Rakumpit beserta sebaran titik panas (hotspot) multi-satelit terkini.</p>
         </div>
         <div class="header-actions">
             <button class="btn-action" id="btn-refresh-data">
@@ -200,7 +196,36 @@
         </div>
     </div>
 
-    <!-- Panel Filter Global (Wilayah Kelurahan & Satelit) di Atas -->
+    <!-- Form Kecil Tailwind CSS untuk Tanggal & Waktu Update Terakhir -->
+    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mb-5 flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center space-x-3">
+            <div class="p-2 bg-emerald-50 text-emerald-600 rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+            </div>
+            <div>
+                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Tanggal Hari Ini</span>
+                <span id="current-date-display" class="text-sm font-bold text-gray-800">-</span>
+            </div>
+        </div>
+        
+        <div class="h-8 w-px bg-gray-200 hidden sm:block"></div>
+
+        <div class="flex items-center space-x-3">
+            <div class="p-2 bg-blue-50 text-blue-600 rounded-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div>
+                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Update Data Terakhir</span>
+                <span id="last-update-display" class="text-sm font-bold text-gray-800">-</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel Filter Global -->
     <div class="global-filter-panel">
         <div class="filter-group">
             <label for="rk-village">Pilih Kelurahan / Wilayah:</label>
@@ -211,9 +236,11 @@
         <div class="filter-group">
             <label for="satellite-filter">Filter Sumber Satelit:</label>
             <select id="satellite-filter">
-                <option value="ALL">Semua Satelit</option>
-                <option value="MODIS">MODIS</option>
-                <option value="VIIRS">VIIRS</option>
+                <option value="ALL">Semua Satelit (Terra/Aqua, SNPP, NOAA-20)</option>
+                <option value="Terra">Terra (MODIS)</option>
+                <option value="Aqua">Aqua (MODIS)</option>
+                <option value="SNPP">SNPP (VIIRS)</option>
+                <option value="NOAA-20">NOAA-20 (VIIRS)</option>
             </select>
         </div>
     </div>
@@ -244,7 +271,7 @@
 
     <!-- Tabel Data Hotspot -->
     <div class="table-wrapper">
-        <h3>Daftar Titik Panas Terdeteksi</h3>
+        <h3>Daftar Titik Panas Terdeteksi (Multi-Satelit)</h3>
         <table class="hotspot-table">
             <thead>
                 <tr>
@@ -265,7 +292,7 @@
     </div>
 
     <div class="footer-note">
-        Batas administratif: GeoJSON Rakumpit (HDX-BPS-2020). Hotspot: NASA FIRMS. Bounding box hanya digunakan untuk mengambil data awal. Hotspot final hanya ditampilkan apabila berada di dalam polygon kelurahan Kecamatan Rakumpit.
+        Batas administratif: GeoJSON Rakumpit (HDX-BPS-2020). Hotspot: NASA FIRMS (Terra, Aqua, SNPP, NOAA-20). Bounding box hanya digunakan untuk mengambil data awal. Hotspot final hanya ditampilkan apabila berada di dalam polygon kelurahan Kecamatan Rakumpit.
     </div>
 </div>
 
@@ -273,11 +300,6 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
-    /*
-    =========================================================
-    GEOJSON RAKUMPIT
-    =========================================================
-    */
     const GEOJSON = {
       "type":"FeatureCollection",
       "name":"Rakumpit's Village",
@@ -446,7 +468,12 @@
     };
 
     document.addEventListener("DOMContentLoaded", function () {
-        // 1. Inisialisasi Peta
+        // Set Tanggal Hari Ini dan Waktu Update Terakhir secara Otomatis
+        var now = new Date();
+        var optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('current-date-display').textContent = now.toLocaleDateString('id-ID', optionsDate);
+        document.getElementById('last-update-display').textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
+
         var map = L.map('gis-map').setView([-1.76, 113.68], 11);
 
         var basemapOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -470,7 +497,6 @@
             }[m]));
         }
 
-        // 2. Render Batas Wilayah Kelurahan (GeoJSON)
         var boundaryLayer = L.geoJSON(GEOJSON, {
             style: () => ({
                 color: '#2563eb',
@@ -489,7 +515,6 @@
 
         map.fitBounds(boundaryLayer.getBounds(), { padding: [15, 15] });
 
-        // 3. Populate Dropdown Kelurahan
         var names = GEOJSON.features.map(f => ({
             code: f.properties.village_code,
             name: f.properties.village
@@ -503,13 +528,15 @@
             villageSelect.appendChild(option);
         });
 
-        // 4. Data Titik Panas (Hotspot) Contoh
+        // Dataset Contoh Multi-Satelit (Terra, Aqua, SNPP, NOAA-20)
         var hotspotData = [
-            [-1.6852, 113.5410, 85, "MODIS", "2026-09-03 09:30", "Bukit Sua", 7.45],
-            [-1.6421, 113.7650, 92, "VIIRS", "2026-09-03 10:15", "Mungku Baru", 8.12],
-            [-1.8104, 113.7320, 78, "MODIS", "2026-09-03 08:00", "Petuk Bukit", 6.85],
-            [-1.7812, 113.5120, 95, "VIIRS", "2026-09-03 11:00", "Pager", 9.04],
-            [-1.7756, 113.7850, 88, "MODIS", "2026-09-03 07:45", "Gaung Baru", 7.30]
+            [-1.6852, 113.5410, 85, "Terra", "2026-09-03 09:30", "Bukit Sua", 7.45],
+            [-1.6421, 113.7650, 92, "SNPP", "2026-09-03 10:15", "Mungku Baru", 8.12],
+            [-1.8104, 113.7320, 78, "Aqua", "2026-09-03 08:00", "Petuk Bukit", 6.85],
+            [-1.7812, 113.5120, 95, "NOAA-20", "2026-09-03 11:00", "Pager", 9.04],
+            [-1.7756, 113.7850, 88, "Terra", "2026-09-03 07:45", "Gaung Baru", 7.30],
+            [-1.7102, 113.7500, 90, "SNPP", "2026-09-03 12:20", "Panjehang", 8.40],
+            [-1.7250, 113.6200, 81, "NOAA-20", "2026-09-03 13:10", "Petuk Barunai", 5.90]
         ];
 
         var hotspotGroup = L.layerGroup().addTo(map);
@@ -518,7 +545,6 @@
             var selectedVillageCode = villageSelect.value;
             var selectedSatellite = document.getElementById('satellite-filter').value;
 
-            // Handle Peta Zoom ke Kelurahan
             if (!selectedVillageCode) {
                 map.fitBounds(boundaryLayer.getBounds(), { padding: [15, 15] });
             } else {
@@ -530,7 +556,6 @@
                 });
             }
 
-            // Filter & Render Hotspot
             hotspotGroup.clearLayers();
             var highConfCount = 0;
             var displayedCount = 0;
@@ -587,7 +612,6 @@
                 );
                 hotspotGroup.addLayer(marker);
 
-                // Tambahkan baris ke tabel
                 tableRowsHtml += `
                     <tr>
                         <td>${esc(time)}</td>
@@ -600,13 +624,11 @@
                 `;
             });
 
-            // Update Metrics Cards
             document.getElementById('total-hotspot').textContent = displayedCount;
             document.getElementById('high-confidence').textContent = highConfCount;
             document.getElementById('affected-villages').textContent = affectedVillagesSet.size;
             document.getElementById('max-frp').textContent = maxFrpVal.toFixed(2) + ' MW';
 
-            // Update Table Body
             var tbody = document.getElementById('hotspot-table-body');
             if (displayedCount > 0) {
                 tbody.innerHTML = tableRowsHtml;
@@ -618,7 +640,6 @@
         villageSelect.addEventListener('change', updateGISDisplay);
         document.getElementById('satellite-filter').addEventListener('change', updateGISDisplay);
 
-        // 5. Tombol Refresh Data Satelit
         document.getElementById('btn-refresh-data').addEventListener('click', function() {
             var btn = this;
             btn.disabled = true;
@@ -626,18 +647,23 @@
 
             setTimeout(function() {
                 updateGISDisplay();
+                
+                // Perbarui juga waktu update terakhir saat tombol refresh diklik
+                var refreshTime = new Date();
+                document.getElementById('last-update-display').textContent = refreshTime.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
+
                 btn.disabled = false;
                 btn.innerHTML = '<span>🔄 Refresh Data</span>';
-                alert('Data satelit berhasil diperbarui ke informasi terkini.');
+                alert('Data multi-satelit dan waktu pembaruan berhasil diperbarui.');
             }, 800);
         });
 
         updateGISDisplay();
 
-        // 6. Tombol Kirim Data via WhatsApp
         document.getElementById('btn-share-wa').addEventListener('click', function() {
             var selectedVillageCode = villageSelect.value;
             var currentSatelliteFilter = document.getElementById('satellite-filter').value;
+            var updateTimeText = document.getElementById('last-update-display').textContent;
             
             var filteredData = hotspotData.filter(item => {
                 var satellite = item[3];
@@ -655,7 +681,8 @@
                 return true;
             });
 
-            var text = `📢 LAPORAN HOTSPOT KARHUTLA - KEC. RAKUMPIT\n\n`;
+            var text = `📢 LAPORAN HOTSPOT KARHUTLA (MULTI-SATELIT) - KEC. RAKUMPIT\n`;
+            text += `🕒 Update: ${updateTimeText}\n\n`;
             text += `🔥 Hotspot terdeteksi: ${filteredData.length}\n\n`;
 
             if (filteredData.length > 0) {
@@ -670,14 +697,14 @@
                     
                     var level = confidence >= 80 ? 'Tinggi' : 'Sedang';
 
-                    text += `${index + 1}. ${esc(locationName)} | ${esc(time)} WIB | ${esc(satellite)} | ${level} | FRP ${frp} MW\n`;
+                    text += `${index + 1}. ${esc(locationName)} | ${esc(time)} WIB | Satelit: ${esc(satellite)} | ${level} | FRP ${frp} MW\n`;
                     text += `📍 Google Maps: https://www.google.com/maps?q=${lat},${lng}\n`;
                 });
             } else {
                 text += `Tidak ada data hotspot yang cocok dengan filter yang dipilih.\n\n`;
             }
 
-            text += `\nSumber: NASA FIRMS`;
+            text += `\nSumber: NASA FIRMS (Terra/Aqua, SNPP, NOAA-20)`;
 
             var waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
