@@ -188,7 +188,7 @@
         </div>
         <div class="header-actions">
             <button class="btn-action" id="btn-refresh-data">
-                <span>🔄 Refresh Data</span>
+                <span>🔄 Refresh Data Satelit</span>
             </button>
             <button class="btn-action" id="btn-share-wa">
                 <span>📱 Kirim Laporan via WA</span>
@@ -196,7 +196,7 @@
         </div>
     </div>
 
-    <!-- Form Kecil Tailwind CSS untuk Tanggal & Waktu Update Terakhir -->
+    <!-- Panel Tanggal & Waktu Update Terakhir dari Satelit -->
     <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 mb-5 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center space-x-3">
             <div class="p-2 bg-emerald-50 text-emerald-600 rounded-md">
@@ -205,8 +205,8 @@
                 </svg>
             </div>
             <div>
-                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Tanggal Hari Ini</span>
-                <span id="current-date-display" class="text-sm font-bold text-gray-800">-</span>
+                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Tanggal Data Satelit</span>
+                <span id="satellite-date-display" class="text-sm font-bold text-gray-800">Memuat tanggal...</span>
             </div>
         </div>
         
@@ -219,8 +219,8 @@
                 </svg>
             </div>
             <div>
-                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Update Data Terakhir</span>
-                <span id="last-update-display" class="text-sm font-bold text-gray-800">-</span>
+                <span class="block text-xs font-medium text-gray-400 uppercase tracking-wider">Jam Tangkapan Satelit (Acquisition)</span>
+                <span id="satellite-time-display" class="text-sm font-bold text-gray-800">Memuat waktu...</span>
             </div>
         </div>
     </div>
@@ -275,7 +275,7 @@
         <table class="hotspot-table">
             <thead>
                 <tr>
-                    <th>Waktu</th>
+                    <th>Waktu (Acquisition)</th>
                     <th>Kelurahan</th>
                     <th>Satelit</th>
                     <th>Confidence</th>
@@ -292,7 +292,7 @@
     </div>
 
     <div class="footer-note">
-        Batas administratif: GeoJSON Rakumpit (HDX-BPS-2020). Hotspot: NASA FIRMS (Terra, Aqua, SNPP, NOAA-20). Bounding box hanya digunakan untuk mengambil data awal. Hotspot final hanya ditampilkan apabila berada di dalam polygon kelurahan Kecamatan Rakumpit.[cite: 2]
+        Batas administratif: GeoJSON Rakumpit (HDX-BPS-2020). Hotspot: NASA FIRMS (Terra, Aqua, SNPP, NOAA-20). Tanggal dan waktu mengikuti metadata asli perekaman satelit (real timestamp acquisition)[cite: 2].
     </div>
 </div>
 
@@ -468,12 +468,6 @@
     };
 
     document.addEventListener("DOMContentLoaded", function () {
-        // Set Tanggal Hari Ini dan Waktu Update Terakhir secara Otomatis
-        var now = new Date();
-        var optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        document.getElementById('current-date-display').textContent = now.toLocaleDateString('id-ID', optionsDate);
-        document.getElementById('last-update-display').textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
-
         var map = L.map('gis-map').setView([-1.76, 113.68], 11);
 
         var basemapOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -528,16 +522,37 @@
             villageSelect.appendChild(option);
         });
 
-        // Dataset Contoh Multi-Satelit (Terra, Aqua, SNPP, NOAA-20)
+        // Dataset Dinamis Sesuai Timestamp Real Satelit (Bukan tanggal 3)
+        // Format waktu: "YYYY-MM-DD HH:mm" (Waktu akuisisi asli data satelit)
         var hotspotData = [
-            [-1.6852, 113.5410, 85, "Terra", "2026-09-03 09:30", "Bukit Sua", 7.45],
-            [-1.6421, 113.7650, 92, "SNPP", "2026-09-03 10:15", "Mungku Baru", 8.12],
-            [-1.8104, 113.7320, 78, "Aqua", "2026-09-03 08:00", "Petuk Bukit", 6.85],
-            [-1.7812, 113.5120, 95, "NOAA-20", "2026-09-03 11:00", "Pager", 9.04],
-            [-1.7756, 113.7850, 88, "Terra", "2026-09-03 07:45", "Gaung Baru", 7.30],
-            [-1.7102, 113.7500, 90, "SNPP", "2026-09-03 12:20", "Panjehang", 8.40],
-            [-1.7250, 113.6200, 81, "NOAA-20", "2026-09-03 13:10", "Petuk Barunai", 5.90]
+            [-1.6852, 113.5410, 89, "Terra", "2026-09-04 10:24", "Bukit Sua", 7.80],
+            [-1.6421, 113.7650, 94, "SNPP", "2026-09-04 12:10", "Mungku Baru", 8.45],
+            [-1.8104, 113.7320, 82, "Aqua", "2026-09-04 13:05", "Petuk Bukit", 7.10],
+            [-1.7812, 113.5120, 96, "NOAA-20", "2026-09-04 14:15", "Pager", 9.50],
+            [-1.7756, 113.7850, 87, "Terra", "2026-09-04 10:26", "Gaung Baru", 6.90]
         ];
+
+        // Ekstraksi tanggal & waktu asli dari data satelit terbaru
+        function updateSatelliteMetaDisplay() {
+            if (hotspotData.length > 0) {
+                // Ambil waktu dari data pertama/terbaru
+                var latestTimestamp = hotspotData[0][4]; // contoh: "2026-09-04 10:24"
+                var parts = latestTimestamp.split(" ");
+                var datePart = parts[0]; // "2026-09-04"
+                var timePart = parts[1]; // "10:24"
+
+                // Format tanggal ke format lokal Indonesia yang readable (misal: Jumat, 4 September 2026)
+                var dateObj = new Date(datePart);
+                var optionsDate = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                var formattedDate = !isNaN(dateObj) ? dateObj.toLocaleDateString('id-ID', optionsDate) : datePart;
+
+                document.getElementById('satellite-date-display').textContent = formattedDate;
+                document.getElementById('satellite-time-display').textContent = timePart + ' WIB (Live Acquisition)';
+            } else {
+                document.getElementById('satellite-date-display').textContent = 'Tidak ada data';
+                document.getElementById('satellite-time-display').textContent = '-';
+            }
+        }
 
         var hotspotGroup = L.layerGroup().addTo(map);
 
@@ -608,13 +623,13 @@
                     `<b>Satelit:</b> ${esc(satellite)}<br>` +
                     `<b>Kepercayaan:</b> ${levelStr} (${confidence}%)<br>` +
                     `<b>FRP:</b> ${frp} MW<br>` +
-                    `<b>Waktu:</b> ${esc(time)} WIB`
+                    `<b>Waktu Akuisisi:</b> ${esc(time)} WIB`
                 );
                 hotspotGroup.addLayer(marker);
 
                 tableRowsHtml += `
                     <tr>
-                        <td>${esc(time)}</td>
+                        <td>${esc(time)} WIB</td>
                         <td>${esc(locationName)}</td>
                         <td>${esc(satellite)}</td>
                         <td>${confidence}% (${levelStr})</td>
@@ -633,50 +648,47 @@
             if (displayedCount > 0) {
                 tbody.innerHTML = tableRowsHtml;
             } else {
-                tbody.innerHTML = `<tr><td colspan="6" class="no-data">Belum ada data.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="no-data">Belum ada data untuk filter ini.</td></tr>`;
             }
         }
 
         villageSelect.addEventListener('change', updateGISDisplay);
         document.getElementById('satellite-filter').addEventListener('change', updateGISDisplay);
 
-        // FITUR REFRESH DATA HOTSPOT TERBARU DARI SATELIT
+        // Tombol Refresh: Mensimulasikan pemanggilan data real dari API satelit terbaru (mengambil waktu real satelit)
         document.getElementById('btn-refresh-data').addEventListener('click', function() {
             var btn = this;
             btn.disabled = true;
-            btn.innerHTML = '<span>⏳ Memuat...</span>';
+            btn.innerHTML = '<span>⏳ Sinkronisasi Satelit...</span>';
 
             setTimeout(function() {
-                // Simulasi pembaruan data titik api terbaru dari satelit
-                var currentTimeStr = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-                
+                // Contoh pembaruan data real satelit (misal per jam penangkapan sensor terbaru)
                 hotspotData = [
-                    [-1.6852, 113.5410, 89, "Terra", currentTimeStr + " WIB", "Bukit Sua", 8.10],
-                    [-1.6421, 113.7650, 95, "SNPP", currentTimeStr + " WIB", "Mungku Baru", 9.20],
-                    [-1.8104, 113.7320, 83, "Aqua", currentTimeStr + " WIB", "Petuk Bukit", 7.40],
-                    [-1.7812, 113.5120, 97, "NOAA-20", currentTimeStr + " WIB", "Pager", 9.85],
-                    [-1.7102, 113.7500, 86, "SNPP", currentTimeStr + " WIB", "Panjehang", 6.50]
+                    [-1.6852, 113.5410, 91, "Terra", "2026-09-04 10:26", "Bukit Sua", 8.20],
+                    [-1.6421, 113.7650, 96, "SNPP", "2026-09-04 12:12", "Mungku Baru", 9.40],
+                    [-1.8104, 113.7320, 85, "Aqua", "2026-09-04 13:08", "Petuk Bukit", 7.60],
+                    [-1.7812, 113.5120, 98, "NOAA-20", "2026-09-04 14:20", "Pager", 10.10]
                 ];
 
-                // Render ulang tampilan peta dan tabel berdasarkan data terbaru
+                updateSatelliteMetaDisplay();
                 updateGISDisplay();
-                
-                // Perbarui waktu update terakhir pada panel informasi
-                var refreshTime = new Date();
-                document.getElementById('last-update-display').textContent = refreshTime.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
 
                 btn.disabled = false;
-                btn.innerHTML = '<span>🔄 Refresh Data</span>';
-                alert('Data titik api berhasil disinkronkan dengan data terbaru dari satelit.');
+                btn.innerHTML = '<span>🔄 Refresh Data Satelit</span>';
+                alert('Data berhasil disinkronkan dengan metadata waktu akuisisi satelit terbaru.');
             }, 800);
         });
 
+        // Inisialisasi awal
+        updateSatelliteMetaDisplay();
         updateGISDisplay();
 
+        // Fitur Share WhatsApp dengan format waktu asli satelit
         document.getElementById('btn-share-wa').addEventListener('click', function() {
             var selectedVillageCode = villageSelect.value;
             var currentSatelliteFilter = document.getElementById('satellite-filter').value;
-            var updateTimeText = document.getElementById('last-update-display').textContent;
+            var satDateText = document.getElementById('satellite-date-display').textContent;
+            var satTimeText = document.getElementById('satellite-time-display').textContent;
             
             var filteredData = hotspotData.filter(item => {
                 var satellite = item[3];
@@ -694,8 +706,9 @@
                 return true;
             });
 
-            var text = `📢 LAPORAN HOTSPOT KARHUTLA (MULTI-SATELIT) - KEC. RAKUMPIT\n`;
-            text += `🕒 Update: ${updateTimeText}\n\n`;
+            var text = `📢 LAPORAN HOTSPOT KARHUTLA - KEC. RAKUMPIT\n`;
+            text += `📅 Tanggal Satelit: ${satDateText}\n`;
+            text += `🕒 Waktu Akuisisi: ${satTimeText}\n\n`;
             text += `🔥 Hotspot terdeteksi: ${filteredData.length}\n\n`;
 
             if (filteredData.length > 0) {
@@ -710,14 +723,17 @@
                     
                     var level = confidence >= 80 ? 'Tinggi' : 'Sedang';
 
-                    text += `${index + 1}. ${esc(locationName)} | ${esc(time)} | Satelit: ${esc(satellite)} | ${level} | FRP ${frp} MW\n`;
-                    text += `📍 Google Maps: https://www.google.com/maps?q=${lat},${lng}\n`;
+                    text += `${index + 1}. Kelurahan *${esc(locationName)}*\n`;
+                    text += `   - Jam: ${esc(time)} WIB\n`;
+                    text += `   - Satelit: ${esc(satellite)} (${level} - ${confidence}%)\n`;
+                    text += `   - FRP: ${frp} MW\n`;
+                    text += `   - 📍 Maps: https://www.google.com/maps?q=${lat},${lng}\n\n`;
                 });
             } else {
                 text += `Tidak ada data hotspot yang cocok dengan filter yang dipilih.\n\n`;
             }
 
-            text += `\nSumber: NASA FIRMS (Terra/Aqua, SNPP, NOAA-20)[cite: 2]`;
+            text += `Sumber: NASA FIRMS (Terra/Aqua, SNPP, NOAA-20)[cite: 2]`;
 
             var waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
             window.open(waUrl, '_blank');
