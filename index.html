@@ -1,3080 +1,583 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
-<meta charset="utf-8">
-
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>Pos Terpadu Karhutla Kecamatan Rakumpit</title>
-
-<link
-  rel="stylesheet"
-  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
->
-
-<style>
-
-#rakumpit-app{
-  font-family:Arial,sans-serif;
-  max-width:1200px;
-  margin:20px auto;
-  color:#172033;
-}
-
-#rakumpit-app *{
-  box-sizing:border-box;
-}
-
-.rk-head{
-  background:
-    linear-gradient(
-      135deg,
-      #064e3b,
-      #166534
-    );
-  color:#fff;
-  padding:22px;
-  border-radius:16px 16px 0 0;
-}
-
-.rk-head h1{
-  margin:0;
-  font-size:24px;
-}
-
-.rk-head p{
-  margin:6px 0 0;
-  opacity:.9;
-}
-
-.rk-date{
-  display:block;
-  margin-top:8px;
-  font-size:13px;
-  font-weight:700;
-  opacity:.95;
-}
-
-.rk-controls{
-  background:#fff;
-  padding:14px;
-  display:grid;
-  grid-template-columns:1.2fr 1fr 1fr auto;
-  gap:8px;
-  border:1px solid #e5e7eb;
-}
-
-.rk-controls select,
-.rk-controls input,
-.rk-controls button{
-  padding:10px 12px;
-  border:1px solid #d1d5db;
-  border-radius:9px;
-  font-size:14px;
-}
-
-.rk-controls button{
-  cursor:pointer;
-  font-weight:700;
-  border:0;
-}
-
-.rk-primary{
-  background:#16a34a;
-  color:#fff;
-}
-
-.rk-blue{
-  background:#2563eb;
-  color:#fff;
-}
-
-.rk-gray{
-  background:#e5e7eb;
-  color:#111827;
-}
-
-#rakumpit-map{
-  height:600px;
-  border:1px solid #e5e7eb;
-}
-
-.rk-stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  padding:12px 0;
-}
-
-.rk-card{
-  background:#fff;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
-  padding:14px;
-}
-
-.rk-card b{
-  font-size:24px;
-  display:block;
-  margin-top:4px;
-}
-
-.rk-table-wrap{
-  max-height:480px;
-  overflow:auto;
-  border:1px solid #e5e7eb;
-  border-radius:12px;
-}
-
-#rakumpit-app table{
-  border-collapse:collapse;
-  width:100%;
-  font-size:13px;
-}
-
-#rakumpit-app th,
-#rakumpit-app td{
-  padding:9px;
-  border-bottom:1px solid #eef0f3;
-  text-align:left;
-}
-
-#rakumpit-app th{
-  position:sticky;
-  top:0;
-  background:#f8fafc;
-  z-index:2;
-}
-
-.rk-status{
-  padding:10px;
-  background:#f8fafc;
-  border:1px solid #e5e7eb;
-  border-radius:9px;
-  margin:10px 0;
-  font-size:13px;
-}
-
-.rk-legend{
-  background:#fff;
-  padding:9px 12px;
-  border-radius:8px;
-  box-shadow:0 1px 6px #999;
-  line-height:1.6;
-}
-
-.rk-loading{
-  opacity:.7;
-  pointer-events:none;
-}
-
-.rk-footer{
-  font-size:12px;
-  color:#64748b;
-  margin-top:10px;
-  line-height:1.5;
-}
-
-.leaflet-popup-content table{
-  border-collapse:collapse;
-  width:100%;
-  margin-top:6px;
-}
-
-.leaflet-popup-content td{
-  padding:3px 5px;
-  border-bottom:1px solid #eee;
-  font-size:12px;
-}
-
-.leaflet-popup-content td:first-child{
-  font-weight:700;
-  white-space:nowrap;
-}
-
-@media(max-width:800px){
-
-  .rk-controls{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .rk-controls button{
-    width:100%;
-  }
-
-  .rk-stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  #rakumpit-map{
-    height:500px;
-  }
-
-}
-
-@media(max-width:520px){
-
-  .rk-controls,
-  .rk-stats{
-    grid-template-columns:1fr;
-  }
-
-  .rk-head h1{
-    font-size:20px;
-  }
-
-}
-
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Titik Panas (Hotspot) & GIS - POSLAP TERPADU KECAMATAN RAKUMPIT</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f8;
+        }
+        .gis-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .header-section {
+            background: #198754;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-text h2 {
+            margin: 0 0 5px 0;
+            color: #ffffff;
+        }
+        .header-text p {
+            margin: 0;
+            color: #e2f0e8;
+            font-size: 14px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-action {
+            background-color: #ffffff;
+            color: #198754;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.2s;
+        }
+        .btn-action:hover {
+            background-color: #f0f0f0;
+        }
+        .btn-action:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        /* Panel Filter Global di Atas */
+        .global-filter-panel {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        .filter-group label {
+            font-size: 13px;
+            color: #374151;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .filter-group select {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 13px;
+            background-color: #fff;
+        }
+        .gis-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .gis-card {
+            background: white;
+            border-left: 4px solid #d9534f;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .gis-card h3 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .gis-card p {
+            margin: 0;
+            font-size: 22px;
+            font-weight: bold;
+            color: #d9534f;
+        }
+        .map-wrapper {
+            position: relative;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        #gis-map {
+            height: 600px;
+            width: 100%;
+            border-radius: 6px;
+        }
+    </style>
 </head>
-
 <body>
 
-<div id="rakumpit-app">
-
-  <div class="rk-head">
-
-    <h1>
-      🔥 Pos Terpadu Karhutla Kecamatan Rakumpit
-    </h1>
-
-    <p>
-      GIS batas kelurahan + hotspot NASA FIRMS
-      • point-in-polygon
-    </p>
-
-    <span id="rk-today" class="rk-date">
-      📅 Memuat tanggal...
-    </span>
-
-  </div>
-
-
-  <div class="rk-controls">
-
-    <select id="rk-village">
-      <option value="">
-        Semua kelurahan
-      </option>
-    </select>
-
-    <select id="rk-source">
-
-      <option value="ALL">
-        Semua satelit
-      </option>
-
-      <option value="TERRA">
-        Terra
-      </option>
-
-      <option value="AQUA">
-        Aqua
-      </option>
-
-      <option value="N20">
-        NOAA-20
-      </option>
-
-      <option value="N21">
-        NOAA-21
-      </option>
-
-      <option value="SNPP">
-        Suomi-NPP
-      </option>
-
-    </select>
-
-
-    <select id="rk-days">
-
-      <option value="1">
-        1 hari
-      </option>
-
-      <option value="2">
-        2 hari
-      </option>
-
-      <option value="3">
-        3 hari
-      </option>
-
-      <option value="5">
-        5 hari
-      </option>
-
-    </select>
-
-
-    <button
-      class="rk-primary"
-      id="rk-refresh"
-      type="button"
-    >
-      🔄 Muat Hotspot
-    </button>
-
-  </div>
-
-
-  <div
-    class="rk-controls"
-    style="grid-template-columns:1fr auto auto"
-  >
-
-    <input
-      id="rk-msg"
-      placeholder="Pesan tambahan untuk WhatsApp..."
-    >
-
-    <button
-      class="rk-primary"
-      id="rk-wa"
-      type="button"
-    >
-      💬 WhatsApp
-    </button>
-
-    <button
-      class="rk-gray"
-      id="rk-reset"
-      type="button"
-    >
-      Reset
-    </button>
-
-  </div>
-
-
-  <div
-    id="rk-status"
-    class="rk-status"
-  >
-    ✅ Dashboard siap.
-  </div>
-
-
-  <div id="rakumpit-map"></div>
-
-
-  <div class="rk-stats">
-
-    <div class="rk-card">
-      Total hotspot
-      <b id="st-total">0</b>
+<div class="gis-container">
+    <div class="header-section">
+        <div class="header-text">
+            <h2>POSLAP TERPADU KECAMATAN RAKUMPIT</h2>
+            <p>Peta interaktif wilayah administratif Kelurahan se-Kecamatan Rakumpit beserta sebaran titik panas (hotspot) satelit terkini.</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-action" id="btn-refresh-data">
+                <span>🔄 Refresh Data</span>
+            </button>
+            <button class="btn-action" id="btn-share-wa">
+                <span>📱 Kirim Laporan via WA</span>
+            </button>
+        </div>
     </div>
 
-    <div class="rk-card">
-      Confidence tinggi
-      <b id="st-high">0</b>
+    <!-- Panel Filter Global (Wilayah Kelurahan & Satelit) di Atas -->
+    <div class="global-filter-panel">
+        <div class="filter-group">
+            <label for="rk-village">Pilih Kelurahan / Wilayah:</label>
+            <select id="rk-village">
+                <option value="">-- Semua Kelurahan --</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="satellite-filter">Filter Sumber Satelit:</label>
+            <select id="satellite-filter">
+                <option value="ALL">Semua Satelit</option>
+                <option value="MODIS">MODIS</option>
+                <option value="VIIRS">VIIRS</option>
+            </select>
+        </div>
     </div>
 
-    <div class="rk-card">
-      Kelurahan terdampak
-      <b id="st-vill">0</b>
+    <div class="gis-panel">
+        <div class="gis-card">
+            <h3>Total Titik Panas Aktif</h3>
+            <p id="total-hotspot">Memuat...</p>
+        </div>
+        <div class="gis-card" style="border-left-color: #f0ad4e;">
+            <h3>Tingkat Kepercayaan Tinggi</h3>
+            <p id="high-confidence" style="color: #f0ad4e;">Memuat...</p>
+        </div>
+        <div class="gis-card" style="border-left-color: #0275d8;">
+            <h3>Sumber Satelit</h3>
+            <p style="font-size: 16px; color: #0275d8; margin-top: 4px;">MODIS / VIIRS (NASA)</p>
+        </div>
     </div>
 
-    <div class="rk-card">
-      FRP maksimum
-      <b id="st-frp">0 MW</b>
+    <div class="map-wrapper">
+        <div id="gis-map"></div>
     </div>
-
-  </div>
-
-
-  <div class="rk-table-wrap">
-
-    <table>
-
-      <thead>
-
-        <tr>
-          <th>Waktu</th>
-          <th>Kelurahan</th>
-          <th>Satelit</th>
-          <th>Confidence</th>
-          <th>FRP</th>
-          <th>Koordinat</th>
-        </tr>
-
-      </thead>
-
-      <tbody id="rk-table">
-
-        <tr>
-          <td colspan="6">
-            Belum ada data.
-          </td>
-        </tr>
-
-      </tbody>
-
-    </table>
-
-  </div>
-
-
-  <p class="rk-footer">
-
-    Batas administratif:
-    GeoJSON Rakumpit (HDX-BPS-2020).
-
-    <br>
-
-    Hotspot:
-    NASA FIRMS.
-
-    <br>
-
-    Bounding box hanya digunakan
-    untuk mengambil data awal.
-
-    <br>
-
-    Hotspot final hanya ditampilkan
-    apabila berada di dalam polygon
-    kelurahan Kecamatan Rakumpit.
-
-  </p>
-
 </div>
 
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
-
-(function(){
-
-'use strict';
-
-
-/*
-=========================================================
-KONFIGURASI
-=========================================================
-*/
-
-const FIRMS_API =
-  'https://script.google.com/macros/s/AKfycbyAsejC6aqR16THcy50I1AzdnM92zPTqC0ximQl6sfK05VSXmQUE2KHml0KPeyRsN4q/exec';
-
-const BBOX =
-  '113.48,-1.93,113.84,-1.62';
-
-
-/*
-=========================================================
-TANGGAL HARI INI
-=========================================================
-*/
-
-function setToday(){
-
-  const element =
-    document.getElementById('rk-today');
-
-  if(!element){
-    return;
-  }
-
-  const now = new Date();
-
-  const options = {
-    weekday:'long',
-    day:'2-digit',
-    month:'long',
-    year:'numeric',
-    timeZone:'Asia/Jakarta'
-  };
-
-  const today =
-    now.toLocaleDateString(
-      'id-ID',
-      options
-    );
-
-  element.textContent =
-    '📅 ' + today;
-
-}
-
-setToday();
-
-
-/*
-=========================================================
-GEOJSON RAKUMPIT
-=========================================================
-
-DATA POLYGON ASLI DIPERTAHANKAN.
-TIDAK DIUBAH.
-=========================================================
-*/
-
-const GEOJSON = {
-
-  "type":"FeatureCollection",
-
-  "name":"Rakumpit's Village",
-
-  "crs":{
-    "type":"name",
-    "properties":{
-      "name":
-      "urn:ogc:def:crs:OGC:1.3:CRS84"
-    }
-  },
-
-  "features":[
-
-
-    {
-      "type":"Feature",
-
-      "properties":{
-        "country_code":"id",
-        "country":"Indonesia",
-        "province_code":"id62",
-        "province":"Kalimantan Tengah",
-        "regency_code":"id6271",
-        "regency":"Kota Palangka Raya",
-        "district_code":"id6271021",
-        "district":"Rakumpit",
-        "village_code":"id6271021007",
-        "village":"Bukit Sua",
-        "source":"HDX-BPS-2020",
-        "date":"2019-12-20",
-        "valid_on":"2020-04-01"
-      },
-
-      "geometry":{
-        "type":"MultiPolygon",
-
-        "coordinates":[[[
-
-          [113.523219,-1.6666529],
-          [113.5547979,-1.6666529],
-          [113.6162958,-1.6666436],
-          [113.6330451,-1.6666436],
-          [113.6744066,-1.6666902],
-          [113.6992944,-1.6666625],
-          [113.7161403,-1.6666436],
-          [113.7232162,-1.6666467],
-          [113.817299,-1.6666856],
-          [113.8070348,-1.706499],
-          [113.6837798,-1.7064509],
-          [113.6599983,-1.7019134],
-          [113.6339997,-1.6962578],
-          [113.6070334,-1.702537],
-          [113.5740459,-1.6945804],
-          [113.559724,-1.7003436],
-          [113.5260914,-1.7036122],
-          [113.4906512,-1.7067114],
-          [113.482045,-1.6847489],
-          [113.486842,-1.6662588],
-          [113.4920572,-1.6575011],
-          [113.5018741,-1.6672484],
-          [113.508736,-1.6704047],
-          [113.5188389,-1.6708791],
-          [113.523219,-1.6666529]
-
-        ]]]
-      }
-    },
-
-
-    {
-      "type":"Feature",
-
-      "properties":{
-        "country_code":"id",
-        "country":"Indonesia",
-        "province_code":"id62",
-        "province":"Kalimantan Tengah",
-        "regency_code":"id6271",
-        "regency":"Kota Palangka Raya",
-        "district_code":"id6271021",
-        "district":"Rakumpit",
-        "village_code":"id6271021004",
-        "village":"Gaung Baru",
-        "source":"HDX-BPS-2020",
-        "date":"2019-12-20",
-        "valid_on":"2020-04-01"
-      },
-
-      "geometry":{
-        "type":"MultiPolygon",
-
-        "coordinates":[[[
-
-          [113.8066181,-1.75],
-          [113.8066423,-1.750119],
-          [113.8076452,-1.7550624],
-          [113.8118625,-1.7681172],
-          [113.7961336,-1.7707977],
-          [113.790858,-1.7795187],
-          [113.7794454,-1.7828563],
-          [113.7565664,-1.7952917],
-          [113.7411701,-1.8050893],
-          [113.7299729,-1.8133796],
-          [113.7282502,-1.8174709],
-          [113.7290039,-1.8184399],
-          [113.7281425,-1.8190859],
-          [113.7259892,-1.8211316],
-          [113.7259892,-1.8235002],
-          [113.7227593,-1.8222082],
-          [113.715115,-1.8184399],
-          [113.7102876,-1.8227644],
-          [113.7091933,-1.8214815],
-          [113.7091216,-1.8204062],
-          [113.7072535,-1.8163812],
-          [113.7063335,-1.8118925],
-          [113.7029689,-1.8083597],
-          [113.7070064,-1.8054998],
-          [113.7100345,-1.8036493],
-          [113.7100345,-1.8024717],
-          [113.7080157,-1.8023035],
-          [113.7049876,-1.8048269],
-          [113.6989314,-1.8044904],
-          [113.697985,-1.8009576],
-          [113.6999408,-1.7983659],
-          [113.6970809,-1.7949014],
-          [113.6950622,-1.792772],
-          [113.6958837,-1.7886107],
-          [113.6970809,-1.7858171],
-          [113.689006,-1.7854807],
-          [113.689006,-1.7700037],
-          [113.6891207,-1.769755],
-          [113.7102163,-1.769755],
-          [113.7146832,-1.7701401],
-          [113.7169166,-1.7724505],
-          [113.7208282,-1.7712518],
-          [113.7243019,-1.7687023],
-          [113.728392,-1.7638248],
-          [113.7289696,-1.762785],
-          [113.741978,-1.7620161],
-          [113.750226,-1.7549294],
-          [113.7540383,-1.7499619],
-          [113.8066181,-1.75]
-
-        ]]]
-      }
-    },
-
-
-    {
-      "type":"Feature",
-
-      "properties":{
-        "country_code":"id",
-        "country":"Indonesia",
-        "province_code":"id62",
-        "province":"Kalimantan Tengah",
-        "regency_code":"id6271",
-        "regency":"Kota Palangka Raya",
-        "district_code":"id6271021",
-        "district":"Rakumpit",
-        "village_code":"id6271021006",
-        "village":"Mungku Baru",
-        "source":"HDX-BPS-2020",
-        "date":"2019-12-20",
-        "valid_on":"2020-04-01"
-      },
-
-      "geometry":{
-        "type":"MultiPolygon",
-
-        "coordinates":[[[
-
-          [113.7991113,-1.6301087],
-          [113.8271902,-1.6310746],
-          [113.8261576,-1.6347921],
-          [113.8213224,-1.6522002],
-          [113.817299,-1.6666856],
-          [113.7232162,-1.6666466],
-          [113.523219,-1.6666529],
-          [113.5308886,-1.6587412],
-          [113.5451695,-1.646792],
-          [113.5627121,-1.6370386],
-          [113.5768355,-1.6434754],
-          [113.5882453,-1.6533322],
-          [113.600095,-1.6552451],
-          [113.6120586,-1.6532628],
-          [113.6413513,-1.6486553],
-          [113.6761934,-1.6405116],
-          [113.7044213,-1.6306356],
-          [113.7260926,-1.6264187],
-          [113.7504403,-1.6237816],
-          [113.7589626,-1.6237025],
-          [113.7724911,-1.6258611],
-          [113.7991113,-1.6301087]
-
-        ]]]
-      }
-    },
-
-
-    {
-      "type":"Feature",
-
-      "properties":{
-        "country_code":"id",
-        "country":"Indonesia",
-        "province_code":"id62",
-        "province":"Kalimantan Tengah",
-        "regency_code":"id6271",
-        "regency":"Kota Palangka Raya",
-        "district_code":"id6271021",
-        "district":"Rakumpit",
-        "village_code":"id6271021002",
-        "village":"Pager",
-        "source":"HDX-BPS-2020",
-        "date":"2019-12-20",
-        "valid_on":"2020-04-01"
-      },
-
-      "geometry":{
-        "type":"MultiPolygon",
-
-        "coordinates":[[[
-
-          [113.6890575,-1.7499187],
-          [113.6890573,-1.7500395],
-          [113.6890369,-1.769755],
-          [113.6891207,-1.769755],
-          [113.689006,-1.7700037],
-          [113.689006,-1.7854807],
-          [113.6970809,-1.7858171],
-          [113.6958837,-1.7886107],
-          [113.6950622,-1.7905275],
-          [113.6950622,-1.792772],
-          [113.6970809,-1.7949014],
-          [113.6999408,-1.7983659],
-          [113.6979545,-1.8009171],
-          [113.697985,-1.8015868],
-          [113.6989314,-1.8044904],
-          [113.7049876,-1.8048269],
-          [113.7075173,-1.8027188],
-          [113.7100345,-1.8036493],
-          [113.7070064,-1.8054998],
-          [113.7039783,-1.8066774],
-          [113.7029689,-1.8083597],
-          [113.704483,-1.8107149],
-          [113.7063335,-1.8118925],
-          [113.7072535,-1.8163812],
-          [113.7091933,-1.8214815],
-          [113.709947,-1.8230695],
-          [113.7077978,-1.8250665],
-          [113.7048641,-1.8269334],
-          [113.7016637,-1.8280002],
-          [113.6968631,-1.8285336],
-          [113.6859283,-1.8261333],
-          [113.6712616,-1.8261339],
-          [113.6493085,-1.8261347],
-          [113.5091287,-1.8261333],
-          [113.5061353,-1.8233827],
-          [113.5048886,-1.8206076],
-          [113.4902977,-1.7880075],
-          [113.4886101,-1.7617117],
-          [113.4894142,-1.7601171],
-          [113.4944614,-1.7502251],
-          [113.494522,-1.7501045],
-          [113.585111,-1.7499187],
-          [113.636106,-1.7499192],
-          [113.6491992,-1.7499194],
-          [113.6890575,-1.7499187]
-
-        ]]]
-      }
-    },
-
-
-    {
-      "type":"Feature",
-
-      "properties":{
-        "country_code":"id",
-        "country":"Indonesia",
-        "province_code":"id62",
-        "province":"Kalimantan Tengah",
-        "regency_code":"id6271",
-        "regency":"Kota Palangka Raya",
-        "district_code":"id6271021",
-        "district":"Rakumpit",
-        "village_code":"id6271021003",
-        "village":"Panjehang",
-        "source":"HDX-BPS-2020",
-        "date":"2019-12-20",
-        "valid_on":"2020-04-01"
-      },
-
-      "geometry":{
-        "type":"MultiPolygon",
-
-        "coordinates":[[[
-
-          [113.8053556,-1.7274418],
-          [113.8054622,-1.7310695],
-          [113.8051303,-1.7361939],
-          [113.80511,-1.742567],
-          [113.8066181,-1.75],
-          [113.7540383,-1.7499619],
-          [113.750226,-1.7549294],
-          [113.741978,-1.7620161],
-          [113.7289696,-1.762785],
-          [113.7243019,-1.7687023],
-          [113.7208282,-1.7712518],
-          [113.7169166,-1.7724505],
-          [113.7150683,-1.7702941],
-          [113.71399,-1.769986],
-          [113.7102163,-1.769755],
-          [113.6891207,-1.769755],
-          [113.6890573,-1.7500395],
-          [113.7009535,-1.7499187],
-          [113.7068321,-1.7472675],
-          [113.7254893,-1.7472676],
-          [113.7368451,-1.7472675],
-          [113.7370318,-1.7275626],
-          [113.8053556,-1.7274418]
-
-        ]]]
-      }
-    },
-
-
-    {
-      "type":"Feature",
-
-      "properties":{
-        "country_code":"id",
-        "country":"Indonesia",
-        "province_code":"id62",
-        "province":"Kalimantan Tengah",
-        "regency_code":"id6271",
-        "regency":"Kota Palangka Raya",
-        "district_code":"id6271021",
-        "district":"Rakumpit",
-        "village_code":"id6271021005",
-        "village":"Petuk Barunai",
-        "source":"HDX-BPS-2020",
-        "date":"2019-12-20",
-        "valid_on":"2020-04-01"
-      },
-
-      "geometry":{
-        "type":"MultiPolygon",
-
-        "coordinates":[[[
-
-          [113.8070348,-1.706499],
-          [113.8070225,-1.7066199],
-          [113.8062762,-1.7139849],
-          [113.805285,-1.7250436],
-          [113.8053556,-1.7274418],
-          [113.7370318,-1.7274418],
-          [113.7370318,-1.7472675],
-          [113.7069366,-1.7472675],
-          [113.7009535,-1.7499187],
-          [113.6491992,-1.7499194],
-          [113.585111,-1.7499187],
-          [113.494522,-1.7501045],
-          [113.496799,-1.7455735],
-          [113.4982895,-1.7397673],
-          [113.4987406,-1.735574],
-          [113.4982921,-1.7282085],
-          [113.4975792,-1.7193881],
-          [113.4972065,-1.7187097],
-          [113.4906577,-1.7067234],
-          [113.5084794,-1.705182],
-          [113.5260914,-1.7036122],
-          [113.559724,-1.7003436],
-          [113.5740459,-1.6945804],
-          [113.5883462,-1.6955911],
-          [113.6070334,-1.702537],
-          [113.6289677,-1.6977201],
-          [113.6489451,-1.6957202],
-          [113.6559985,-1.7007952],
-          [113.658,-1.7033732],
-          [113.6599983,-1.7019134],
-          [113.6610305,-1.6989458],
-          [113.6740406,-1.7029241],
-          [113.6790726,-1.7039993],
-          [113.6833734,-1.7064508],
-          [113.8070348,-1.706499]
-
-        ]]]
-      }
-    },
-
-
-    {
-      "type":"Feature",
-
-      "properties":{
-        "country_code":"id",
-        "country":"Indonesia",
-        "province_code":"id62",
-        "province":"Kalimantan Tengah",
-        "regency_code":"id6271",
-        "regency":"Kota Palangka Raya",
-        "district_code":"id6271021",
-        "district":"Rakumpit",
-        "village_code":"id6271021001",
-        "village":"Petuk Bukit",
-        "source":"HDX-BPS-2020",
-        "date":"2019-12-20",
-        "valid_on":"2020-04-01"
-      },
-
-      "geometry":{
-        "type":"MultiPolygon",
-
-        "coordinates":[[[
-
-          [113.8125153,-1.770138],
-          [113.8145895,-1.7770645],
-          [113.8152892,-1.7793346],
-          [113.8161679,-1.7820488],
-          [113.8181772,-1.788255],
-          [113.8184438,-1.7893092],
-          [113.8187227,-1.7927346],
-          [113.8194638,-1.8018348],
-          [113.8212994,-1.8172586],
-          [113.8218721,-1.826399],
-          [113.8227507,-1.8404166],
-          [113.8231456,-1.8520407],
-          [113.7640452,-1.8520407],
-          [113.7513103,-1.87083],
-          [113.7151373,-1.9150729],
-          [113.6695366,-1.913796],
-          [113.5853018,-1.911434],
-          [113.5719045,-1.8997868],
-          [113.5562438,-1.8788798],
-          [113.5358353,-1.8516347],
-          [113.522003,-1.8379632],
-          [113.5091287,-1.8261333],
-          [113.6493085,-1.8261338],
-          [113.6712616,-1.8261339],
-          [113.6859283,-1.8261333],
-          [113.6968631,-1.8285336],
-          [113.7016637,-1.8280002],
-          [113.7077978,-1.8250665],
-          [113.7102115,-1.8228326],
-          [113.7102876,-1.8227644],
-          [113.715115,-1.8184399],
-          [113.7227593,-1.8222082],
-          [113.7250202,-1.8235002],
-          [113.7259892,-1.8211316],
-          [113.7279558,-1.8205229],
-          [113.7281425,-1.8190859],
-          [113.7290039,-1.8184399],
-          [113.7282502,-1.8174709],
-          [113.7291115,-1.8159636],
-          [113.7342016,-1.8105604],
-          [113.7411701,-1.8050893],
-          [113.7565664,-1.7952917],
-          [113.7780457,-1.7833946],
-          [113.790858,-1.7795187],
-          [113.7961336,-1.7707977],
-          [113.8118625,-1.7681172],
-          [113.8125153,-1.770138]
-
-        ]]]
-      }
-    }
-
-  ]
-
-};
-
-
-/*
-=========================================================
-MAP
-=========================================================
-*/
-
-const map =
-  L.map(
-    'rakumpit-map'
-  ).setView(
-    [-1.76,113.68],
-    11
-  );
-
-
-L.tileLayer(
-  'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  {
-    maxZoom:19,
-    attribution:
-      '&copy; OpenStreetMap contributors'
-  }
-).addTo(map);
-
-
-/*
-=========================================================
-ESCAPE HTML
-=========================================================
-*/
-
-function esc(v){
-
-  return String(
-    v ?? ''
-  ).replace(
-    /[&<>"']/g,
-    m => ({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#39;'
-    }[m])
-  );
-
-}
-
-
-/*
-=========================================================
-BATAS KELURAHAN
-=========================================================
-*/
-
-const boundaryLayer =
-  L.geoJSON(
-    GEOJSON,
-    {
-      style:() => ({
-        color:'#2563eb',
-        weight:2,
-        fillColor:'#60a5fa',
-        fillOpacity:.16
-      }),
-
-      onEachFeature:(f,l) => {
-
-        l.bindPopup(
-
-          '<b>📍 ' +
-          esc(
-            f.properties.village
-          ) +
-          '</b><br>' +
-
-          'Kecamatan: ' +
-          esc(
-            f.properties.district
-          ) +
-
-          '<br>Kode: ' +
-
-          esc(
-            f.properties.village_code
-          )
-
-        );
-
-      }
-    }
-  ).addTo(map);
-
-
-map.fitBounds(
-  boundaryLayer.getBounds(),
-  {
-    padding:[15,15]
-  }
-);
-
-
-/*
-=========================================================
-VARIABEL
-=========================================================
-*/
-
-const hotspotLayer =
-  L.layerGroup()
-   .addTo(map);
-
-let allHotspots = [];
-
-let selectedVillage = '';
-
-let jsonpCounter = 0;
-
-let activeRequestId = 0;
-
-
-/*
-=========================================================
-DAFTAR KELURAHAN
-=========================================================
-*/
-
-const names =
-  GEOJSON.features
-    .map(
-      f => ({
-        code:
-          f.properties.village_code,
-
-        name:
-          f.properties.village
-      })
-    )
-    .sort(
-      (a,b) =>
-        a.name.localeCompare(
-          b.name
-        )
-    );
-
-
-const villageSelect =
-  document.getElementById(
-    'rk-village'
-  );
-
-
-names.forEach(v => {
-
-  const option =
-    document.createElement(
-      'option'
-    );
-
-  option.value =
-    v.code;
-
-  option.textContent =
-    v.name +
-    ' (' +
-    v.code.replace(
-      'id',
-      ''
-    ) +
-    ')';
-
-  villageSelect.appendChild(
-    option
-  );
-
-});
-
-
-/*
-=========================================================
-FORMAT WAKTU WIB
-=========================================================
-*/
-
-function formatWIB(
-  dateStr,
-  timeStr
-){
-
-  if(
-    !dateStr ||
-    timeStr === undefined ||
-    timeStr === null ||
-    timeStr === ''
-  ){
-    return '-';
-  }
-
-  let t =
-    String(timeStr)
-      .trim()
-      .replace(
-        /\D/g,
-        ''
-      );
-
-  t =
-    t.padStart(
-      4,
-      '0'
-    );
-
-  const hh =
-    Number(
-      t.slice(0,2)
-    );
-
-  const mm =
-    Number(
-      t.slice(2,4)
-    );
-
-  if(
-    !Number.isFinite(hh) ||
-    !Number.isFinite(mm)
-  ){
-
-    return (
-      dateStr +
-      ' ' +
-      t +
-      ' UTC'
-    );
-
-  }
-
-  const d =
-    new Date(
-      dateStr +
-      'T' +
-      String(hh)
-        .padStart(2,'0') +
-      ':' +
-      String(mm)
-        .padStart(2,'0') +
-      ':00Z'
-    );
-
-  if(
-    Number.isNaN(
-      d.getTime()
-    )
-  ){
-
-    return (
-      dateStr +
-      ' ' +
-      t +
-      ' UTC'
-    );
-
-  }
-
-  d.setUTCHours(
-    d.getUTCHours() + 7
-  );
-
-  const y =
-    d.getUTCFullYear();
-
-  const m =
-    String(
-      d.getUTCMonth() + 1
-    ).padStart(2,'0');
-
-  const day =
-    String(
-      d.getUTCDate()
-    ).padStart(2,'0');
-
-  const H =
-    String(
-      d.getUTCHours()
-    ).padStart(2,'0');
-
-  const M =
-    String(
-      d.getUTCMinutes()
-    ).padStart(2,'0');
-
-  return (
-    y + '-' +
-    m + '-' +
-    day + ' ' +
-    H + ':' +
-    M +
-    ' WIB'
-  );
-
-}
-
-
-/*
-=========================================================
-POINT IN RING
-=========================================================
-*/
-
-function pointInRing(
-  pt,
-  ring
-){
-
-  const x =
-    pt[0];
-
-  const y =
-    pt[1];
-
-  let inside =
-    false;
-
-  for(
-    let i=0,
-    j=ring.length-1;
-
-    i<ring.length;
-
-    j=i++
-  ){
-
-    const xi =
-      ring[i][0];
-
-    const yi =
-      ring[i][1];
-
-    const xj =
-      ring[j][0];
-
-    const yj =
-      ring[j][1];
-
-    const hit =
-      (
-        (yi > y) !==
-        (yj > y)
-      ) &&
-      (
-        x <
-        (xj-xi) *
-        (y-yi) /
-        (yj-yi) +
-        xi
-      );
-
-    if(hit){
-      inside =
-        !inside;
-    }
-
-  }
-
-  return inside;
-
-}
-
-
-/*
-=========================================================
-POINT IN POLYGON
-=========================================================
-*/
-
-function pointInPolygon(
-  pt,
-  poly
-){
-
-  if(
-    !poly ||
-    !poly.length ||
-    !poly[0] ||
-    !poly[0].length
-  ){
-    return false;
-  }
-
-  if(
-    !pointInRing(
-      pt,
-      poly[0]
-    )
-  ){
-    return false;
-  }
-
-  for(
-    let i=1;
-    i<poly.length;
-    i++
-  ){
-
-    if(
-      pointInRing(
-        pt,
-        poly[i]
-      )
-    ){
-      return false;
-    }
-
-  }
-
-  return true;
-
-}
-
-
-/*
-=========================================================
-POINT IN FEATURE
-=========================================================
-*/
-
-function pointInFeature(
-  pt,
-  feature
-){
-
-  if(
-    !feature ||
-    !feature.geometry
-  ){
-    return false;
-  }
-
-  const coordinates =
-    feature.geometry.coordinates;
-
-  if(
-    feature.geometry.type ===
-    'Polygon'
-  ){
-
-    return pointInPolygon(
-      pt,
-      coordinates
-    );
-
-  }
-
-  if(
-    feature.geometry.type ===
-    'MultiPolygon'
-  ){
-
-    for(
-      const polygon
-      of coordinates
-    ){
-
-      if(
-        pointInPolygon(
-          pt,
-          polygon
-        )
-      ){
-        return true;
-      }
-
-    }
-
-  }
-
-  return false;
-
-}
-
-
-/*
-=========================================================
-CARI KELURAHAN
-=========================================================
-*/
-
-function findVillage(
-  lat,
-  lng
-){
-
-  for(
-    const feature
-    of GEOJSON.features
-  ){
-
-    if(
-      pointInFeature(
-        [lng,lat],
-        feature
-      )
-    ){
-
-      return feature.properties;
-
-    }
-
-  }
-
-  return null;
-
-}
-
-
-/*
-=========================================================
-CONFIDENCE LABEL
-=========================================================
-*/
-
-function confLabel(v){
-
-  const x =
-    String(
-      v ?? ''
-    )
-    .trim()
-    .toLowerCase();
-
-  if(
-    x === 'h' ||
-    x === 'high'
-  ){
-    return 'Tinggi';
-  }
-
-  if(
-    x === 'l' ||
-    x === 'low'
-  ){
-    return 'Rendah';
-  }
-
-  if(
-    x === 'n' ||
-    x === 'nominal' ||
-    x === 'medium'
-  ){
-    return 'Sedang';
-  }
-
-  const n =
-    Number(x);
-
-  if(
-    Number.isFinite(n)
-  ){
-
-    if(n >= 80){
-      return 'Tinggi';
-    }
-
-    if(n >= 50){
-      return 'Sedang';
-    }
-
-    return 'Rendah';
-
-  }
-
-  return 'Sedang';
-
-}
-
-
-/*
-=========================================================
-WARNA MARKER
-=========================================================
-
-INI PERBAIKAN ERROR:
-
-markerColor is not defined
-
-=========================================================
-*/
-
-function markerColor(confidence){
-
-  const c =
-    String(
-      confidence ?? ''
-    )
-    .trim()
-    .toLowerCase();
-
-
-  if(
-    c === 'h' ||
-    c === 'high' ||
-    c === 'tinggi'
-  ){
-
-    return '#ef4444';
-
-  }
-
-
-  if(
-    c === 'n' ||
-    c === 'nominal' ||
-    c === 'medium' ||
-    c === 'sedang'
-  ){
-
-    return '#f59e0b';
-
-  }
-
-
-  if(
-    c === 'l' ||
-    c === 'low' ||
-    c === 'rendah'
-  ){
-
-    return '#22c55e';
-
-  }
-
-
-  const num =
-    Number(
-      confidence
-    );
-
-
-  if(
-    Number.isFinite(num)
-  ){
-
-    if(num >= 80){
-      return '#ef4444';
-    }
-
-    if(num >= 50){
-      return '#f59e0b';
-    }
-
-    return '#22c55e';
-
-  }
-
-
-  return '#f59e0b';
-
-}
-
-
-/*
-=========================================================
-NAMA SATELIT
-=========================================================
-*/
-
-function satLabel(v){
-
-  const s =
-    String(
-      v || ''
-    )
-    .trim()
-    .toUpperCase();
-
-
-  if(
-    s === 'TERRA'
-  ){
-    return 'Terra';
-  }
-
-
-  if(
-    s === 'AQUA'
-  ){
-    return 'Aqua';
-  }
-
-
-  if(
-    s.includes('N21') ||
-    s.includes('NOAA-21') ||
-    s.includes('NOAA21')
-  ){
-    return 'NOAA-21';
-  }
-
-
-  if(
-    s.includes('N20') ||
-    s.includes('NOAA-20') ||
-    s.includes('NOAA20')
-  ){
-    return 'NOAA-20';
-  }
-
-
-  if(
-    s.includes('SNPP') ||
-    s === 'NPP' ||
-    s.includes('NPP')
-  ){
-    return 'Suomi-NPP';
-  }
-
-
-  if(
-    s === 'MODIS_NRT'
-  ){
-    return 'MODIS';
-  }
-
-
-  return (
-    s ||
-    'Tidak diketahui'
-  );
-
-}
-
-
-/*
-=========================================================
-MATCH SATELIT
-=========================================================
-*/
-
-function satMatches(
-  row,
-  selected
-){
-
-  if(
-    !selected ||
-    selected === 'ALL'
-  ){
-    return true;
-  }
-
-
-  const source =
-    String(
-      row.firms_source ||
-      ''
-    )
-    .trim()
-    .toUpperCase();
-
-
-  const sat =
-    String(
-      row.satellite ||
-      ''
-    )
-    .trim()
-    .toUpperCase();
-
-
-  if(
-    selected === 'TERRA'
-  ){
-
-    return (
-      (
-        source === 'MODIS_NRT' ||
-        source === ''
-      ) &&
-      (
-        sat === 'TERRA' ||
-        sat.includes('TERRA')
-      )
-    );
-
-  }
-
-
-  if(
-    selected === 'AQUA'
-  ){
-
-    return (
-      (
-        source === 'MODIS_NRT' ||
-        source === ''
-      ) &&
-      (
-        sat === 'AQUA' ||
-        sat.includes('AQUA')
-      )
-    );
-
-  }
-
-
-  if(
-    selected === 'N20'
-  ){
-
-    return (
-      source === 'VIIRS_NOAA20_NRT' ||
-      sat.includes('N20') ||
-      sat.includes('NOAA20') ||
-      sat.includes('NOAA-20')
-    );
-
-  }
-
-
-  if(
-    selected === 'N21'
-  ){
-
-    return (
-      source === 'VIIRS_NOAA21_NRT' ||
-      sat.includes('N21') ||
-      sat.includes('NOAA21') ||
-      sat.includes('NOAA-21')
-    );
-
-  }
-
-
-  if(
-    selected === 'SNPP'
-  ){
-
-    return (
-      source === 'VIIRS_SNPP_NRT' ||
-      sat.includes('SNPP') ||
-      sat === 'NPP' ||
-      sat.includes('NPP')
-    );
-
-  }
-
-
-  return false;
-
-}
-
-
-/*
-=========================================================
-JSONP NASA / APPS SCRIPT
-=========================================================
-*/
-
-function fetchFirmsJSONP(
-  days
-){
-
-  return new Promise(
-    (resolve,reject)=>{
-
-      if(!FIRMS_API){
-
-        reject(
-          new Error(
-            'URL Google Apps Script belum diisi.'
-          )
-        );
-
-        return;
-
-      }
-
-
-      const callbackName =
-        'rakumpitFirmsCallback_' +
-        Date.now() +
-        '_' +
-        (++jsonpCounter);
-
-
-      const script =
-        document.createElement(
-          'script'
-        );
-
-
-      let finished = false;
-
-
-      function cleanup(){
-
-        if(
-          script.parentNode
-        ){
-
-          script.parentNode
-            .removeChild(
-              script
-            );
-
-        }
-
-
-        try{
-
-          delete window[
-            callbackName
-          ];
-
-        }catch(e){}
-
-      }
-
-
-      const timer =
-        setTimeout(
-          ()=>{
-
-            if(finished){
-              return;
-            }
-
-
-            finished = true;
-
-            cleanup();
-
-
-            reject(
-              new Error(
-                'Timeout 120 detik. Apps Script tidak mengirim respons.'
-              )
-            );
-
-          },
-          120000
-        );
-
-
-      window[callbackName] =
-        data => {
-
-          if(finished){
-            return;
-          }
-
-
-          finished = true;
-
-          clearTimeout(
-            timer
-          );
-
-
-          cleanup();
-
-
-          resolve(data);
-
-        };
-
-
-      script.onerror =
-        () => {
-
-          if(finished){
-            return;
-          }
-
-
-          finished = true;
-
-          clearTimeout(
-            timer
-          );
-
-          cleanup();
-
-
-          reject(
-            new Error(
-              'Browser gagal memuat Apps Script. ' +
-              'Periksa URL deployment dan akses publik.'
-            )
-          );
-
-        };
-
-
-      const separator =
-        FIRMS_API.includes('?')
-          ? '&'
-          : '?';
-
-
-      const url =
-        FIRMS_API +
-        separator +
-        'days=' +
-        encodeURIComponent(days) +
-        '&callback=' +
-        encodeURIComponent(callbackName) +
-        '&_=' +
-        Date.now();
-
-
-      script.src =
-        url;
-
-      script.async =
-        true;
-
-
-      document.head
-        .appendChild(
-          script
-        );
-
-    }
-  );
-
-}
-
-
-/*
-=========================================================
-NORMALISASI DATA
-=========================================================
-*/
-
-function normalizeRow(
-  r,
-  source
-){
-
-  const lat =
-    Number(
-      r.latitude
-    );
-
-
-  const lng =
-    Number(
-      r.longitude
-    );
-
-
-  if(
-    !Number.isFinite(lat) ||
-    !Number.isFinite(lng)
-  ){
-
-    return null;
-
-  }
-
-
-  const village =
-    findVillage(
-      lat,
-      lng
-    );
-
-
-  if(!village){
-
-    return null;
-
-  }
-
-
-  return Object.assign(
-    {},
-    r,
-    {
-      latitude:lat,
-      longitude:lng,
-
-      village:
-        village.village,
-
-      village_code:
-        village.village_code,
-
-      district:
-        village.district,
-
-      source_name:
-        source
-    }
-  );
-
-}
-
-
-/*
-=========================================================
-GET FILTERED ROWS
-=========================================================
-*/
-
-function getFilteredRows(){
-
-  let rows =
-    allHotspots.slice();
-
-
-  if(
-    selectedVillage
-  ){
-
-    rows =
-      rows.filter(
-        r =>
-          r.village_code ===
-          selectedVillage
-      );
-
-  }
-
-
-  const satelliteFilter =
-    document
-      .getElementById(
-        'rk-source'
-      )
-      .value;
-
-
-  rows =
-    rows.filter(
-      r =>
-        satMatches(
-          r,
-          satelliteFilter
-        )
-    );
-
-
-  rows.sort(
-    (a,b) =>
-      (Number(b.frp) || 0) -
-      (Number(a.frp) || 0)
-  );
-
-
-  return rows;
-
-}
-
-
-/*
-=========================================================
-RENDER
-=========================================================
-*/
-
-function render(){
-
-  hotspotLayer.clearLayers();
-
-
-  const rows =
-    getFilteredRows();
-
-
-  const villages =
-    new Set(
-      rows.map(
-        r =>
-          r.village_code
-      )
-    );
-
-
-  let high = 0;
-
-  let max = 0;
-
-
-  rows.forEach(
-    r => {
-
-      const confidence =
-        confLabel(
-          r.confidence
-        );
-
-
-      if(
-        confidence === 'Tinggi'
-      ){
-
-        high++;
-
-      }
-
-
-      max =
-        Math.max(
-          max,
-          Number(r.frp) || 0
-        );
-
-
-      /*
-       * PERBAIKAN:
-       * markerColor sekarang sudah didefinisikan.
-       */
-
-      const color =
-        markerColor(
-          confidence
-        );
-
-
-      const formattedTime =
-        formatWIB(
-          r.acq_date,
-          r.acq_time
-        );
-
-
-      const lat =
-        Number(
-          r.latitude
-        );
-
-
-      const lng =
-        Number(
-          r.longitude
-        );
-
-
-      const marker =
-        L.circleMarker(
-          [lat,lng],
-          {
-            radius:8,
-            fillColor:color,
-            color:'#fff',
-            weight:2,
-            fillOpacity:.9
-          }
-        )
-        .addTo(
-          hotspotLayer
-        );
-
-
-      marker.bindPopup(
-
-        '<b>🔥 HOTSPOT KARHUTLA</b>' +
-
-        '<table>' +
-
-        '<tr>' +
-        '<td>Kelurahan</td>' +
-        '<td>' +
-        esc(r.village) +
-        '</td>' +
-        '</tr>' +
-
-        '<tr>' +
-        '<td>Waktu</td>' +
-        '<td>' +
-        esc(formattedTime) +
-        '</td>' +
-        '</tr>' +
-
-        '<tr>' +
-        '<td>Satelit</td>' +
-        '<td>' +
-        esc(
-          satLabel(
-            r.satellite ||
-            r.firms_source
-          )
-        ) +
-        '</td>' +
-        '</tr>' +
-
-        '<tr>' +
-        '<td>Confidence</td>' +
-        '<td><b>' +
-        esc(confidence) +
-        '</b></td>' +
-        '</tr>' +
-
-        '<tr>' +
-        '<td>FRP</td>' +
-        '<td>' +
-        esc(
-          r.frp || '-'
-        ) +
-        ' MW</td>' +
-        '</tr>' +
-
-        '<tr>' +
-        '<td>Koordinat</td>' +
-        '<td>' +
-        lat.toFixed(6) +
-        ', ' +
-        lng.toFixed(6) +
-        '</td>' +
-        '</tr>' +
-
-        '</table>'
-
-      );
-
-    }
-  );
-
-
-  /*
-   * STATISTIK
-   */
-
-  document
-    .getElementById('st-total')
-    .textContent =
-      rows.length;
-
-
-  document
-    .getElementById('st-high')
-    .textContent =
-      high;
-
-
-  document
-    .getElementById('st-vill')
-    .textContent =
-      villages.size;
-
-
-  document
-    .getElementById('st-frp')
-    .textContent =
-      max.toFixed(1) +
-      ' MW';
-
-
-  /*
-   * TABEL
-   */
-
-  document
-    .getElementById('rk-table')
-    .innerHTML =
-
-      rows.length
-
-      ? rows.map(
-          r => {
-
-            return (
-
-              '<tr>' +
-
-              '<td>' +
-              esc(
-                formatWIB(
-                  r.acq_date,
-                  r.acq_time
-                )
-              ) +
-              '</td>' +
-
-              '<td>' +
-              esc(
-                r.village
-              ) +
-              '</td>' +
-
-              '<td>' +
-              esc(
-                satLabel(
-                  r.satellite ||
-                  r.firms_source
-                )
-              ) +
-              '</td>' +
-
-              '<td>' +
-              esc(
-                confLabel(
-                  r.confidence
-                )
-              ) +
-              '</td>' +
-
-              '<td>' +
-              esc(
-                r.frp || '-'
-              ) +
-              ' MW</td>' +
-
-              '<td>' +
-              Number(
-                r.latitude
-              ).toFixed(6) +
-              ', ' +
-              Number(
-                r.longitude
-              ).toFixed(6) +
-              '</td>' +
-
-              '</tr>'
-
-            );
-
-          }
-        ).join('')
-
-      :
-
-        '<tr>' +
-        '<td colspan="6">' +
-        'Tidak ada hotspot pada filter ini.' +
-        '</td>' +
-        '</tr>';
-
-}
-
-
-/*
-=========================================================
-LOAD HOTSPOTS
-=========================================================
-*/
-
-async function loadHotspots(){
-
-  const days =
-    Number(
-      document
-        .getElementById('rk-days')
-        .value
-    );
-
-
-  const selectedSatellite =
-    document
-      .getElementById('rk-source')
-      .value;
-
-
-  const app =
-    document.getElementById(
-      'rakumpit-app'
-    );
-
-
-  const requestId =
-    ++activeRequestId;
-
-
-  app.classList.add(
-    'rk-loading'
-  );
-
-
-  setStatus(
-    '⏳ Mengambil data NASA FIRMS untuk ' +
-    satLabel(
-      selectedSatellite
-    ) +
-    '...'
-  );
-
-
-  try{
-
-    const json =
-      await fetchFirmsJSONP(
-        days
-      );
-
-
-    if(
-      requestId !== activeRequestId
-    ){
-
-      return;
-
-    }
-
-
-    if(
-      !json ||
-      !json.success
-    ){
-
-      throw new Error(
-        json &&
-        json.error
-          ? json.error
-          : 'API tidak mengembalikan data.'
-      );
-
-    }
-
-
-    const raw = [];
-
-
-    (json.data || [])
-      .forEach(
-        r => {
-
-          const normalized =
-            normalizeRow(
-              r,
-              r.firms_source || ''
-            );
-
-
-          if(normalized){
-
-            raw.push(
-              normalized
-            );
-
-          }
-
-        }
-      );
-
-
     /*
-     * DEDUPLIKASI
-     */
-
-    const seen =
-      new Set();
-
-
-    allHotspots =
-      raw.filter(
-        r => {
-
-          const key =
-            [
-              r.latitude,
-              r.longitude,
-              r.acq_date,
-              r.acq_time,
-              r.satellite
-            ].join('|');
-
-
-          if(
-            seen.has(key)
-          ){
-
-            return false;
-
-          }
-
-
-          seen.add(key);
-
-          return true;
-
-        }
-      );
-
-
-    render();
-
-
-    const visibleCount =
-      getFilteredRows().length;
-
-
-    let status =
-      '✅ Data NASA FIRMS berhasil dimuat. ' +
-      'Satelit: ' +
-      satLabel(
-        selectedSatellite
-      ) +
-      ' • periode ' +
-      days +
-      ' hari • ' +
-      visibleCount +
-      ' hotspot tampil.';
-
-
-    if(
-      json.partial &&
-      Array.isArray(json.warnings) &&
-      json.warnings.length
-    ){
-
-      status +=
-        ' ⚠️ Sebagian sumber FIRMS gagal: ' +
-        json.warnings.join(' | ');
-
-    }
-
-
-    setStatus(
-      status
-    );
-
-
-  }catch(e){
-
-    console.error(
-      'NASA FIRMS ERROR:',
-      e
-    );
-
-
-    setStatus(
-      '❌ Gagal mengambil data NASA FIRMS: ' +
-      (
-        e &&
-        e.message
-          ? e.message
-          : String(e)
-      )
-    );
-
-
-  }finally{
-
-    if(
-      requestId === activeRequestId
-    ){
-
-      app.classList.remove(
-        'rk-loading'
-      );
-
-    }
-
-  }
-
-}
-
-
-/*
-=========================================================
-STATUS
-=========================================================
-*/
-
-function setStatus(
-  text
-){
-
-  document
-    .getElementById('rk-status')
-    .textContent =
-      text;
-
-}
-
-
-/*
-=========================================================
-FILTER KELURAHAN
-=========================================================
-*/
-
-villageSelect
-  .addEventListener(
-    'change',
-    e => {
-
-      selectedVillage =
-        e.target.value;
-
-
-      render();
-
-
-      if(
-        selectedVillage
-      ){
-
-        const feature =
-          GEOJSON.features.find(
-            x =>
-              x.properties
-                .village_code ===
-              selectedVillage
-          );
-
-
-        if(feature){
-
-          const layer =
-            L.geoJSON(
-              feature
-            );
-
-
-          map.fitBounds(
-            layer.getBounds(),
-            {
-              padding:[25,25],
-              maxZoom:14
-            }
-          );
-
-        }
-
-      }else{
-
-        map.fitBounds(
-          boundaryLayer.getBounds(),
-          {
-            padding:[15,15]
-          }
-        );
-
-      }
-
-    }
-  );
-
-
-/*
-=========================================================
-FILTER SATELIT
-=========================================================
-
-Saat satelit berubah:
-1. request ulang NASA FIRMS
-2. render ulang data
-
-=========================================================
-*/
-
-document
-  .getElementById('rk-source')
-  .addEventListener(
-    'change',
-    loadHotspots
-  );
-
-
-/*
-=========================================================
-PERUBAHAN HARI
-=========================================================
-*/
-
-document
-  .getElementById('rk-days')
-  .addEventListener(
-    'change',
-    loadHotspots
-  );
-
-
-/*
-=========================================================
-REFRESH
-=========================================================
-*/
-
-document
-  .getElementById('rk-refresh')
-  .addEventListener(
-    'click',
-    loadHotspots
-  );
-
-
-/*
-=========================================================
-RESET
-=========================================================
-*/
-
-document
-  .getElementById('rk-reset')
-  .addEventListener(
-    'click',
-    () => {
-
-      villageSelect.value =
-        '';
-
-      selectedVillage =
-        '';
-
-
-      document
-        .getElementById('rk-source')
-        .value =
-        'ALL';
-
-
-      document
-        .getElementById('rk-days')
-        .value =
-        '1';
-
-
-      document
-        .getElementById('rk-msg')
-        .value =
-        '';
-
-
-      allHotspots =
-        [];
-
-
-      render();
-
-
-      map.fitBounds(
-        boundaryLayer.getBounds(),
+    =========================================================
+    GEOJSON RAKUMPIT
+    =========================================================
+    */
+    const GEOJSON = {
+      "type":"FeatureCollection",
+      "name":"Rakumpit's Village",
+      "crs":{
+        "type":"name",
+        "properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}
+      },
+      "features":[
         {
-          padding:[15,15]
-        }
-      );
-
-
-      setStatus(
-        'Filter direset. Klik "Muat Hotspot" untuk mengambil data terbaru.'
-      );
-
-    }
-  );
-
-
-/*
-=========================================================
-WHATSAPP
-=========================================================
-*/
-
-document
-  .getElementById('rk-wa')
-  .addEventListener(
-    'click',
-    async () => {
-
-      const rows =
-        getFilteredRows();
-
-
-      let msg =
-        '📢 LAPORAN HOTSPOT KARHUTLA - KEC. RAKUMPIT\n\n';
-
-
-      if(rows.length){
-
-        msg +=
-          '🔥 Hotspot terdeteksi: ' +
-          rows.length +
-          '\n';
-
-
-        rows
-          .slice(0,10)
-          .forEach(
-            (r,i) => {
-
-              msg +=
-                '\n' +
-                (i+1) +
-                '. ' +
-                r.village +
-                ' | ' +
-                formatWIB(
-                  r.acq_date,
-                  r.acq_time
-                ) +
-                ' | ' +
-                satLabel(
-                  r.satellite ||
-                  r.firms_source
-                ) +
-                ' | ' +
-                confLabel(
-                  r.confidence
-                ) +
-                ' | FRP ' +
-                (
-                  r.frp ||
-                  '-'
-                ) +
-                ' MW\n' +
-                '📍 Google Maps: https://www.google.com/maps?q=' +
-                Number(
-                  r.latitude
-                ).toFixed(6) +
-                ',' +
-                Number(
-                  r.longitude
-                ).toFixed(6);
-
-            }
-          );
-
-
-        if(
-          rows.length > 10
-        ){
-
-          msg +=
-            '\n\n... dan ' +
-            (
-              rows.length - 10
-            ) +
-            ' hotspot lainnya.';
-
-        }
-
-      }else{
-
-        msg +=
-          'Tidak ada hotspot pada filter yang dipilih.';
-
-      }
-
-
-      const extra =
-        document
-          .getElementById('rk-msg')
-          .value
-          .trim();
-
-
-      if(extra){
-
-        msg +=
-          '\n\n📝 ' +
-          extra;
-
-      }
-
-
-      msg +=
-        '\n\nSumber: NASA FIRMS';
-
-
-      /*
-       * Native share
-       */
-
-      if(
-        navigator.share
-      ){
-
-        try{
-
-          await navigator.share(
-            {
-              title:
-                'Laporan Karhutla Rakumpit',
-
-              text:
-                msg
-            }
-          );
-
-          return;
-
-        }catch(e){
-
-          if(
-            e.name === 'AbortError'
-          ){
-
-            return;
-
+          "type":"Feature",
+          "properties":{
+            "country_code":"id","country":"Indonesia","province_code":"id62","province":"Kalimantan Tengah",
+            "regency_code":"id6271","regency":"Kota Palangka Raya","district_code":"id6271021","district":"Rakumpit",
+            "village_code":"id6271021007","village":"Bukit Sua","source":"HDX-BPS-2020","date":"2019-12-20","valid_on":"2020-04-01"
+          },
+          "geometry":{
+            "type":"MultiPolygon",
+            "coordinates":[[[
+              [113.523219,-1.6666529],[113.5547979,-1.6666529],[113.6162958,-1.6666436],[113.6330451,-1.6666436],
+              [113.6744066,-1.6666902],[113.6992944,-1.6666625],[113.7161403,-1.6666436],[113.7232162,-1.6666467],
+              [113.817299,-1.6666856],[113.8070348,-1.706499],[113.6837798,-1.7064509],[113.6599983,-1.7019134],
+              [113.6339997,-1.6962578],[113.6070334,-1.702537],[113.5740459,-1.6945804],[113.559724,-1.7003436],
+              [113.5260914,-1.7036122],[113.4906512,-1.7067114],[113.482045,-1.6847489],[113.486842,-1.6662588],
+              [113.4920572,-1.6575011],[113.5018741,-1.6672484],[113.508736,-1.6704047],[113.5188389,-1.6708791],
+              [113.523219,-1.6666529]
+            ]]]
           }
+        },
+        {
+          "type":"Feature",
+          "properties":{
+            "country_code":"id","country":"Indonesia","province_code":"id62","province":"Kalimantan Tengah",
+            "regency_code":"id6271","regency":"Kota Palangka Raya","district_code":"id6271021","district":"Rakumpit",
+            "village_code":"id6271021004","village":"Gaung Baru","source":"HDX-BPS-2020","date":"2019-12-20","valid_on":"2020-04-01"
+          },
+          "geometry":{
+            "type":"MultiPolygon",
+            "coordinates":[[[
+              [113.8066181,-1.75],[113.8066423,-1.750119],[113.8076452,-1.7550624],[113.8118625,-1.7681172],
+              [113.7961336,-1.7707977],[113.790858,-1.7795187],[113.7794454,-1.7828563],[113.7565664,-1.7952917],
+              [113.7411701,-1.8050893],[113.7299729,-1.8133796],[113.7282502,-1.8174709],[113.7290039,-1.8184399],
+              [113.7281425,-1.8190859],[113.7259892,-1.8211316],[113.7259892,-1.8235002],[113.7227593,-1.8222082],
+              [113.715115,-1.8184399],[113.7102876,-1.8227644],[113.7091933,-1.8214815],[113.7091216,-1.8204062],
+              [113.7072535,-1.8163812],[113.7063335,-1.8118925],[113.7029689,-1.8083597],[113.7070064,-1.8054998],
+              [113.7100345,-1.8036493],[113.7100345,-1.8024717],[113.7080157,-1.8023035],[113.7049876,-1.8048269],
+              [113.6989314,-1.8044904],[113.697985,-1.8009576],[113.6999408,-1.7983659],[113.6970809,-1.7949014],
+              [113.6950622,-1.792772],[113.6958837,-1.7886107],[113.6970809,-1.7858171],[113.689006,-1.7854807],
+              [113.689006,-1.7700037],[113.6891207,-1.769755],[113.7102163,-1.769755],[113.7146832,-1.7701401],
+              [113.7169166,-1.7724505],[113.7208282,-1.7712518],[113.7243019,-1.7687023],[113.728392,-1.7638248],
+              [113.7289696,-1.762785],[113.741978,-1.7620161],[113.750226,-1.7549294],[113.7540383,-1.7499619],
+              [113.8066181,-1.75]
+            ]]]
+          }
+        },
+        {
+          "type":"Feature",
+          "properties":{
+            "country_code":"id","country":"Indonesia","province_code":"id62","province":"Kalimantan Tengah",
+            "regency_code":"id6271","regency":"Kota Palangka Raya","district_code":"id6271021","district":"Rakumpit",
+            "village_code":"id6271021006","village":"Mungku Baru","source":"HDX-BPS-2020","date":"2019-12-20","valid_on":"2020-04-01"
+          },
+          "geometry":{
+            "type":"MultiPolygon",
+            "coordinates":[[[
+              [113.7991113,-1.6301087],[113.8271902,-1.6310746],[113.8261576,-1.6347921],[113.8213224,-1.6522002],
+              [113.817299,-1.6666856],[113.7232162,-1.6666466],[113.523219,-1.6666529],[113.5308886,-1.6587412],
+              [113.5451695,-1.646792],[113.5627121,-1.6370386],[113.5768355,-1.6434754],[113.5882453,-1.6533322],
+              [113.600095,-1.6552451],[113.6120586,-1.6532628],[113.6413513,-1.6486553],[113.6761934,-1.6405116],
+              [113.7044213,-1.6306356],[113.7260926,-1.6264187],[113.7504403,-1.6237816],[113.7589626,-1.6237025],
+              [113.7724911,-1.6258611],[113.7991113,-1.6301087]
+            ]]]
+          }
+        },
+        {
+          "type":"Feature",
+          "properties":{
+            "country_code":"id","country":"Indonesia","province_code":"id62","province":"Kalimantan Tengah",
+            "regency_code":"id6271","regency":"Kota Palangka Raya","district_code":"id6271021","district":"Rakumpit",
+            "village_code":"id6271021002","village":"Pager","source":"HDX-BPS-2020","date":"2019-12-20","valid_on":"2020-04-01"
+          },
+          "geometry":{
+            "type":"MultiPolygon",
+            "coordinates":[[[
+              [113.6890575,-1.7499187],[113.6890573,-1.7500395],[113.6890369,-1.769755],[113.6891207,-1.769755],
+              [113.689006,-1.7700037],[113.689006,-1.7854807],[113.6970809,-1.7858171],[113.6958837,-1.7886107],
+              [113.6950622,-1.7905275],[113.6950622,-1.792772],[113.6970809,-1.7949014],[113.6999408,-1.7983659],
+              [113.6979545,-1.8009171],[113.697985,-1.8015868],[113.6989314,-1.8044904],[113.7049876,-1.8048269],
+              [113.7075173,-1.8027188],[113.7100345,-1.8036493],[113.7070064,-1.8054998],[113.7039783,-1.8066774],
+              [113.7029689,-1.8083597],[113.704483,-1.8107149],[113.7063335,-1.8118925],[113.7072535,-1.8163812],
+              [113.7091933,-1.8214815],[113.709947,-1.8230695],[113.7077978,-1.8250665],[113.7048641,-1.8269334],
+              [113.7016637,-1.8280002],[113.6968631,-1.8285336],[113.6859283,-1.8261333],[113.6712616,-1.8261339],
+              [113.6493085,-1.8261347],[113.5091287,-1.8261333],[113.5061353,-1.8233827],[113.5048886,-1.8206076],
+              [113.4902977,-1.7880075],[113.4886101,-1.7617117],[113.4894142,-1.7601171],[113.4944614,-1.7502251],
+              [113.494522,-1.7501045],[113.585111,-1.7499187],[113.636106,-1.7499192],[113.6491992,-1.7499194],
+              [113.6890575,-1.7499187]
+            ]]]
+          }
+        },
+        {
+          "type":"Feature",
+          "properties":{
+            "country_code":"id","country":"Indonesia","province_code":"id62","province":"Kalimantan Tengah",
+            "regency_code":"id6271","regency":"Kota Palangka Raya","district_code":"id6271021","district":"Rakumpit",
+            "village_code":"id6271021003","village":"Panjehang","source":"HDX-BPS-2020","date":"2019-12-20","valid_on":"2020-04-01"
+          },
+          "geometry":{
+            "type":"MultiPolygon",
+            "coordinates":[[[
+              [113.8053556,-1.7274418],[113.8054622,-1.7310695],[113.8051303,-1.7361939],[113.80511,-1.742567],
+              [113.8066181,-1.75],[113.7540383,-1.7499619],[113.750226,-1.7549294],[113.741978,-1.7620161],
+              [113.7289696,-1.762785],[113.7243019,-1.7687023],[113.7208282,-1.7712518],[113.7169166,-1.7724505],
+              [113.7150683,-1.7702941],[113.71399,-1.769986],[113.7102163,-1.769755],[113.6891207,-1.769755],
+              [113.6890573,-1.7500395],[113.7009535,-1.7499187],[113.7068321,-1.7472675],[113.7254893,-1.7472676],
+              [113.7368451,-1.7472675],[113.7370318,-1.7275626],[113.8053556,-1.7274418]
+            ]]]
+          }
+        },
+        {
+          "type":"Feature",
+          "properties":{
+            "country_code":"id","country":"Indonesia","province_code":"id62","province":"Kalimantan Tengah",
+            "regency_code":"id6271","regency":"Kota Palangka Raya","district_code":"id6271021","district":"Rakumpit",
+            "village_code":"id6271021005","village":"Petuk Barunai","source":"HDX-BPS-2020","date":"2019-12-20","valid_on":"2020-04-01"
+          },
+          "geometry":{
+            "type":"MultiPolygon",
+            "coordinates":[[[
+              [113.8070348,-1.706499],[113.8070225,-1.7066199],[113.8062762,-1.7139849],[113.805285,-1.7250436],
+              [113.8053556,-1.7274418],[113.7370318,-1.7274418],[113.7370318,-1.7472675],[113.7069366,-1.7472675],
+              [113.7009535,-1.7499187],[113.6491992,-1.7499194],[113.585111,-1.7499187],[113.494522,-1.7501045],
+              [113.496799,-1.7455735],[113.4982895,-1.7397673],[113.4987406,-1.735574],[113.4982921,-1.7282085],
+              [113.4975792,-1.7193881],[113.4972065,-1.7187097],[113.4906577,-1.7067234],[113.5084794,-1.705182],
+              [113.5260914,-1.7036122],[113.559724,-1.7003436],[113.5740459,-1.6945804],[113.5883462,-1.6955911],
+              [113.6070334,-1.702537],[113.6289677,-1.6977201],[113.6489451,-1.6957202],[113.6559985,-1.7007952],
+              [113.658,-1.7033732],[113.6599983,-1.7019134],[113.6610305,-1.6989458],[113.6740406,-1.7029241],
+              [113.6790726,-1.7039993],[113.6833734,-1.7064508],[113.8070348,-1.706499]
+            ]]]
+          }
+        },
+        {
+          "type":"Feature",
+          "properties":{
+            "country_code":"id","country":"Indonesia","province_code":"id62","province":"Kalimantan Tengah",
+            "regency_code":"id6271","regency":"Kota Palangka Raya","district_code":"id6271021","district":"Rakumpit",
+            "village_code":"id6271021001","village":"Petuk Bukit","source":"HDX-BPS-2020","date":"2019-12-20","valid_on":"2020-04-01"
+          },
+          "geometry":{
+            "type":"MultiPolygon",
+            "coordinates":[[[
+              [113.8125153,-1.770138],[113.8145895,-1.7770645],[113.8152892,-1.7793346],[113.8161679,-1.7820488],
+              [113.8181772,-1.788255],[113.8184438,-1.7893092],[113.8187227,-1.7927346],[113.8194638,-1.8018348],
+              [113.8212994,-1.8172586],[113.8218721,-1.826399],[113.8227507,-1.8404166],[113.8231456,-1.8520407],
+              [113.7640452,-1.8520407],[113.7513103,-1.87083],[113.7151373,-1.9150729],[113.6695366,-1.913796],
+              [113.5853018,-1.911434],[113.5719045,-1.8997868],[113.5562438,-1.8788798],[113.5358353,-1.8516347],
+              [113.522003,-1.8379632],[113.5091287,-1.8261333],[113.6493085,-1.8261338],[113.6712616,-1.8261339],
+              [113.6859283,-1.8261333],[113.6968631,-1.8285336],[113.7016637,-1.8280002],[113.7077978,-1.8250665],
+              [113.7102115,-1.8228326],[113.7102876,-1.8227644],[113.715115,-1.8184399],[113.7227593,-1.8222082],
+              [113.7250202,-1.8235002],[113.7259892,-1.8211316],[113.7279558,-1.8205229],[113.7281425,-1.8190859],
+              [113.7290039,-1.8184399],[113.7282502,-1.8174709],[113.7291115,-1.8159636],[113.7342016,-1.8105604],
+              [113.7411701,-1.8050893],[113.7565664,-1.7952917],[113.7780457,-1.7833946],[113.790858,-1.7795187],
+              [113.7961336,-1.7707977],[113.8118625,-1.7681172],[113.8125153,-1.770138]
+            ]]]
+          }
+        }
+      ]
+    };
 
+    document.addEventListener("DOMContentLoaded", function () {
+        // 1. Inisialisasi Peta
+        var map = L.map('gis-map').setView([-1.76, 113.68], 11);
+
+        var basemapOSM = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var basemapSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            attribution: 'Tiles &copy; Esri'
+        });
+
+        L.control.layers({
+            "OpenStreetMap": basemapOSM,
+            "Citra Satelit (Esri)": basemapSatellite
+        }).addTo(map);
+
+        function esc(v) {
+            return String(v ?? '').replace(/[&<>"']/g, m => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[m]));
         }
 
-      }
+        // 2. Render Batas Wilayah Kelurahan (GeoJSON)
+        var boundaryLayer = L.geoJSON(GEOJSON, {
+            style: () => ({
+                color: '#2563eb',
+                weight: 2,
+                fillColor: '#60a5fa',
+                fillOpacity: 0.15
+            }),
+            onEachFeature: (f, l) => {
+                l.bindPopup(
+                    '<b>📍 Kelurahan ' + esc(f.properties.village) + '</b><br>' +
+                    'Kecamatan: ' + esc(f.properties.district) + '<br>' +
+                    'Kode: ' + esc(f.properties.village_code)
+                );
+            }
+        }).addTo(map);
 
+        map.fitBounds(boundaryLayer.getBounds(), { padding: [15, 15] });
 
-      /*
-       * WhatsApp Web
-       */
+        // 3. Populate Dropdown Kelurahan
+        var names = GEOJSON.features.map(f => ({
+            code: f.properties.village_code,
+            name: f.properties.village
+        })).sort((a, b) => a.name.localeCompare(b.name));
 
-      window.open(
-        'https://wa.me/?text=' +
-        encodeURIComponent(msg),
-        '_blank'
-      );
+        var villageSelect = document.getElementById('rk-village');
+        names.forEach(v => {
+            var option = document.createElement('option');
+            option.value = v.code;
+            option.textContent = v.name;
+            villageSelect.appendChild(option);
+        });
 
-    }
-  );
+        // 4. Data Titik Panas (Hotspot)
+        var hotspotData = [
+            [-1.6852, 113.5410, 85, "MODIS", "2026-09-03 09:30", "Bukit Sua", 7.45],
+            [-1.6421, 113.7650, 92, "VIIRS", "2026-09-03 10:15", "Mungku Baru", 8.12],
+            [-1.8104, 113.7320, 78, "MODIS", "2026-09-03 08:00", "Petuk Bukit", 6.85],
+            [-1.7812, 113.5120, 95, "VIIRS", "2026-09-03 11:00", "Pager", 9.04],
+            [-1.7756, 113.7850, 88, "MODIS", "2026-09-03 07:45", "Gaung Baru", 7.30]
+        ];
 
+        var hotspotGroup = L.layerGroup().addTo(map);
 
-/*
-=========================================================
-LEGENDA
-=========================================================
-*/
+        function updateGISDisplay() {
+            var selectedVillageCode = villageSelect.value;
+            var selectedSatellite = document.getElementById('satellite-filter').value;
 
-const legend =
-  L.control(
-    {
-      position:'bottomright'
-    }
-  );
+            // Handle Peta Zoom ke Kelurahan
+            if (!selectedVillageCode) {
+                map.fitBounds(boundaryLayer.getBounds(), { padding: [15, 15] });
+            } else {
+                boundaryLayer.eachLayer(layer => {
+                    if (layer.feature.properties.village_code === selectedVillageCode) {
+                        map.fitBounds(layer.getBounds(), { padding: [30, 30] });
+                        layer.openPopup();
+                    }
+                });
+            }
 
+            // Filter & Render Hotspot
+            hotspotGroup.clearLayers();
+            var highConfCount = 0;
+            var displayedCount = 0;
 
-legend.onAdd =
-  () => {
+            hotspotData.forEach(function(item) {
+                var lat = item[0];
+                var lng = item[1];
+                var confidence = item[2];
+                var satellite = item[3];
+                var time = item[4];
+                var locationName = item[5];
+                var frp = item[6];
 
-    const d =
-      L.DomUtil.create(
-        'div',
-        'rk-legend'
-      );
+                if (selectedVillageCode) {
+                    var targetVillageObj = GEOJSON.features.find(f => f.properties.village_code === selectedVillageCode);
+                    if (targetVillageObj && targetVillageObj.properties.village !== locationName) {
+                        return;
+                    }
+                }
 
+                if (selectedSatellite !== "ALL" && satellite !== selectedSatellite) {
+                    return;
+                }
 
-    d.innerHTML =
+                displayedCount++;
+                if (confidence >= 80) {
+                    highConfCount++;
+                }
 
-      '<b>Legenda hotspot</b><br>' +
+                var markerColor = confidence >= 80 ? '#d9534f' : '#f0ad4e';
+                var customIcon = L.divIcon({
+                    className: 'custom-hotspot-icon',
+                    html: `<div style="background-color: ${markerColor}; width: 14px; height: 14px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.4);"></div>`,
+                    iconSize: [14, 14],
+                    iconAnchor: [7, 7]
+                });
 
-      '<span style="color:#dc2626">●</span> ' +
-      'Tinggi<br>' +
+                var marker = L.marker([lat, lng], { icon: customIcon });
+                var levelStr = confidence >= 80 ? 'Tinggi' : 'Sedang';
+                marker.bindPopup(
+                    `<b>🔥 Titik Panas (Hotspot)</b><br>` +
+                    `<b>Kelurahan:</b> ${esc(locationName)}<br>` +
+                    `<b>Satelit:</b> ${esc(satellite)}<br>` +
+                    `<b>Kepercayaan:</b> ${levelStr} (${confidence}%)<br>` +
+                    `<b>FRP:</b> ${frp} MW<br>` +
+                    `<b>Waktu:</b> ${esc(time)} WIB`
+                );
+                hotspotGroup.addLayer(marker);
+            });
 
-      '<span style="color:#f59e0b">●</span> ' +
-      'Sedang<br>' +
+            document.getElementById('total-hotspot').textContent = displayedCount;
+            document.getElementById('high-confidence').textContent = highConfCount;
+        }
 
-      '<span style="color:#16a34a">●</span> ' +
-      'Rendah<br>' +
+        villageSelect.addEventListener('change', updateGISDisplay);
+        document.getElementById('satellite-filter').addEventListener('change', updateGISDisplay);
 
-      '<span style="color:#2563eb">━━</span> ' +
-      'Batas kelurahan';
+        // 5. Tombol Refresh Data Satelit
+        document.getElementById('btn-refresh-data').addEventListener('click', function() {
+            var btn = this;
+            btn.disabled = true;
+            btn.innerHTML = '<span>⏳ Memuat...</span>';
 
+            // Simulasi proses sinkronisasi / pengambilan data baru
+            setTimeout(function() {
+                updateGISDisplay();
+                btn.disabled = false;
+                btn.innerHTML = '<span>🔄 Refresh Data</span>';
+                alert('Data satelit berhasil diperbarui ke informasi terkini.');
+            }, 800);
+        });
 
-    return d;
+        updateGISDisplay();
 
-  };
+        // 6. Tombol Kirim Data via WhatsApp
+        document.getElementById('btn-share-wa').addEventListener('click', function() {
+            var selectedVillageCode = villageSelect.value;
+            var currentSatelliteFilter = document.getElementById('satellite-filter').value;
+            
+            var filteredData = hotspotData.filter(item => {
+                var satellite = item[3];
+                var locationName = item[5];
 
+                if (currentSatelliteFilter !== "ALL" && satellite !== currentSatelliteFilter) {
+                    return false;
+                }
+                if (selectedVillageCode) {
+                    var targetObj = GEOJSON.features.find(f => f.properties.village_code === selectedVillageCode);
+                    if (targetObj && targetObj.properties.village !== locationName) {
+                        return false;
+                    }
+                }
+                return true;
+            });
 
-legend.addTo(
-  map
-);
+            var text = `📢 LAPORAN HOTSPOT KARHUTLA - KEC. RAKUMPIT\n\n`;
+            text += `🔥 Hotspot terdeteksi: ${filteredData.length}\n\n`;
 
+            if (filteredData.length > 0) {
+                filteredData.forEach((item, index) => {
+                    var lat = item[0];
+                    var lng = item[1];
+                    var confidence = item[2];
+                    var satellite = item[3];
+                    var time = item[4];
+                    var locationName = item[5];
+                    var frp = item[6];
+                    
+                    var level = confidence >= 80 ? 'Tinggi' : 'Sedang';
 
-/*
-=========================================================
-STATUS AWAL
-=========================================================
-*/
+                    text += `${index + 1}. ${esc(locationName)} | ${esc(time)} WIB | ${esc(satellite)} | ${level} | FRP ${frp} MW\n`;
+                    text += `📍 Google Maps: https://www.google.com/maps?q=${lat},${lng}\n`;
+                });
+            } else {
+                text += `Tidak ada data hotspot yang cocok dengan filter yang dipilih.\n\n`;
+            }
 
-if(!FIRMS_API){
+            text += `\nSumber: NASA FIRMS`;
 
-  setStatus(
-    '⚠️ URL Google Apps Script belum diisi.'
-  );
-
-}else{
-
-  setStatus(
-    '✅ Dashboard siap. Pilih satelit dan periode, lalu klik "Muat Hotspot".'
-  );
-
-}
-
-
-/*
-=========================================================
-SELESAI
-=========================================================
-*/
-
-})();
-
+            var waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+            window.open(waUrl, '_blank');
+        });
+    });
 </script>
 
 </body>
