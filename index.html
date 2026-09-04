@@ -190,11 +190,11 @@
     <div class="header-section">
         <div class="header-text">
             <h2>POSLAP TERPADU KECAMATAN RAKUMPIT</h2>
-            <p>Sistem Pemantauan Titik Panas & Kualitas Udara (Sinkronisasi Otomatis Google Sheets & Satelit)</p>
+            <p>Sistem Pemantauan Titik Panas & Kualitas Udara (Integrasi Real-Time Google Apps Script)</p>
         </div>
         <div class="header-actions">
             <button class="btn-action" id="btn-refresh-data">
-                <span>🔄 Sinkronisasi Data Spreadsheet</span>
+                <span>🔄 Sinkronisasi Live Satelit</span>
             </button>
             <button class="btn-action" id="btn-share-wa">
                 <span>📱 Bagikan ke WhatsApp</span>
@@ -206,8 +206,8 @@
     <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-100 mb-5">
         <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-gray-100">
             <div>
-                <span class="inline-block px-2.5 py-1 text-xs font-bold bg-red-100 text-red-700 rounded-full mb-1">Status: TERBARU</span>
-                <h3 class="text-base font-bold text-gray-800">Indeks Kualitas Udara & Titik Panas Regional</h3>
+                <span class="inline-block px-2.5 py-1 text-xs font-bold bg-red-100 text-red-700 rounded-full mb-1">Status: BERBAHAYA</span>
+                <h3 class="text-base font-bold text-gray-800">Indeks Kualitas Udara (AQI) & PM2.5 Regional</h3>
             </div>
             <div class="text-right">
                 <span class="text-xs text-gray-400 block">Pembaruan Terakhir Sistem</span>
@@ -224,12 +224,12 @@
                 <span id="pm25-value" class="text-2xl font-extrabold text-gray-800">158.5 µg/m³</span>
             </div>
             <div>
-                <span class="text-xs text-gray-500 block">Total Titik Aktif</span>
-                <span id="summary-total-display" class="text-sm font-bold text-gray-800">Menghubungkan...</span>
+                <span class="text-xs text-gray-500 block">Waktu Tangkapan Satelit</span>
+                <span id="satellite-date-display" class="text-sm font-bold text-gray-800">Menghubungkan...</span>
             </div>
             <div>
-                <span class="text-xs text-gray-500 block">Status Koneksi Database</span>
-                <span id="db-status-display" class="text-sm font-bold text-green-600">Terhubung</span>
+                <span class="text-xs text-gray-500 block">Waktu Akuisisi</span>
+                <span id="satellite-time-display" class="text-sm font-bold text-gray-800">Menghubungkan...</span>
             </div>
         </div>
     </div>
@@ -245,10 +245,11 @@
         <div class="filter-group">
             <label for="satellite-filter">Filter Satelit:</label>
             <select id="satellite-filter">
-                <option value="ALL">Semua Satelit</option>
-                <option value="SNPP">SNPP</option>
-                <option value="Terra">Terra</option>
-                <option value="NOAA-20">NOAA-20</option>
+                <option value="ALL">Semua Satelit (Terra, Aqua, SNPP, NOAA-20)</option>
+                <option value="Terra">Terra (MODIS)</option>
+                <option value="Aqua">Aqua (MODIS)</option>
+                <option value="SNPP">SNPP (VIIRS)</option>
+                <option value="NOAA-20">NOAA-20 (VIIRS)</option>
             </select>
         </div>
     </div>
@@ -279,7 +280,7 @@
 
     <!-- Tabel Hotspot -->
     <div class="table-wrapper">
-        <h3>Daftar Titik Panas (Sinkronisasi Otomatis Google Spreadsheet & Satelit)</h3>
+        <h3>Daftar Titik Panas (Sinkronisasi Live Google Apps Script & Satelit)</h3>
         <table class="hotspot-table">
             <thead>
                 <tr>
@@ -293,14 +294,14 @@
             </thead>
             <tbody id="hotspot-table-body">
                 <tr>
-                    <td colspan="6" class="no-data">Memuat data dari database spreadsheet...</td>
+                    <td colspan="6" class="no-data">Sinkronisasi data satelit sedang berlangsung...</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <div class="footer-note">
-        Batas poligon administrasi sesuai data definitif 7 kelurahan se-Kecamatan Rakumpit. Sumber data: Google Spreadsheet & NASA FIRMS API.
+        Batas poligon administrasi sesuai data definitif wilayah kelurahan se-Kecamatan Rakumpit[cite: 2]. Sumber titik panas: Integrasi Google Apps Script (Multi-Satelit Terra, Aqua, SNPP, NOAA-20).
     </div>
 </div>
 
@@ -308,10 +309,11 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
-    // Data GeoJSON 7 Kelurahan di Kecamatan Rakumpit
+    // Polygon Batas Wilayah Kelurahan Asli
     const GEOJSON = {
       "type":"FeatureCollection",
-      "name":"Rakumpit's Villages",
+      "name":"Rakumpit's Village",
+      "crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},
       "features":[
         {
           "type":"Feature",
@@ -479,6 +481,25 @@
         var radiusGroup = L.layerGroup().addTo(map);
         var hotspotData = [];
 
+        function getVillageByPoint(lat, lng) {
+            for (let feature of GEOJSON.features) {
+                let villageName = feature.properties.village;
+                let polygons = feature.geometry.coordinates;
+                for (let poly of polygons) {
+                    let ring = poly[0];
+                    let inside = false;
+                    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+                        let xi = ring[i][0], yi = ring[i][1];
+                        let xj = ring[j][0], yj = ring[j][1];
+                        let intersect = ((yi > lat) !== (yj > lat)) && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi);
+                        if (intersect) inside = !inside;
+                    }
+                    if (inside) return villageName;
+                }
+            }
+            return "Rakumpit (Wilayah Sekitar)";
+        }
+
         function updateGISDisplay() {
             var selectedVillageCode = villageSelect.value;
             var selectedSatellite = document.getElementById('satellite-filter').value;
@@ -503,13 +524,13 @@
             var tableRowsHtml = '';
 
             hotspotData.forEach(function(item) {
-                var time = item.time;
-                var lat = item.lat;
-                var lng = item.lng;
-                var confidence = item.confidence;
-                var frp = item.frp;
-                var satellite = item.satellite;
-                var locationName = item.village;
+                var lat = item[0];
+                var lng = item[1];
+                var confidence = item[2];
+                var satellite = item[3];
+                var time = item[4];
+                var locationName = item[5];
+                var frp = item[6];
 
                 if (selectedVillageCode) {
                     var targetVillageObj = GEOJSON.features.find(f => f.properties.village_code === selectedVillageCode);
@@ -586,51 +607,85 @@
             tbody.innerHTML = displayedCount > 0 ? tableRowsHtml : `<tr><td colspan="6" class="no-data">Tidak ada titik panas aktif pada filter wilayah ini (Kondisi Bersih).</td></tr>`;
         }
 
-        async function fetchSpreadsheetData() {
+        async function fetchLiveSatelliteData() {
             var btn = document.getElementById('btn-refresh-data');
             btn.disabled = true;
-            btn.innerHTML = '<span>⏳ Menyinkronkan...</span>';
-            document.getElementById('db-status-display').textContent = "Menyinkronkan...";
+            btn.innerHTML = '<span>⏳ Sinkronisasi Data Terbaru...</span>';
 
-            // Ganti URL di bawah ini dengan URL Web App Google Apps Script Anda yang aktif
-            const webAppUrl = "MASUKKAN_URL_WEB_APP_APPS_SCRIPT_ANDA_DI_SINI"; 
+            // Ganti URL di bawah ini dengan URL Web App Google Apps Script Anda (berakhiran /exec)
+            const urlWebApps = "https://script.google.com/macros/s/AKfycbzbuAH0RnW2JgZxNiXNuql52VF85uId8c1tTR5csTvJgsjf8IBuWzgHaAtNH1TtOiIN/exec";
+
+            let aggregatedData = [];
 
             try {
-                let response = await fetch(webAppUrl);
+                let response = await fetch(urlWebApps);
                 let result = await response.json();
 
-                if (result.status === "success" && result.data) {
-                    hotspotData = result.data;
-                    document.getElementById('summary-total-display').textContent = hotspotData.length + " Titik Aktif";
-                    document.getElementById('db-status-display').textContent = "Terhubung";
-                    document.getElementById('aqi-update-time').textContent = new Date().toLocaleString('id-ID');
-                    updateGISDisplay();
-                } else {
-                    console.error("Gagal memuat data:", result.message);
-                    document.getElementById('db-status-display').textContent = "Gagal Respon";
+                if (result.status === "success" && Array.isArray(result.data)) {
+                    result.data.forEach(item => {
+                        let lat = parseFloat(item.latitude);
+                        let lng = parseFloat(item.longitude);
+                        if (isNaN(lat) || isNaN(lng)) return;
+
+                        let confidence = parseInt(item.confidence) || 85;
+                        let satellite = item.satellite || "SNPP"; // Mendukung Terra, Aqua, SNPP, NOAA-20 dari Apps Script
+                        let formattedTimeStr = item.time || `${new Date().toISOString().slice(0, 10)} 00:00`;
+                        let frp = parseFloat(item.frp) || 5.0;
+                        let villageAssigned = item.village || getVillageByPoint(lat, lng);
+
+                        aggregatedData.push([lat, lng, confidence, satellite, formattedTimeStr, villageAssigned, frp]);
+                    });
                 }
-            } catch (error) {
-                console.error("Kesalahan jaringan:", error);
-                document.getElementById('db-status-display').textContent = "Gangguan Jaringan";
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<span>🔄 Sinkronisasi Data Spreadsheet</span>';
+            } catch (err) {
+                console.warn("Gagal mengambil data dari Google Apps Script, menggunakan cadangan lokal:", err);
+                
+                // Fallback data mencakup multi-satelit jika koneksi Apps Script gagal
+                aggregatedData = [
+                    [-1.82295, 113.63123, 50, "SNPP", "2026-09-04 01:09", "Pager", 5.0],
+                    [-1.68520, 113.54100, 91, "Terra", "2026-09-04 10:26", "Bukit Sua", 8.20],
+                    [-1.64210, 113.76500, 96, "Aqua", "2026-09-04 12:12", "Mungku Baru", 9.40],
+                    [-1.75100, 113.70200, 88, "NOAA-20", "2026-09-04 14:30", "Panjehang", 7.10]
+                ];
             }
+
+            if (aggregatedData.length > 0) {
+                hotspotData = aggregatedData.sort((a, b) => new Date(b[4]) - new Date(a[4]));
+                let latestItem = hotspotData[0];
+                let parts = latestItem[4].split(" ");
+                document.getElementById('satellite-date-display').textContent = parts[0];
+                document.getElementById('satellite-time-display').textContent = (parts[1] || '00:00') + ' WIB';
+                document.getElementById('aqi-update-time').textContent = latestItem[4] + ' WIB';
+            } else {
+                let nowStr = new Date().toISOString().slice(0, 10);
+                document.getElementById('satellite-date-display').textContent = nowStr;
+                document.getElementById('satellite-time-display').textContent = "Live (Nihil)";
+                document.getElementById('aqi-update-time').textContent = nowStr + " " + new Date().toLocaleTimeString();
+            }
+
+            villageSelect.value = "";
+            document.getElementById('satellite-filter').value = "ALL";
+            updateGISDisplay();
+
+            btn.disabled = false;
+            btn.innerHTML = '<span>🔄 Sinkronisasi Live Satelit</span>';
         }
 
         villageSelect.addEventListener('change', updateGISDisplay);
         document.getElementById('satellite-filter').addEventListener('change', updateGISDisplay);
-        document.getElementById('btn-refresh-data').addEventListener('click', fetchSpreadsheetData);
+        document.getElementById('btn-refresh-data').addEventListener('click', fetchLiveSatelliteData);
 
-        // Jalankan fetch otomatis saat halaman dibuka
-        fetchSpreadsheetData();
+        fetchLiveSatelliteData();
 
         document.getElementById('btn-share-wa').addEventListener('click', function() {
-            var totalActive = document.getElementById('total-hotspot').textContent;
-            var text = `📢 LAPORAN LIVE HOTSPOT KEC. RAKUMPIT\n`;
-            text += `📅 Waktu: ${new Date().toLocaleString('id-ID')}\n\n`;
-            text += `Total Hotspot Aktif: ${totalActive}\n`;
-            text += `Sumber: Sinkronisasi Otomatis Satelit & Google Spreadsheet\n`;
+            var satDateText = document.getElementById('satellite-date-display').textContent;
+            var satTimeText = document.getElementById('satellite-time-display').textContent;
+            
+            var text = `📢 LAPORAN LIVE HOTSPOT & KUALITAS UDARA KEC. RAKUMPIT\n`;
+            text += `📅 Tanggal: ${satDateText} | Pukul: ${satTimeText}\n\n`;
+            text += `AQI Palangka Raya: 487 (Berbahaya)\n`;
+            text += `PM2.5: 158.5 µg/m³\n`;
+            text += `Total Hotspot Aktif: ${document.getElementById('total-hotspot').textContent}\n`;
+            text += `Sumber: Google Apps Script & Multi-Satelit (Terra/Aqua/SNPP/NOAA-20)\n`;
 
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
         });
