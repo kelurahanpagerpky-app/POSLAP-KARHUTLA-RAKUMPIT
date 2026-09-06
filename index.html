@@ -320,7 +320,26 @@
             style: { color: '#059669', weight: 2, fillColor: '#10b981', fillOpacity: 0.08 },
             onEachFeature: function(feature, layer) {
                 var vName = feature.properties.village;
+                var vCode = feature.properties.village_code || "-";
+                var dName = feature.properties.district || "Rakumpit";
+                var cityName = "Kota Palangka Raya";
+
+                // Menghitung perkiraan luas poligon secara otomatis menggunakan Turf.js (dalam kilometer persegi)
+                var areaSqKm = turf.area(feature) / 1000000;
+                var areaFormatted = areaSqKm.toFixed(2) + " km²";
+
                 villageLayers[vName] = layer;
+
+                // Tambahkan pop-up informasi wilayah saat poligon diklik
+                layer.bindPopup(
+                    `<b>📍 Informasi Wilayah</b><br>` +
+                    `Kelurahan: ${esc(vName)}<br>` +
+                    `ID Wilayah: ${esc(vCode)}<br>` +
+                    `Luas Wilayah: ${esc(areaFormatted)}<br>` +
+                    `Kecamatan: ${esc(dName)}<br>` +
+                    `Kota: ${esc(cityName)}`
+                );
+
                 var opt = document.createElement('option');
                 opt.value = vName;
                 opt.textContent = vName;
