@@ -336,7 +336,6 @@
         function formatSatelliteTime(timeStr) {
             if (!timeStr || timeStr === "-") return "-";
             
-            // Pemetaan nama hari dan bulan ke bahasa Indonesia
             const daysMap = {
                 'Sun': 'Minggu', 'Mon': 'Senin', 'Tue': 'Selasa', 'Wed': 'Rabu', 
                 'Thu': 'Kamis', 'Fri': 'Jumat', 'Sat': 'Sabtu'
@@ -432,6 +431,13 @@
                 if (matchVillage && matchSat) {
                     filtered.push(hObj);
                 }
+            });
+
+            // LOGIKA PENGURUTAN: Urutkan data dari waktu terbaru ke terlama
+            filtered.sort(function(a, b) {
+                let timeA = Date.parse(a.time.replace(" WIB", "")) || 0;
+                let timeB = Date.parse(b.time.replace(" WIB", "")) || 0;
+                return timeB - timeA; 
             });
 
             globalFilteredHotspots = filtered;
