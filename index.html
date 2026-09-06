@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring Titik Panas - POSLAP TERPADU KECAMATAN RAKUMPIT</title>
+    <title>Monitoring Titik Panas - POSLAP TERPADU KARHUTLA KECAMATAN RAKUMPIT</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -47,7 +47,7 @@
                     PR
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight leading-tight">POSLAP TERPADU</h1>
+                    <h1 class="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight leading-tight">POSLAP TERPADU KARHUTLA</h1>
                     <p class="text-xs text-emerald-700 font-medium">Kecamatan Rakumpit</p>
                 </div>
             </div>
@@ -83,7 +83,7 @@
             <div class="space-y-2 relative z-10">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/25 backdrop-blur-md text-white border border-white/15">
                     <span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
-                    Terhubung Google Apps Script & Database Spreadsheet NASA FIRMS
+                    Terhubung Menggunakan Google Apps Script & Database dari NASA FIRMS
                 </span>
                 <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Dashboard Siaga Kebakaran Hutan & Lahan</h2>
                 <p class="text-emerald-100 text-sm max-w-2xl font-normal leading-relaxed">
@@ -477,7 +477,7 @@
                             <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-bold ${h.confidence >= 80 ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'}">${h.confidence}%</span></td>
                             <td class="py-3 px-4 font-bold text-slate-800">${h.frp} MW</td>
                             <td class="py-3 px-4 text-slate-700">Lat ${h.lat}, Long ${h.lng}
-                            <br><a href="${routeUrl}" target="_blank" class="route-btn">Buka di Google Maps</a></td>
+                            <br><a href="${routeUrl}" target="_blank" class="route-btn">Buka di Google Maps</a></br></td>
                         </tr>
                     `;
                 });
