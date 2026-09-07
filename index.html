@@ -316,15 +316,42 @@
         var villageSelect = document.getElementById('rk-village');
         var villageLayers = {};
 
-        L.geoJSON(GEOJSON, {
-            style: { color: '#059669', weight: 2, fillColor: '#10b981', fillOpacity: 0.08 },
+        // Fungsi Pewarnaan Berdasarkan Kode Kelurahan
+        function getVillageColor(code) {
+            switch (code) {
+                case 'id6271021001': return '#e74c3c'; // Petuk Bukit
+                case 'id6271021002': return '#3498db'; // Pager
+                case 'id6271021003': return '#2ecc71'; // Panjehang
+                case 'id6271021004': return '#9b59b6'; // Gaung Baru
+                case 'id6271021005': return '#e67e22'; // Petuk Barunai
+                case 'id6271021006': return '#f1c40f'; // Mungku Baru
+                case 'id6271021007': return '#1abc9c'; // Bukit Sua
+                default: return '#95a5a6';
+            }
+        }
+
+        // Style Visual Poligon Wilayah
+        function styleFeature(feature) {
+            return {
+                fillColor: getVillageColor(feature.properties.village_code),
+                weight: 2,
+                opacity: 1,
+                color: '#ffffff',
+                dashArray: '3',
+                fillOpacity: 0.55
+            };
+        }
+
+        // Render Layer GeoJSON Wilayah dengan Interaksi Hover & Popup
+        var geoJsonLayer = L.geoJSON(GEOJSON, {
+            style: styleFeature,
             onEachFeature: function(feature, layer) {
                 var vName = feature.properties.village;
                 var vCode = feature.properties.village_code || "-";
                 var dName = feature.properties.district || "Rakumpit";
                 var cityName = "Kota Palangka Raya";
 
-                // Menghitung perkiraan luas poligon secara otomatis menggunakan Turf.js (dalam kilometer persegi)
+                // Menghitung luas poligon secara otomatis menggunakan Turf.js
                 var areaSqKm = turf.area(feature) / 1000000;
                 var areaFormatted = areaSqKm.toFixed(2) + " km²";
 
@@ -340,12 +367,29 @@
                     `Kota: ${esc(cityName)}`
                 );
 
+                // Efek interaktif hover mouse pada poligon
+                layer.on({
+                    mouseover: function(e) {
+                        var l = e.target;
+                        l.setStyle({
+                            weight: 3,
+                            fillOpacity: 0.8
+                        });
+                    },
+                    mouseout: function(e) {
+                        geoJsonLayer.resetStyle(e.target);
+                    }
+                });
+
                 var opt = document.createElement('option');
                 opt.value = vName;
                 opt.textContent = vName;
                 villageSelect.appendChild(opt);
             }
         }).addTo(map);
+
+        // Sesuaikan batas tampilan peta agar pas dengan seluruh wilayah Rakumpit
+        map.fitBounds(geoJsonLayer.getBounds());
 
         function esc(str) {
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -489,7 +533,7 @@
                         `FRP: ${h.frp} MW<br>` +
                         `Waktu Satelit: ${esc(h.time)}<br>` +
                         `Lat, Long: ${h.lat}, ${h.lng}<br>` +
-                        `<a href="${routeUrl}" target="_blank" class="route-btn">🗺️ Titik lokasi Google Maps</a>`
+                        `<a href="${routeUrl}" target="_blank" class="route-btn">🗺️ Menuju Google Maps</a>`
                     );
 
                     hotspotGroup.addLayer(marker);
