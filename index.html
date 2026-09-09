@@ -35,6 +35,30 @@
         .route-btn:hover {
             background-color: #1d4ed8;
         }
+        /* Popup titik panas bergaya card modern: hilangkan padding bawaan Leaflet */
+        .hotspot-popup .leaflet-popup-content-wrapper {
+            padding: 0;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.3);
+        }
+        .hotspot-popup .leaflet-popup-content {
+            margin: 0;
+            width: 256px !important;
+        }
+        .hotspot-popup .leaflet-popup-tip {
+            box-shadow: 0 8px 16px -4px rgba(15, 23, 42, 0.2);
+        }
+        .hotspot-popup .leaflet-popup-close-button {
+            color: #fff !important;
+            top: 8px !important;
+            right: 8px !important;
+            font-size: 18px !important;
+            opacity: 0.85;
+        }
+        .hotspot-popup .leaflet-popup-close-button:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
@@ -160,7 +184,13 @@
 
         <!-- Tabel -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs overflow-hidden space-y-4">
-            <h3 class="text-base font-bold text-slate-800">Daftar Titik Panas (Wilayah Kecamatan Rakumpit)</h3>
+            <div class="flex items-center justify-between flex-wrap gap-3">
+                <h3 class="text-base font-bold text-slate-800">Daftar Titik Panas (Wilayah Kecamatan Rakumpit)</h3>
+                <div class="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 gap-1" id="time-range-toggle">
+                    <button type="button" data-range="TODAY" class="time-range-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all">Hari Ini</button>
+                    <button type="button" data-range="24H" class="time-range-btn px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all">24 Jam Terakhir</button>
+                </div>
+            </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse text-sm">
                     <thead>
@@ -181,12 +211,44 @@
         </div>
     </main>
 
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-200 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 text-center">
+            <p class="text-xs text-slate-500 font-medium">
+                Penata Kelola Sistem dan Teknologi Informasi Kelurahan Pager - MHC 2026
+            </p>
+        </div>
+    </footer>
+
     <!-- Leaflet JS & Script Utama -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
     <script>
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzF7GFRaAuz_4_7D00HAjGZqWEI_nV95e_Hj5BQ2Xj-3U74IAhc96kDpcL-mYJ5fIbp/exec"; 
         let globalFilteredHotspots = [];
+        let currentTimeRange = 'TODAY'; // Default: hanya tampilkan data hari ini
+
+        // Mengembalikan tanggal hari ini di zona WIB dalam format YYYY-MM-DD,
+        // dipakai untuk filter "Hari Ini" (bukan tanggal lokal perangkat).
+        function getTodayWIB() {
+            return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
+        }
+
+        // Mengubah string waktu hotspot "YYYY-MM-DD HH:MM WIB" menjadi epoch UTC
+        // yang valid, supaya bisa dibandingkan akurat dengan waktu saat ini
+        // untuk filter "24 Jam Terakhir".
+        function parseHotspotEpochUTC(timeStr) {
+            if (!timeStr) return 0;
+            const clean = timeStr.replace(' WIB', '');
+            const [datePart, timePart] = clean.split(' ');
+            if (!datePart || !timePart) return 0;
+            const [y, m, d] = datePart.split('-').map(Number);
+            const [hh, mm] = timePart.split(':').map(Number);
+            if (!y || !m || !d) return 0;
+            // Angka di timeStr adalah waktu WIB (UTC+7), jadi dikurangi 7 jam
+            // untuk mendapatkan epoch UTC yang sesungguhnya.
+            return Date.UTC(y, m - 1, d, hh, mm) - (7 * 60 * 60 * 1000);
+        }
 
         const GEOJSON = {
             "type": "FeatureCollection",
@@ -436,6 +498,30 @@
             return timeStr;
         }
 
+        // Menyorot tombol rentang waktu yang sedang aktif (Hari Ini / 24 Jam Terakhir)
+        function updateTimeRangeButtons() {
+            document.querySelectorAll('.time-range-btn').forEach(btn => {
+                const isActive = btn.dataset.range === currentTimeRange;
+                btn.classList.toggle('bg-emerald-600', isActive);
+                btn.classList.toggle('text-white', isActive);
+                btn.classList.toggle('shadow-sm', isActive);
+                btn.classList.toggle('text-slate-500', !isActive);
+                btn.classList.toggle('hover:bg-slate-200', !isActive);
+            });
+        }
+
+        // Warna khas per satelit dipakai untuk badge di tabel & popup
+        const SATELLITE_COLORS = {
+            'SNPP': '#f59e0b',
+            'NOAA-20': '#dc2626',
+            'NOAA-21': '#7c3aed',
+            'Terra': '#0ea5e9',
+            'Aqua': '#059669'
+        };
+        function getSatelliteColor(name) {
+            return SATELLITE_COLORS[name] || '#64748b';
+        }
+
         async function fetchRealtimeData(isUpdate = false) {
             let btn = document.getElementById('btn-update-satellite');
             if (isUpdate) {
@@ -479,6 +565,9 @@
 
             const selectedVillage = villageSelect.value;
             const selectedSat = document.getElementById('satellite-filter').value;
+            const selectedTimeRange = currentTimeRange;
+            const todayWIB = getTodayWIB();
+            const nowMillis = Date.now();
 
             hotspotGroup.clearLayers();
 
@@ -506,7 +595,15 @@
                 let matchVillage = !selectedVillage || hObj.village === selectedVillage;
                 let matchSat = selectedSat === 'ALL' || hObj.satellite.toUpperCase().includes(selectedSat.toUpperCase());
 
-                if (matchVillage && matchSat) {
+                let matchTime = true;
+                if (selectedTimeRange === 'TODAY') {
+                    // Bandingkan tanggal (WIB) titik panas dengan tanggal hari ini (WIB)
+                    matchTime = hObj.time.slice(0, 10) === todayWIB;
+                } else if (selectedTimeRange === '24H') {
+                    matchTime = parseHotspotEpochUTC(hObj.time) >= (nowMillis - 24 * 60 * 60 * 1000);
+                }
+
+                if (matchVillage && matchSat && matchTime) {
                     filtered.push(hObj);
                 }
             });
@@ -540,15 +637,59 @@
                         radius: 8, fillColor: markerColor, color: "#fff", weight: 2, fillOpacity: 0.9
                     });
 
+                    let isHighConf = h.confidence >= 80;
+                    let headerGradient = isHighConf
+                        ? 'linear-gradient(135deg,#dc2626,#f97316)'
+                        : 'linear-gradient(135deg,#f59e0b,#fbbf24)';
+                    let satColor = getSatelliteColor(h.satellite);
+
                     marker.bindPopup(
-                        `<b>🔥 Titik Panas</b><br>` +
-                        `Kelurahan: ${esc(h.village)}<br>` +
-                        `Satelit: ${esc(h.satellite)}<br>` +
-                        `Confidence: ${h.confidence}%<br>` +
-                        `FRP: ${h.frp} MW<br>` +
-                        `Waktu Satelit: ${esc(h.time)}<br>` +
-                        `Lat, Long: ${h.lat}, ${h.lng}<br>` +
-                        `<a href="${routeUrl}" target="_blank" class="route-btn">🗺️ Menuju Google Maps</a>`
+                        `<div class="w-64 overflow-hidden rounded-2xl">` +
+                            `<div class="relative px-4 py-3.5 flex items-center gap-2.5" style="background:${headerGradient}">` +
+                                `<div class="w-8 h-8 rounded-full bg-white/25 backdrop-blur-sm flex items-center justify-center shrink-0">` +
+                                    `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-4.5 h-4.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2c-3 4-6 7.5-6 11.5A6 6 0 0012 20a6 6 0 006-6.5C18 9.5 15 6 12 2z"/></svg>` +
+                                `</div>` +
+                                `<div class="flex-1 min-w-0">` +
+                                    `<div class="text-white font-bold text-sm leading-tight">Titik Panas</div>` +
+                                    `<div class="text-white/80 text-[10px] font-medium">${esc(h.village)}</div>` +
+                                `</div>` +
+                                `<span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-white/25 text-white backdrop-blur-sm shrink-0">${h.confidence}%</span>` +
+                            `</div>` +
+                            `<div class="bg-white px-4 py-3.5 space-y-2.5 text-xs">` +
+                                `<div class="flex items-center justify-between">` +
+                                    `<span class="flex items-center gap-1.5 text-slate-400 font-medium">` +
+                                        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 15l-3-3a22 22 0 016-8c3-3 8-4 10-2s1 7-2 10a22 22 0 01-8 6l-3-3"/></svg>` +
+                                        `Satelit` +
+                                    `</span>` +
+                                    `<span class="inline-flex items-center gap-1.5 text-slate-800 font-bold">` +
+                                        `<span class="w-2 h-2 rounded-full shrink-0" style="background:${satColor}"></span>${esc(h.satellite)}` +
+                                    `</span>` +
+                                `</div>` +
+                                `<div class="flex items-center justify-between">` +
+                                    `<span class="flex items-center gap-1.5 text-slate-400 font-medium">` +
+                                        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>` +
+                                        `FRP` +
+                                    `</span>` +
+                                    `<span class="text-slate-800 font-bold">${h.frp} MW</span>` +
+                                `</div>` +
+                                `<div class="flex items-center justify-between">` +
+                                    `<span class="flex items-center gap-1.5 text-slate-400 font-medium">` +
+                                        `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>` +
+                                        `Waktu` +
+                                    `</span>` +
+                                    `<span class="text-slate-800 font-bold text-right">${esc(h.time)}</span>` +
+                                `</div>` +
+                                `<div class="flex items-center justify-between pt-2.5 mt-1 border-t border-dashed border-slate-200">` +
+                                    `<span class="text-[10px] text-slate-400 font-mono">${h.lat.toFixed(5)}, ${h.lng.toFixed(5)}</span>` +
+                                `</div>` +
+                                `<a href="${routeUrl}" target="_blank" ` +
+                                    `class="flex items-center justify-center gap-1.5 w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm">` +
+                                    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>` +
+                                    `Buka di Google Maps` +
+                                `</a>` +
+                            `</div>` +
+                        `</div>`,
+                        { className: 'hotspot-popup', minWidth: 256 }
                     );
 
                     hotspotGroup.addLayer(marker);
@@ -557,7 +698,11 @@
                         <tr class="hover:bg-slate-50 transition-colors">
                             <td class="py-3 px-4 font-medium text-slate-700">${esc(h.time)}</td>
                             <td class="py-3 px-4 text-slate-700">${esc(h.village)}</td>
-                            <td class="py-3 px-4 text-slate-700 font-semibold">${esc(h.satellite)}</td>
+                            <td class="py-3 px-4 text-slate-700 font-semibold">
+                                <span class="inline-flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full shrink-0" style="background:${getSatelliteColor(h.satellite)}"></span>${esc(h.satellite)}
+                                </span>
+                            </td>
                             <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs font-bold ${h.confidence >= 80 ? 'bg-rose-100 text-rose-700' : 'bg-amber-100 text-amber-700'}">${h.confidence}%</span></td>
                             <td class="py-3 px-4 font-bold text-slate-800">${h.frp} MW</td>
                             <td class="py-3 px-4 text-slate-700">Lat ${h.lat}, Long ${h.lng}
@@ -572,6 +717,8 @@
             document.getElementById('affected-villages').textContent = affectedSet.size;
             document.getElementById('max-frp').innerHTML = maxFrpVal.toFixed(1) + ` <span class="text-sm font-bold">MW</span>`;
             document.getElementById('hotspot-table-body').innerHTML = tableRowsHtml;
+
+            updateTimeRangeButtons();
 
             // Perbarui waktu update dashboard terakhir dengan format zona waktu WIB
             const now = new Date();
@@ -598,9 +745,12 @@
             }
 
             let updateTimeText = document.getElementById('last-update-time').textContent;
+            let rangeLabels = { TODAY: 'Hari Ini', '24H': '24 Jam Terakhir' };
+            let rangeText = rangeLabels[currentTimeRange] || 'Hari Ini';
 
             let message = `🚨 *LAPORAN MONITORING TITIK PANAS (HOTSPOT)*\n`;
             message += `📍 *Poslap Terpadu Kecamatan Rakumpit*\n`;
+            message += `🗓️ *Rentang Data:* ${rangeText}\n`;
             message += `🕒 *Update Data Dashboard:* ${updateTimeText}\n`;
             message += `📊 Total Titik Terpantau: ${globalFilteredHotspots.length}\n\n`;
 
@@ -626,6 +776,13 @@
         document.getElementById('btn-refresh-data').addEventListener('click', () => fetchRealtimeData(false));
         document.getElementById('rk-village').addEventListener('change', () => fetchRealtimeData(false));
         document.getElementById('satellite-filter').addEventListener('change', () => fetchRealtimeData(false));
+        document.querySelectorAll('.time-range-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (currentTimeRange === btn.dataset.range) return;
+                currentTimeRange = btn.dataset.range;
+                fetchRealtimeData(false);
+            });
+        });
 
         // Muat data otomatis saat halaman dibuka
         fetchRealtimeData(false);
