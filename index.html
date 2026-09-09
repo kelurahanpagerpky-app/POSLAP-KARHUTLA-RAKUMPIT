@@ -425,14 +425,44 @@
 
                 villageLayers[vName] = layer;
 
-                // Tambahkan pop-up informasi wilayah saat poligon diklik
+                // Tambahkan pop-up informasi wilayah bergaya card modern saat poligon diklik
+                var villageColor = getVillageColor(vCode);
                 layer.bindPopup(
-                    `<b>📍 Informasi Wilayah</b><br>` +
-                    `Kelurahan: ${esc(vName)}<br>` +
-                    `ID Wilayah: ${esc(vCode)}<br>` +
-                    `Luas Wilayah: ${esc(areaFormatted)}<br>` +
-                    `Kecamatan: ${esc(dName)}<br>` +
-                    `Kota: ${esc(cityName)}`
+                    `<div class="w-64 overflow-hidden rounded-2xl">` +
+                        `<div class="relative px-4 py-3.5 flex items-center gap-2.5" style="background:${villageColor}">` +
+                            `<div class="w-8 h-8 rounded-full bg-white/25 backdrop-blur-sm flex items-center justify-center shrink-0">` +
+                                `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-4.5 h-4.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21c-4.5-4.2-7-8-7-11a7 7 0 1114 0c0 3-2.5 6.8-7 11z"/><circle cx="12" cy="10" r="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>` +
+                            `</div>` +
+                            `<div class="flex-1 min-w-0">` +
+                                `<div class="text-white font-bold text-sm leading-tight">${esc(vName)}</div>` +
+                                `<div class="text-white/80 text-[10px] font-medium">Kelurahan ${esc(dName)}</div>` +
+                            `</div>` +
+                        `</div>` +
+                        `<div class="bg-white px-4 py-3.5 space-y-2.5 text-xs">` +
+                            `<div class="flex items-center justify-between">` +
+                                `<span class="flex items-center gap-1.5 text-slate-400 font-medium">` +
+                                    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>` +
+                                    `ID Wilayah` +
+                                `</span>` +
+                                `<span class="text-slate-800 font-bold font-mono text-[11px]">${esc(vCode)}</span>` +
+                            `</div>` +
+                            `<div class="flex items-center justify-between">` +
+                                `<span class="flex items-center gap-1.5 text-slate-400 font-medium">` +
+                                    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4h4M4 16v4h4M20 8V4h-4M20 16v4h-4"/></svg>` +
+                                    `Luas Wilayah` +
+                                `</span>` +
+                                `<span class="text-slate-800 font-bold">${esc(areaFormatted)}</span>` +
+                            `</div>` +
+                            `<div class="flex items-center justify-between pt-2.5 mt-1 border-t border-dashed border-slate-200">` +
+                                `<span class="flex items-center gap-1.5 text-slate-400 font-medium">` +
+                                    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1"/></svg>` +
+                                    `Kecamatan / Kota` +
+                                `</span>` +
+                                `<span class="text-slate-800 font-bold text-right">${esc(dName)}, ${esc(cityName)}</span>` +
+                            `</div>` +
+                        `</div>` +
+                    `</div>`,
+                    { className: 'hotspot-popup', minWidth: 256 }
                 );
 
                 // Efek interaktif hover mouse pada poligon
