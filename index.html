@@ -93,9 +93,15 @@
 
             <!-- Bagian Bawah Header: Waktu Update & Tombol Laporan WhatsApp -->
             <div class="pt-4 border-t border-white/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
-                <div class="text-xs text-emerald-100 font-medium flex items-center gap-2">
-                    <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span>Pembaruan Dashboard Terakhir: <strong id="last-update-time" class="text-white">-</strong></span>
+                <div class="flex flex-col gap-1">
+                    <div class="text-xs text-emerald-100 font-medium flex items-center gap-2">
+                        <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span>Pembaruan Dashboard Terakhir: <strong id="last-update-time" class="text-white">-</strong></span>
+                    </div>
+                    <div class="text-xs text-emerald-100 font-medium flex items-center gap-2">
+                        <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg>
+                        <span>Tarikan Data Satelit Terakhir: <strong id="last-satellite-pull-time" class="text-white">-</strong></span>
+                    </div>
                 </div>
 
                 <!-- Tombol Laporan ke WhatsApp -->
@@ -438,8 +444,14 @@
             }
 
             let rawHotspotData = [];
+            let lastSatelliteUpdate = null;
             try {
-                const response = await fetch(GAS_API_URL);
+                // isUpdate=true (tombol "Update Data Satelit") HARUS memicu penarikan
+                // ulang langsung dari NASA FIRMS di backend (?action=update), bukan
+                // sekadar membaca ulang sheet lama. "_=" adalah cache-buster supaya
+                // browser tidak pernah menyajikan respons JSON yang sudah kedaluwarsa.
+                const queryParams = (isUpdate ? 'action=update&' : '') + '_=' + Date.now();
+                const response = await fetch(`${GAS_API_URL}?${queryParams}`, { cache: 'no-store' });
                 const result = await response.json();
                 if (result && Array.isArray(result.hotspots)) {
                     rawHotspotData = result.hotspots;
@@ -447,6 +459,9 @@
                     rawHotspotData = result.data;
                 } else if (Array.isArray(result)) {
                     rawHotspotData = result;
+                }
+                if (result && result.lastSatelliteUpdate) {
+                    lastSatelliteUpdate = result.lastSatelliteUpdate;
                 }
                 
                 if (isUpdate) {
@@ -562,6 +577,17 @@
             const now = new Date();
             const timeString = now.toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta' }) + ' WIB';
             document.getElementById('last-update-time').textContent = timeString;
+
+            // Waktu backend benar-benar menarik data dari NASA FIRMS (bisa beda
+            // dengan waktu render dashboard di atas, karena penarikan nyata hanya
+            // terjadi lewat trigger 30 menit atau tombol "Update Data Satelit").
+            const pullEl = document.getElementById('last-satellite-pull-time');
+            if (lastSatelliteUpdate) {
+                const pullDate = new Date(lastSatelliteUpdate);
+                pullEl.textContent = pullDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' }) + ' ' + pullDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'Asia/Jakarta' }) + ' WIB';
+            } else {
+                pullEl.textContent = 'Belum pernah ditarik';
+            }
         }
 
         // Fungsi Kirim Laporan via WhatsApp dengan rincian waktu update data WIB
