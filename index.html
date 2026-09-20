@@ -641,21 +641,11 @@
                 }
             });
 
-            // Sheet kini menyimpan histori (beberapa deteksi per lokasi). Agar tidak
-            // bertumpuk, satu lokasi + satelit hanya ditampilkan sekali dengan
-            // pembacaan TERBARU di dalam rentang waktu yang dipilih.
-            const latestByLoc = {};
-            filtered.forEach(h => {
-                const key = h.lat.toFixed(3) + '_' + h.lng.toFixed(3) + '_' + h.satellite;
-                const cur = latestByLoc[key];
-                if (!cur || parseHotspotEpochUTC(h.time) > parseHotspotEpochUTC(cur.time)) latestByLoc[key] = h;
-            });
-            filtered = Object.values(latestByLoc);
-
             // LOGIKA PENGURUTAN: Urutkan data dari waktu terbaru ke terlama
-            // (pakai epoch eksplisit; Date.parse pada "YYYY-MM-DD HH:MM" tidak konsisten di Safari)
             filtered.sort(function(a, b) {
-                return parseHotspotEpochUTC(b.time) - parseHotspotEpochUTC(a.time);
+                let timeA = Date.parse(a.time.replace(" WIB", "")) || 0;
+                let timeB = Date.parse(b.time.replace(" WIB", "")) || 0;
+                return timeB - timeA; 
             });
 
             globalFilteredHotspots = filtered;
