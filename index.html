@@ -128,21 +128,11 @@
                     </div>
                 </div>
 
-                <!-- Tombol Laporan ke WhatsApp & Laporan Manual -->
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button id="btn-pdf-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        <span>Laporan PDF</span>
-                    </button>
-                    <button id="btn-manual-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-sky-600 hover:bg-sky-700 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        <span>Laporan Manual</span>
-                    </button>
-                    <button id="btn-whatsapp-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                        <span>Kirim Laporan via WhatsApp</span>
-                    </button>
-                </div>
+                <!-- Tombol Laporan ke WhatsApp -->
+                <button id="btn-whatsapp-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                    <span>Kirim Laporan via WhatsApp</span>
+                </button>
             </div>
         </div>
 
@@ -233,128 +223,13 @@
     </div>
 </footer>
 
-    <!-- Modal Laporan Kegiatan: upload foto & deskripsi tindakan per titik panas -->
-    <div id="report-modal-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] hidden items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
-            <div class="px-5 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,#059669,#10b981)">
-                <h3 class="text-white font-bold text-sm">Laporan Kegiatan</h3>
-                <button id="report-modal-close" class="text-white/80 hover:text-white text-xl leading-none">&times;</button>
-            </div>
-            <div class="p-5 space-y-3">
-                <p id="report-modal-loc" class="text-[11px] text-slate-400 font-mono"></p>
-
-                <label class="block text-xs font-semibold text-slate-600">Foto Kegiatan/Tindakan</label>
-                <input type="file" id="report-photo-input" accept="image/*"
-                    class="block w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
-                <img id="report-photo-preview" class="hidden w-full h-32 object-cover rounded-lg border border-slate-200" />
-
-                <label class="block text-xs font-semibold text-slate-600 pt-1">Uraian Aksi/Tindakan</label>
-                <textarea id="report-deskripsi" rows="3" placeholder="Contoh: Pemadaman dini oleh tim patroli, koordinasi dengan BPBD, dll."
-                    class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
-
-                <label class="block text-xs font-semibold text-slate-600 pt-1">Nama Pelapor (opsional)</label>
-                <input type="text" id="report-pelapor" placeholder="Nama petugas/pelapor"
-                    class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-
-                <p id="report-modal-error" class="hidden text-[11px] text-rose-600 font-medium"></p>
-
-                <button id="report-submit-btn"
-                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm disabled:opacity-50">
-                    Kirim Laporan
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Laporan PDF: pilih cakupan data (sesuai filter aktif / semua data) -->
-    <div id="pdf-modal-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] hidden items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden">
-            <div class="px-5 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,#be123c,#e11d48)">
-                <h3 class="text-white font-bold text-sm">Unduh Laporan PDF</h3>
-                <button id="pdf-modal-close" class="text-white/80 hover:text-white text-xl leading-none">&times;</button>
-            </div>
-            <div class="p-5 space-y-3">
-                <p class="text-xs text-slate-500 leading-relaxed">Pilih cakupan data yang ingin dimasukkan ke laporan PDF. Titik panas yang belum ada laporan kegiatan/foto akan otomatis diberi keterangan <em>"Akses tidak bisa dijangkau / belum bisa ditindaklanjuti"</em>.</p>
-                <button id="pdf-scope-filtered" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-rose-400 hover:bg-rose-50 transition-colors">
-                    <div class="text-xs font-bold text-slate-800">Sesuai Filter Aktif</div>
-                    <div id="pdf-scope-filtered-desc" class="text-[11px] text-slate-500 mt-0.5">Kelurahan, satelit, dan rentang waktu yang sedang dipilih di dashboard.</div>
-                </button>
-                <button id="pdf-scope-all" class="w-full text-left px-4 py-3 rounded-xl border border-slate-200 hover:border-rose-400 hover:bg-rose-50 transition-colors">
-                    <div class="text-xs font-bold text-slate-800">Semua Data (Tanpa Filter)</div>
-                    <div class="text-[11px] text-slate-500 mt-0.5">Seluruh titik panas yang tersimpan di sistem, tanpa filter kelurahan/satelit/waktu.</div>
-                </button>
-                <p id="pdf-modal-status" class="hidden text-[11px] text-slate-500 font-medium text-center pt-1"></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Laporan Manual: laporan di luar titik panas satelit, koordinat dipilih manual -->
-    <div id="manual-modal-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] hidden items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
-            <div class="px-5 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,#0369a1,#0ea5e9)">
-                <h3 class="text-white font-bold text-sm">Laporan Manual (Luar Titik Panas)</h3>
-                <button id="manual-modal-close" class="text-white/80 hover:text-white text-xl leading-none">&times;</button>
-            </div>
-            <div class="p-5 space-y-3">
-                <label class="block text-xs font-semibold text-slate-600">Koordinat Lokasi</label>
-                <div class="grid grid-cols-2 gap-2">
-                    <input type="number" step="any" id="manual-lat-input" placeholder="Latitude, mis. -1.65"
-                        class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500" />
-                    <input type="number" step="any" id="manual-lng-input" placeholder="Longitude, mis. 113.6"
-                        class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500" />
-                </div>
-                <button id="manual-pick-map-btn" type="button"
-                    class="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-sky-700 bg-sky-50 hover:bg-sky-100 py-2 rounded-lg transition-colors">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                    Pilih Titik di Peta
-                </button>
-                <p id="manual-pick-hint" class="hidden text-[11px] text-sky-700 font-medium text-center">Klik lokasi di peta untuk mengisi koordinat...</p>
-
-                <label class="block text-xs font-semibold text-slate-600 pt-1">Foto Kegiatan/Kejadian</label>
-                <input type="file" id="manual-photo-input" accept="image/*"
-                    class="block w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100" />
-                <img id="manual-photo-preview" class="hidden w-full h-32 object-cover rounded-lg border border-slate-200" />
-
-                <label class="block text-xs font-semibold text-slate-600 pt-1">Uraian Kejadian/Tindakan</label>
-                <textarea id="manual-deskripsi" rows="3" placeholder="Contoh: Titik pembakaran lahan warga yang tidak terpantau satelit, tindakan yang dilakukan, dll."
-                    class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500"></textarea>
-
-                <label class="block text-xs font-semibold text-slate-600 pt-1">Nama Pelapor (opsional)</label>
-                <input type="text" id="manual-pelapor" placeholder="Nama petugas/pelapor"
-                    class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500" />
-
-                <p id="manual-modal-error" class="hidden text-[11px] text-rose-600 font-medium"></p>
-
-                <button id="manual-submit-btn"
-                    class="w-full bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm disabled:opacity-50">
-                    Kirim Laporan Manual
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Leaflet JS & Script Utama -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"
-        onerror="this.onerror=null;var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';document.head.appendChild(s);"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"
-        onerror="this.onerror=null;var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js';document.head.appendChild(s);"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
     <script>
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzF7GFRaAuz_4_7D00HAjGZqWEI_nV95e_Hj5BQ2Xj-3U74IAhc96kDpcL-mYJ5fIbp/exec"; 
         let globalFilteredHotspots = [];
         let currentTimeRange = 'TODAY'; // Default: hanya tampilkan data hari ini
-        let globalReportsByKey = {}; // Laporan aksi/foto kegiatan per titik panas, kunci = hotspotKey
-        let globalManualReports = []; // Laporan manual di luar titik panas satelit
-        let globalRawHotspotData = []; // Data mentah (belum difilter) dari tarikan terakhir, dipakai untuk PDF "Semua Data"
-        let pendingReportPhoto = null; // {base64, mime, nama} hasil kompresi foto yang dipilih di modal
-
-        // Kunci unik per titik panas (lokasi + satelit, dibulatkan 3 desimal).
-        // Dipakai untuk: (1) dedup histori jadi 1 marker per lokasi (sudah ada),
-        // (2) mengaitkan laporan aksi/foto kegiatan ke titik panas yang tepat.
-        function hotspotKeyOf(lat, lng, satellite) {
-            return lat.toFixed(3) + '_' + lng.toFixed(3) + '_' + satellite;
-        }
 
         // Mengembalikan tanggal hari ini di zona WIB dalam format YYYY-MM-DD,
         // dipakai untuk filter "Hari Ini" (bukan tanggal lokal perangkat).
@@ -509,7 +384,6 @@
         L.control.layers(baseMaps).addTo(map);
 
         var hotspotGroup = L.layerGroup().addTo(map);
-        var manualReportGroup = L.layerGroup().addTo(map);
         var villageSelect = document.getElementById('rk-village');
         var villageLayers = {};
 
@@ -657,60 +531,6 @@
             return timeStr;
         }
 
-        // Ubah data mentah dari API jadi daftar titik panas yang sudah difilter,
-        // dideduplikasi per lokasi+satelit (ambil pembacaan terbaru), dan terurut
-        // dari waktu terbaru. Dipakai baik untuk render dashboard maupun untuk
-        // membuat laporan PDF (dengan filter aktif ATAU tanpa filter sama sekali
-        // saat village='' , satellite='ALL', timeRange=null).
-        function buildHotspotList(rawArray, village, satellite, timeRange) {
-            const todayWIB = getTodayWIB();
-            const nowMillis = Date.now();
-            let filtered = [];
-
-            rawArray.forEach(item => {
-                let lat = parseFloat(item.latitude || item.lat || 0);
-                let lng = parseFloat(item.longitude || item.lng || 0);
-                if (lat === 0 || lng === 0) return;
-
-                let rawTime = item.time || item.acq_time || "-";
-                let formattedTime = formatSatelliteTime(rawTime);
-
-                let hObj = {
-                    lat: lat,
-                    lng: lng,
-                    village: item.village || "Rakumpit",
-                    satellite: item.satellite || "VIIRS",
-                    confidence: parseInt(item.confidence) || 50,
-                    frp: item.frp !== undefined ? parseFloat(item.frp) : 0.0,
-                    time: formattedTime
-                };
-
-                let matchVillage = !village || hObj.village === village;
-                let matchSat = !satellite || satellite === 'ALL' || hObj.satellite.toUpperCase().includes(satellite.toUpperCase());
-
-                let matchTime = true;
-                if (timeRange === 'TODAY') {
-                    matchTime = hObj.time.slice(0, 10) === todayWIB;
-                } else if (timeRange === '24H') {
-                    matchTime = parseHotspotEpochUTC(hObj.time) >= (nowMillis - 24 * 60 * 60 * 1000);
-                }
-                // timeRange null/undefined = tanpa filter waktu (dipakai untuk PDF "Semua Data")
-
-                if (matchVillage && matchSat && matchTime) filtered.push(hObj);
-            });
-
-            const latestByLoc = {};
-            filtered.forEach(h => {
-                const key = hotspotKeyOf(h.lat, h.lng, h.satellite);
-                const cur = latestByLoc[key];
-                if (!cur || parseHotspotEpochUTC(h.time) > parseHotspotEpochUTC(cur.time)) latestByLoc[key] = h;
-            });
-            filtered = Object.values(latestByLoc);
-
-            filtered.sort((a, b) => parseHotspotEpochUTC(b.time) - parseHotspotEpochUTC(a.time));
-            return filtered;
-        }
-
         // Menyorot tombol rentang waktu yang sedang aktif (Hari Ini / 24 Jam Terakhir)
         function updateTimeRangeButtons() {
             document.querySelectorAll('.time-range-btn').forEach(btn => {
@@ -762,11 +582,6 @@
                 if (result && result.lastSatelliteUpdate) {
                     lastSatelliteUpdate = result.lastSatelliteUpdate;
                 }
-                globalReportsByKey = {};
-                if (result && Array.isArray(result.reports)) {
-                    result.reports.forEach(rep => { globalReportsByKey[rep.hotspotKey] = rep; });
-                }
-                globalManualReports = (result && Array.isArray(result.manualReports)) ? result.manualReports : [];
                 
                 if (isUpdate) {
                     alert("Berhasil menarik data satelit terbaru ke Spreadsheet dan memperbarui dashboard!");
@@ -784,12 +599,54 @@
             const selectedVillage = villageSelect.value;
             const selectedSat = document.getElementById('satellite-filter').value;
             const selectedTimeRange = currentTimeRange;
+            const todayWIB = getTodayWIB();
+            const nowMillis = Date.now();
 
             hotspotGroup.clearLayers();
-            renderManualReports();
-            globalRawHotspotData = rawHotspotData;
 
-            let filtered = buildHotspotList(rawHotspotData, selectedVillage, selectedSat, selectedTimeRange);
+            let filtered = [];
+
+            rawHotspotData.forEach(item => {
+                let lat = parseFloat(item.latitude || item.lat || 0);
+                let lng = parseFloat(item.longitude || item.lng || 0);
+                
+                if (lat === 0 || lng === 0) return;
+
+                let rawTime = item.time || item.acq_time || "-";
+                let formattedTime = formatSatelliteTime(rawTime);
+
+                let hObj = {
+                    lat: lat,
+                    lng: lng,
+                    village: item.village || "Rakumpit",
+                    satellite: item.satellite || "VIIRS",
+                    confidence: parseInt(item.confidence) || 50,
+                    frp: item.frp !== undefined ? parseFloat(item.frp) : 0.0,
+                    time: formattedTime
+                };
+
+                let matchVillage = !selectedVillage || hObj.village === selectedVillage;
+                let matchSat = selectedSat === 'ALL' || hObj.satellite.toUpperCase().includes(selectedSat.toUpperCase());
+
+                let matchTime = true;
+                if (selectedTimeRange === 'TODAY') {
+                    // Bandingkan tanggal (WIB) titik panas dengan tanggal hari ini (WIB)
+                    matchTime = hObj.time.slice(0, 10) === todayWIB;
+                } else if (selectedTimeRange === '24H') {
+                    matchTime = parseHotspotEpochUTC(hObj.time) >= (nowMillis - 24 * 60 * 60 * 1000);
+                }
+
+                if (matchVillage && matchSat && matchTime) {
+                    filtered.push(hObj);
+                }
+            });
+
+            // LOGIKA PENGURUTAN: Urutkan data dari waktu terbaru ke terlama
+            filtered.sort(function(a, b) {
+                let timeA = Date.parse(a.time.replace(" WIB", "")) || 0;
+                let timeB = Date.parse(b.time.replace(" WIB", "")) || 0;
+                return timeB - timeA; 
+            });
 
             globalFilteredHotspots = filtered;
 
@@ -818,33 +675,6 @@
                         ? 'linear-gradient(135deg,#dc2626,#f97316)'
                         : 'linear-gradient(135deg,#f59e0b,#fbbf24)';
                     let satColor = getSatelliteColor(h.satellite);
-                    let hKey = hotspotKeyOf(h.lat, h.lng, h.satellite);
-                    let existingReport = globalReportsByKey[hKey];
-
-                    let reportSectionHtml = existingReport
-                        ? (
-                            `<div class="pt-2.5 mt-1 border-t border-dashed border-slate-200 space-y-2">` +
-                                `<div class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Laporan Kegiatan</div>` +
-                                (existingReport.fotoUrl
-                                    ? `<a href="${esc(existingReport.fotoUrl)}" target="_blank" class="block">` +
-                                        `<img src="${esc(existingReport.fotoUrl)}" class="w-full h-28 object-cover rounded-lg border border-slate-200" alt="Foto kegiatan">` +
-                                      `</a>`
-                                    : ''
-                                ) +
-                                `<p class="text-slate-700 text-[11px] leading-snug">${esc(existingReport.deskripsi)}</p>` +
-                                `<button onclick="openReportModal('${hKey}', ${h.lat}, ${h.lng}, '${esc(h.time)}')" ` +
-                                    `class="w-full text-center text-[11px] font-semibold text-emerald-700 hover:text-emerald-800 underline underline-offset-2">` +
-                                    `Perbarui laporan` +
-                                `</button>` +
-                            `</div>`
-                          )
-                        : (
-                            `<button onclick="openReportModal('${hKey}', ${h.lat}, ${h.lng}, '${esc(h.time)}')" ` +
-                                `class="flex items-center justify-center gap-1.5 w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm mt-1">` +
-                                `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>` +
-                                `Tambah Laporan Kegiatan` +
-                            `</button>`
-                          );
 
                     marker.bindPopup(
                         `<div class="w-64 overflow-hidden rounded-2xl">` +
@@ -885,7 +715,6 @@
                                 `<div class="flex items-center justify-between pt-2.5 mt-1 border-t border-dashed border-slate-200">` +
                                     `<span class="text-[10px] text-slate-400 font-mono">${h.lat.toFixed(5)}, ${h.lng.toFixed(5)}</span>` +
                                 `</div>` +
-                                reportSectionHtml +
                                 `<a href="${routeUrl}" target="_blank" ` +
                                     `class="flex items-center justify-center gap-1.5 w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm">` +
                                     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3.5 h-3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>` +
@@ -965,15 +794,7 @@
                 message += `   • Confidence: ${h.confidence}%\n`;
                 message += `   • FRP: ${h.frp} MW\n`;
                 message += `   • Waktu Satelit: ${h.time}\n`;
-                message += `   • Lokasi: ${mapsLink}\n`;
-
-                const hKey = hotspotKeyOf(h.lat, h.lng, h.satellite);
-                const rep = globalReportsByKey[hKey];
-                if (rep) {
-                    message += `   • Tindakan: ${rep.deskripsi}\n`;
-                    if (rep.fotoUrl) message += `   • Foto Kegiatan: ${rep.fotoUrl}\n`;
-                }
-                message += `\n`;
+                message += `   • Lokasi: ${mapsLink}\n\n`;
             });
 
             message += `_Pesan otomatis dikirim dari Dashboard Siaga Karhutla Rakumpit_`;
@@ -995,442 +816,6 @@
                 fetchRealtimeData(false);
             });
         });
-
-        // --- MODAL LAPORAN KEGIATAN (foto + deskripsi tindakan per titik panas) ---
-        let currentReportTarget = null; // {hotspotKey, lat, lng, waktuSatelit}
-        const reportOverlay = document.getElementById('report-modal-overlay');
-        const reportPhotoInput = document.getElementById('report-photo-input');
-        const reportPhotoPreview = document.getElementById('report-photo-preview');
-        const reportDeskripsiEl = document.getElementById('report-deskripsi');
-        const reportPelaporEl = document.getElementById('report-pelapor');
-        const reportErrorEl = document.getElementById('report-modal-error');
-        const reportSubmitBtn = document.getElementById('report-submit-btn');
-
-        function openReportModal(hotspotKey, lat, lng, waktuSatelit) {
-            currentReportTarget = { hotspotKey, lat, lng, waktuSatelit };
-            pendingReportPhoto = null;
-            reportPhotoInput.value = '';
-            reportPhotoPreview.classList.add('hidden');
-            reportDeskripsiEl.value = '';
-            reportErrorEl.classList.add('hidden');
-            reportErrorEl.textContent = '';
-            reportSubmitBtn.disabled = false;
-            reportSubmitBtn.textContent = 'Kirim Laporan';
-            document.getElementById('report-modal-loc').textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)} • ${waktuSatelit}`;
-            map.closePopup();
-            reportOverlay.classList.remove('hidden');
-            reportOverlay.classList.add('flex');
-        }
-
-        function closeReportModal() {
-            reportOverlay.classList.add('hidden');
-            reportOverlay.classList.remove('flex');
-            currentReportTarget = null;
-        }
-        document.getElementById('report-modal-close').addEventListener('click', closeReportModal);
-        reportOverlay.addEventListener('click', (e) => { if (e.target === reportOverlay) closeReportModal(); });
-
-        // Kompres & ubah foto jadi JPEG base64 sebelum dikirim, supaya upload dari
-        // kamera HP (bisa >5MB) tidak membuat request ke Apps Script terlalu besar.
-        function compressImageToBase64(file, maxDim, quality) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                const reader = new FileReader();
-                reader.onload = (e) => { img.src = e.target.result; };
-                reader.onerror = reject;
-                img.onload = () => {
-                    let w = img.width, h = img.height;
-                    if (w > maxDim || h > maxDim) {
-                        const scale = maxDim / Math.max(w, h);
-                        w = Math.round(w * scale);
-                        h = Math.round(h * scale);
-                    }
-                    const canvas = document.createElement('canvas');
-                    canvas.width = w; canvas.height = h;
-                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    const dataUrl = canvas.toDataURL('image/jpeg', quality);
-                    resolve(dataUrl.split(',')[1]);
-                };
-                img.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        reportPhotoInput.addEventListener('change', async () => {
-            const file = reportPhotoInput.files[0];
-            if (!file) { pendingReportPhoto = null; reportPhotoPreview.classList.add('hidden'); return; }
-            try {
-                const base64 = await compressImageToBase64(file, 1280, 0.7);
-                pendingReportPhoto = { base64, mime: 'image/jpeg', nama: 'laporan_' + Date.now() + '.jpg' };
-                reportPhotoPreview.src = 'data:image/jpeg;base64,' + base64;
-                reportPhotoPreview.classList.remove('hidden');
-            } catch (err) {
-                console.error('Gagal memproses foto:', err);
-                reportErrorEl.textContent = 'Gagal memproses foto, coba foto lain.';
-                reportErrorEl.classList.remove('hidden');
-            }
-        });
-
-        reportSubmitBtn.addEventListener('click', async () => {
-            if (!currentReportTarget) return;
-            const deskripsi = reportDeskripsiEl.value.trim();
-            if (!deskripsi) {
-                reportErrorEl.textContent = 'Uraian aksi/tindakan wajib diisi.';
-                reportErrorEl.classList.remove('hidden');
-                return;
-            }
-            reportErrorEl.classList.add('hidden');
-            reportSubmitBtn.disabled = true;
-            reportSubmitBtn.textContent = 'Mengirim...';
-
-            const payload = {
-                action: 'submitReport',
-                hotspotKey: currentReportTarget.hotspotKey,
-                lat: currentReportTarget.lat,
-                lng: currentReportTarget.lng,
-                waktuSatelit: currentReportTarget.waktuSatelit,
-                deskripsi: deskripsi,
-                pelapor: reportPelaporEl.value.trim() || '-'
-            };
-            if (pendingReportPhoto) {
-                payload.fotoBase64 = pendingReportPhoto.base64;
-                payload.fotoMime = pendingReportPhoto.mime;
-                payload.fotoNama = pendingReportPhoto.nama;
-            }
-
-            try {
-                // Content-Type dibiarkan default (text/plain) supaya browser tidak
-                // melakukan CORS preflight ke Apps Script, yang tidak menangani OPTIONS.
-                const res = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(payload) });
-                const result = await res.json();
-                if (result.status !== 'success') throw new Error(result.message || 'Gagal menyimpan laporan.');
-                closeReportModal();
-                fetchRealtimeData(false); // muat ulang supaya popup menampilkan laporan terbaru
-            } catch (err) {
-                console.error('Gagal mengirim laporan:', err);
-                reportErrorEl.textContent = 'Gagal mengirim laporan. Periksa koneksi lalu coba lagi.';
-                reportErrorEl.classList.remove('hidden');
-                reportSubmitBtn.disabled = false;
-                reportSubmitBtn.textContent = 'Kirim Laporan';
-            }
-        });
-
-        // --- MARKER LAPORAN MANUAL DI PETA (di luar titik panas satelit) ---
-        function renderManualReports() {
-            manualReportGroup.clearLayers();
-            globalManualReports.forEach(rep => {
-                const lat = parseFloat(rep.lat), lng = parseFloat(rep.lng);
-                if (isNaN(lat) || isNaN(lng)) return;
-                const routeUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-                const marker = L.circleMarker([lat, lng], {
-                    radius: 8, fillColor: '#0ea5e9', color: '#fff', weight: 2, fillOpacity: 0.9
-                });
-                marker.bindPopup(
-                    `<div class="w-64 overflow-hidden rounded-2xl">` +
-                        `<div class="relative px-4 py-3.5 flex items-center gap-2.5" style="background:linear-gradient(135deg,#0369a1,#0ea5e9)">` +
-                            `<div class="w-8 h-8 rounded-full bg-white/25 backdrop-blur-sm flex items-center justify-center shrink-0">` +
-                                `<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" class="w-4.5 h-4.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>` +
-                            `</div>` +
-                            `<div class="flex-1 min-w-0">` +
-                                `<div class="text-white font-bold text-sm leading-tight">Laporan Manual</div>` +
-                                `<div class="text-white/80 text-[10px] font-medium">${esc(rep.pelapor || '-')}</div>` +
-                            `</div>` +
-                        `</div>` +
-                        `<div class="bg-white px-4 py-3.5 space-y-2.5 text-xs">` +
-                            (rep.fotoUrl
-                                ? `<a href="${esc(rep.fotoUrl)}" target="_blank" class="block">` +
-                                    `<img src="${esc(rep.fotoUrl)}" class="w-full h-28 object-cover rounded-lg border border-slate-200" alt="Foto laporan">` +
-                                  `</a>`
-                                : '') +
-                            `<p class="text-slate-700 text-[11px] leading-snug">${esc(rep.deskripsi)}</p>` +
-                            `<div class="flex items-center justify-between pt-2.5 mt-1 border-t border-dashed border-slate-200">` +
-                                `<span class="text-[10px] text-slate-400 font-mono">${lat.toFixed(5)}, ${lng.toFixed(5)}</span>` +
-                            `</div>` +
-                            `<a href="${routeUrl}" target="_blank" ` +
-                                `class="flex items-center justify-center gap-1.5 w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm">` +
-                                `Buka di Google Maps` +
-                            `</a>` +
-                        `</div>` +
-                    `</div>`,
-                    { className: 'hotspot-popup', minWidth: 256 }
-                );
-                manualReportGroup.addLayer(marker);
-            });
-        }
-
-        // --- MODAL LAPORAN MANUAL ---
-        const manualOverlay = document.getElementById('manual-modal-overlay');
-        const manualLatInput = document.getElementById('manual-lat-input');
-        const manualLngInput = document.getElementById('manual-lng-input');
-        const manualPickBtn = document.getElementById('manual-pick-map-btn');
-        const manualPickHint = document.getElementById('manual-pick-hint');
-        const manualPhotoInput = document.getElementById('manual-photo-input');
-        const manualPhotoPreview = document.getElementById('manual-photo-preview');
-        const manualDeskripsiEl = document.getElementById('manual-deskripsi');
-        const manualPelaporEl = document.getElementById('manual-pelapor');
-        const manualErrorEl = document.getElementById('manual-modal-error');
-        const manualSubmitBtn = document.getElementById('manual-submit-btn');
-        let pendingManualPhoto = null;
-        let manualPickModeActive = false;
-
-        function openManualModal() {
-            manualLatInput.value = '';
-            manualLngInput.value = '';
-            manualPhotoInput.value = '';
-            manualPhotoPreview.classList.add('hidden');
-            manualDeskripsiEl.value = '';
-            pendingManualPhoto = null;
-            manualErrorEl.classList.add('hidden');
-            manualErrorEl.textContent = '';
-            manualSubmitBtn.disabled = false;
-            manualSubmitBtn.textContent = 'Kirim Laporan Manual';
-            manualPickModeActive = false;
-            manualPickHint.classList.add('hidden');
-            manualOverlay.classList.remove('hidden');
-            manualOverlay.classList.add('flex');
-        }
-        function closeManualModal() {
-            manualOverlay.classList.add('hidden');
-            manualOverlay.classList.remove('flex');
-            manualPickModeActive = false;
-            manualPickHint.classList.add('hidden');
-        }
-        document.getElementById('btn-manual-report').addEventListener('click', openManualModal);
-        document.getElementById('manual-modal-close').addEventListener('click', closeManualModal);
-        manualOverlay.addEventListener('click', (e) => { if (e.target === manualOverlay) closeManualModal(); });
-
-        // "Pilih Titik di Peta": sembunyikan modal sementara, tunggu klik di peta,
-        // isi input lat/lng, lalu tampilkan modal lagi.
-        manualPickBtn.addEventListener('click', () => {
-            manualPickModeActive = true;
-            manualOverlay.classList.add('hidden');
-            manualOverlay.classList.remove('flex');
-            manualPickHint.classList.remove('hidden');
-        });
-        map.on('click', (e) => {
-            if (!manualPickModeActive) return;
-            manualPickModeActive = false;
-            manualLatInput.value = e.latlng.lat.toFixed(6);
-            manualLngInput.value = e.latlng.lng.toFixed(6);
-            manualOverlay.classList.remove('hidden');
-            manualOverlay.classList.add('flex');
-        });
-
-        manualPhotoInput.addEventListener('change', async () => {
-            const file = manualPhotoInput.files[0];
-            if (!file) { pendingManualPhoto = null; manualPhotoPreview.classList.add('hidden'); return; }
-            try {
-                const base64 = await compressImageToBase64(file, 1280, 0.7);
-                pendingManualPhoto = { base64, mime: 'image/jpeg', nama: 'laporan_manual_' + Date.now() + '.jpg' };
-                manualPhotoPreview.src = 'data:image/jpeg;base64,' + base64;
-                manualPhotoPreview.classList.remove('hidden');
-            } catch (err) {
-                console.error('Gagal memproses foto:', err);
-                manualErrorEl.textContent = 'Gagal memproses foto, coba foto lain.';
-                manualErrorEl.classList.remove('hidden');
-            }
-        });
-
-        manualSubmitBtn.addEventListener('click', async () => {
-            const lat = parseFloat(manualLatInput.value);
-            const lng = parseFloat(manualLngInput.value);
-            const deskripsi = manualDeskripsiEl.value.trim();
-            manualErrorEl.classList.add('hidden');
-
-            if (isNaN(lat) || isNaN(lng)) {
-                manualErrorEl.textContent = 'Koordinat lokasi wajib diisi (ketik manual atau pilih di peta).';
-                manualErrorEl.classList.remove('hidden');
-                return;
-            }
-            if (!deskripsi) {
-                manualErrorEl.textContent = 'Uraian kejadian/tindakan wajib diisi.';
-                manualErrorEl.classList.remove('hidden');
-                return;
-            }
-
-            manualSubmitBtn.disabled = true;
-            manualSubmitBtn.textContent = 'Mengirim...';
-
-            const payload = {
-                action: 'submitManualReport',
-                lat: lat,
-                lng: lng,
-                deskripsi: deskripsi,
-                pelapor: manualPelaporEl.value.trim() || '-'
-            };
-            if (pendingManualPhoto) {
-                payload.fotoBase64 = pendingManualPhoto.base64;
-                payload.fotoMime = pendingManualPhoto.mime;
-                payload.fotoNama = pendingManualPhoto.nama;
-            }
-
-            try {
-                const res = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(payload) });
-                const result = await res.json();
-                if (result.status !== 'success') throw new Error(result.message || 'Gagal menyimpan laporan manual.');
-                closeManualModal();
-                fetchRealtimeData(false);
-            } catch (err) {
-                console.error('Gagal mengirim laporan manual:', err);
-                manualErrorEl.textContent = 'Gagal mengirim laporan. Periksa koneksi lalu coba lagi.';
-                manualErrorEl.classList.remove('hidden');
-                manualSubmitBtn.disabled = false;
-                manualSubmitBtn.textContent = 'Kirim Laporan Manual';
-            }
-        });
-
-        // --- LAPORAN PDF ---
-        const pdfOverlay = document.getElementById('pdf-modal-overlay');
-        const pdfStatusEl = document.getElementById('pdf-modal-status');
-        const pdfScopeFilteredBtn = document.getElementById('pdf-scope-filtered');
-        const pdfScopeAllBtn = document.getElementById('pdf-scope-all');
-
-        function openPdfModal() {
-            pdfStatusEl.classList.add('hidden');
-            pdfStatusEl.textContent = '';
-            const rangeLabels = { TODAY: 'Hari Ini', '24H': '24 Jam Terakhir' };
-            const villageLabel = villageSelect.value || 'Semua Kelurahan';
-            const satLabel = document.getElementById('satellite-filter').value === 'ALL' ? 'Semua Satelit' : document.getElementById('satellite-filter').value;
-            document.getElementById('pdf-scope-filtered-desc').textContent =
-                `${villageLabel} • ${satLabel} • ${rangeLabels[currentTimeRange] || 'Hari Ini'}`;
-            pdfOverlay.classList.remove('hidden');
-            pdfOverlay.classList.add('flex');
-        }
-        function closePdfModal() {
-            pdfOverlay.classList.add('hidden');
-            pdfOverlay.classList.remove('flex');
-        }
-        document.getElementById('btn-pdf-report').addEventListener('click', openPdfModal);
-        document.getElementById('pdf-modal-close').addEventListener('click', closePdfModal);
-        pdfOverlay.addEventListener('click', (e) => { if (e.target === pdfOverlay) closePdfModal(); });
-
-        pdfScopeFilteredBtn.addEventListener('click', () => {
-            const rangeLabels = { TODAY: 'Hari Ini', '24H': '24 Jam Terakhir' };
-            const villageLabel = villageSelect.value || 'Semua Kelurahan';
-            const satLabel = document.getElementById('satellite-filter').value === 'ALL' ? 'Semua Satelit' : document.getElementById('satellite-filter').value;
-            const scopeLabel = `Sesuai Filter Aktif (${villageLabel}, ${satLabel}, ${rangeLabels[currentTimeRange] || 'Hari Ini'})`;
-            runPdfGeneration(globalFilteredHotspots, scopeLabel);
-        });
-        pdfScopeAllBtn.addEventListener('click', () => {
-            const allList = buildHotspotList(globalRawHotspotData, '', 'ALL', null);
-            runPdfGeneration(allList, 'Semua Data (Tanpa Filter)');
-        });
-
-        async function runPdfGeneration(list, scopeLabel) {
-            if (!list || list.length === 0) {
-                pdfStatusEl.textContent = 'Tidak ada titik panas pada cakupan ini.';
-                pdfStatusEl.classList.remove('hidden');
-                return;
-            }
-            pdfStatusEl.textContent = 'Menyusun PDF...';
-            pdfStatusEl.classList.remove('hidden');
-            try {
-                if (typeof window.jspdf === 'undefined' || !window.jspdf.jsPDF) {
-                    throw new Error('Library jsPDF gagal dimuat (kemungkinan diblokir jaringan/ad-blocker/CSP).');
-                }
-                await generateHotspotPdfReport(list, scopeLabel);
-                closePdfModal();
-            } catch (err) {
-                console.error('Gagal membuat PDF:', err);
-                pdfStatusEl.textContent = 'Gagal membuat PDF: ' + (err && err.message ? err.message : String(err));
-                pdfStatusEl.classList.remove('hidden');
-            }
-        }
-
-        // Susun & unduh laporan PDF dari daftar titik panas. Titik yang belum
-        // punya laporan kegiatan/foto (globalReportsByKey) otomatis diberi
-        // keterangan "Akses tidak bisa dijangkau / belum bisa ditindaklanjuti".
-        async function generateHotspotPdfReport(list, scopeLabel) {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-            if (typeof doc.autoTable !== 'function') {
-                throw new Error('Plugin jspdf-autotable gagal dimuat (cek koneksi ke cdnjs.cloudflare.com / ad-blocker).');
-            }
-            const pageWidth = doc.internal.pageSize.getWidth();
-            const pageHeight = doc.internal.pageSize.getHeight();
-
-            doc.setFontSize(14);
-            doc.setFont(undefined, 'bold');
-            doc.text('Laporan Monitoring Titik Panas (Hotspot)', pageWidth / 2, 14, { align: 'center' });
-            doc.setFontSize(10);
-            doc.setFont(undefined, 'normal');
-            doc.text('Poslap Terpadu Kecamatan Rakumpit', pageWidth / 2, 20, { align: 'center' });
-
-            doc.setFontSize(9);
-            const cetakDate = new Date().toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short', timeZone: 'Asia/Jakarta' }) + ' WIB';
-            doc.text(`Cakupan Data: ${scopeLabel}`, 14, 28);
-            doc.text(`Dicetak: ${cetakDate}`, 14, 33);
-
-            let highConf = 0, maxFrp = 0, belumTindakLanjut = 0;
-            const villageSet = new Set();
-            list.forEach(h => {
-                villageSet.add(h.village);
-                if (h.confidence >= 80) highConf++;
-                if (h.frp > maxFrp) maxFrp = h.frp;
-                const key = hotspotKeyOf(h.lat, h.lng, h.satellite);
-                if (!globalReportsByKey[key]) belumTindakLanjut++;
-            });
-            doc.text(
-                `Total Titik: ${list.length}  |  Confidence Tinggi (>=80%): ${highConf}  |  Kelurahan Terdampak: ${villageSet.size}  |  FRP Maks: ${maxFrp.toFixed(1)} MW  |  Belum Ditindaklanjuti: ${belumTindakLanjut}`,
-                14, 39
-            );
-
-            const rows = list.map((h, i) => {
-                const key = hotspotKeyOf(h.lat, h.lng, h.satellite);
-                const rep = globalReportsByKey[key];
-                const keterangan = rep
-                    ? (rep.deskripsi || '-') + (rep.pelapor && rep.pelapor !== '-' ? ` (Pelapor: ${rep.pelapor})` : '')
-                    : 'Akses tidak bisa dijangkau / belum bisa ditindaklanjuti';
-                return [
-                    i + 1,
-                    h.time,
-                    h.village,
-                    h.satellite,
-                    h.confidence + '%',
-                    h.frp.toFixed(1),
-                    `${h.lat.toFixed(5)}, ${h.lng.toFixed(5)}`,
-                    rep && rep.fotoUrl ? 'Lihat Foto' : '-',
-                    keterangan
-                ];
-            });
-
-            doc.autoTable({
-                startY: 44,
-                head: [['No', 'Waktu (WIB)', 'Kelurahan', 'Satelit', 'Conf.', 'FRP (MW)', 'Koordinat', 'Foto', 'Keterangan / Tindak Lanjut']],
-                body: rows,
-                styles: { fontSize: 7, cellPadding: 1.5, valign: 'middle' },
-                headStyles: { fillColor: [5, 150, 105], textColor: 255, fontStyle: 'bold' },
-                columnStyles: {
-                    0: { cellWidth: 8 },
-                    1: { cellWidth: 24 },
-                    2: { cellWidth: 22 },
-                    3: { cellWidth: 18 },
-                    4: { cellWidth: 12 },
-                    5: { cellWidth: 16 },
-                    6: { cellWidth: 26 },
-                    7: { cellWidth: 15, textColor: [8, 145, 178] },
-                    8: { cellWidth: 'auto' }
-                },
-                didDrawCell: (data) => {
-                    if (data.section === 'body' && data.column.index === 7) {
-                        const h = list[data.row.index];
-                        const key = hotspotKeyOf(h.lat, h.lng, h.satellite);
-                        const rep = globalReportsByKey[key];
-                        if (rep && rep.fotoUrl) {
-                            doc.link(data.cell.x, data.cell.y, data.cell.width, data.cell.height, { url: rep.fotoUrl });
-                        }
-                    }
-                },
-                didDrawPage: () => {
-                    doc.setFontSize(8);
-                    doc.text(`Halaman ${doc.internal.getCurrentPageInfo().pageNumber}`, pageWidth - 14, pageHeight - 8, { align: 'right' });
-                    doc.text('Dokumen dibuat otomatis dari Dashboard Siaga Karhutla Rakumpit.', 14, pageHeight - 8);
-                }
-            });
-
-            const fileDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
-            doc.save(`Laporan-Hotspot-Rakumpit-${fileDate}.pdf`);
-        }
 
         // Muat data otomatis saat halaman dibuka
         fetchRealtimeData(false);
