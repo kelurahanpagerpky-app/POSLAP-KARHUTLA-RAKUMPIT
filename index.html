@@ -316,6 +316,9 @@
                     <input type="number" step="any" id="manual-lat-input" placeholder="Latitude" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500" />
                     <input type="number" step="any" id="manual-lng-input" placeholder="Longitude" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500" />
                 </div>
+                <label class="block text-xs font-semibold text-slate-600 pt-1">Kelurahan</label>
+                <select id="manual-kelurahan" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-sky-500"></select>
+                <p class="text-[10px] text-slate-400 -mt-1">Terisi otomatis dari posisi pin, bisa diubah manual.</p>
                 <details class="text-[11px] text-slate-500">
                     <summary class="cursor-pointer font-semibold text-sky-700">Punya koordinat atau link dari Google Maps?</summary>
                     <div class="flex gap-2 mt-2">
@@ -536,6 +539,24 @@
             "Peta Satelit (ESRI World Imagery)": satelliteLayer
         };
         L.control.layers(baseMaps).addTo(map);
+
+        // Legenda warna: titik panas, laporan manual, dan wilayah kelurahan
+        var legend = L.control({ position: 'bottomleft' });
+        legend.onAdd = function () {
+            var div = L.DomUtil.create('div');
+            L.DomEvent.disableClickPropagation(div);
+            var dot = function (c) { return '<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:' + c + ';border:2px solid #fff;box-shadow:0 0 0 1px #94a3b8;margin-right:6px;vertical-align:-2px"></span>'; };
+            var sq = function (c) { return '<span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:' + c + ';opacity:.85;margin-right:6px;vertical-align:-2px"></span>'; };
+            var villages = GEOJSON.features.map(function (f) { return sq(getVillageColor(f.properties.village_code)) + f.properties.village; }).join('<br>');
+            div.innerHTML = '<details ' + (window.innerWidth > 640 ? 'open' : '') + ' style="background:rgba(255,255,255,.95);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.25);padding:6px 10px;font:11px/1.7 system-ui,sans-serif;color:#1e293b">' +
+                '<summary style="cursor:pointer;font-weight:700">Keterangan</summary>' +
+                dot('#dc2626') + 'Titik panas, confidence &ge; 80%<br>' +
+                dot('#f59e0b') + 'Titik panas, confidence &lt; 80%<br>' +
+                dot('#0ea5e9') + 'Laporan manual<br>' +
+                '<div style="margin-top:4px;padding-top:4px;border-top:1px dashed #cbd5e1"><b>Wilayah kelurahan</b><br>' + villages + '</div></details>';
+            return div;
+        };
+        legend.addTo(map);
 
         var hotspotGroup = L.layerGroup().addTo(map);
         var manualReportGroup = L.layerGroup().addTo(map);
@@ -1010,11 +1031,12 @@
                 message += `\n`;
             });
 
-            if (globalManualReports.length > 0) {
+            const manualView = manualForView_();
+            if (manualView.length > 0) {
                 message += `\n📌 *LAPORAN MANUAL (LUAR TITIK PANAS)*\n`;
-                globalManualReports.forEach((rep, index) => {
+                manualView.forEach((rep, index) => {
                     let mapsLink = `https://www.google.com/maps/search/?api=1&query=${rep.lat},${rep.lng}`;
-                    message += `${index + 1}. Lokasi: ${mapsLink}\n`;
+                    message += `${index + 1}. *Kelurahan*: ${manualVillage_(rep) || '-'}\n   • Lokasi: ${mapsLink}\n`;
                     if (rep.tindakan) message += `   • Tindakan: ${rep.tindakan}\n`;
                     if (rep.deskripsi) message += `   • Uraian: ${rep.deskripsi}\n`;
                     if (rep.fotoUrl) message += `   • Foto Kegiatan: ${rep.fotoUrl}\n`;
@@ -1171,10 +1193,23 @@
             }
         });
 
+        function villageOfPoint_(lat, lng) {
+            try {
+                const pt = turf.point([lng, lat]);
+                const f = GEOJSON.features.find(ft => turf.booleanPointInPolygon(pt, ft));
+                return f ? f.properties.village : '';
+            } catch (err) { return ''; }
+        }
+        // Laporan lama (tanpa kolom kelurahan) dihitung dari koordinatnya
+        function manualVillage_(rep) { return rep.kelurahan || villageOfPoint_(parseFloat(rep.lat), parseFloat(rep.lng)) || ''; }
+        function manualForView_() {
+            const v = villageSelect.value;
+            return (globalManualReports || []).filter(r => !v || manualVillage_(r) === v);
+        }
         // --- MARKER LAPORAN MANUAL DI PETA (di luar titik panas satelit) ---
         function renderManualReports() {
             manualReportGroup.clearLayers();
-            globalManualReports.forEach(rep => {
+            manualForView_().forEach(rep => {
                 const lat = parseFloat(rep.lat), lng = parseFloat(rep.lng);
                 if (isNaN(lat) || isNaN(lng)) return;
                 const routeUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
@@ -1189,7 +1224,7 @@
                             `</div>` +
                             `<div class="flex-1 min-w-0">` +
                                 `<div class="text-white font-bold text-sm leading-tight">Laporan Manual</div>` +
-                                `<div class="text-white/80 text-[10px] font-medium">${esc(rep.pelapor || '-')}</div>` +
+                                `<div class="text-white/80 text-[10px] font-medium">Kel. ${esc(manualVillage_(rep) || '-')} • ${esc(rep.pelapor || '-')}</div>` +
                             `</div>` +
                         `</div>` +
                         `<div class="bg-white px-4 py-3.5 space-y-2.5 text-xs">` +
@@ -1237,6 +1272,9 @@
 
         // Peta pemilih lokasi di dalam modal (tile Google Maps, Satelit, atau OSM)
         let manualPicker = null, manualPickerMarker = null;
+        const manualKelurahanEl = document.getElementById('manual-kelurahan');
+        manualKelurahanEl.innerHTML = '<option value="">Pilih kelurahan...</option>' +
+            GEOJSON.features.map(f => f.properties.village).sort().map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
         function initManualPicker() {
             if (manualPicker) return;
             const gStd = L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&hl=id&x={x}&y={y}&z={z}', { subdomains: '0123', maxZoom: 20, attribution: 'Map data &copy; Google' });
@@ -1267,6 +1305,7 @@
             } catch (err) { console.error(err); }
             manualLocateStatus.textContent = `Lokasi dipilih: ${lat.toFixed(5)}, ${lng.toFixed(5)} • ` + (village ? `Kel. ${village}` : 'di luar batas Kecamatan Rakumpit');
             manualLocateStatus.className = 'text-[11px] font-medium ' + (village ? 'text-emerald-700' : 'text-amber-600');
+            if (village) manualKelurahanEl.value = village;
         }
         [manualLatInput, manualLngInput].forEach(el => el.addEventListener('change', () => {
             const la = parseFloat(manualLatInput.value), ln = parseFloat(manualLngInput.value);
@@ -1281,6 +1320,7 @@
             manualPhotoPreview.classList.add('hidden');
             manualTindakanEl.value = '';
             manualDeskripsiEl.value = '';
+            manualKelurahanEl.value = '';
             pendingManualPhoto = null;
             manualErrorEl.classList.add('hidden');
             manualErrorEl.textContent = '';
@@ -1389,6 +1429,11 @@
                 manualErrorEl.classList.remove('hidden');
                 return;
             }
+            if (!manualKelurahanEl.value) {
+                manualErrorEl.textContent = 'Kelurahan wajib dipilih.';
+                manualErrorEl.classList.remove('hidden');
+                return;
+            }
             if (!tindakan) {
                 manualErrorEl.textContent = 'Jenis tindakan wajib dipilih.';
                 manualErrorEl.classList.remove('hidden');
@@ -1409,6 +1454,7 @@
                 lng: lng,
                 tindakan: tindakan,
                 deskripsi: deskripsi,
+                kelurahan: manualKelurahanEl.value,
                 pelapor: manualPelaporEl.value.trim() || '-'
             };
             if (pendingManualPhoto) {
@@ -1522,8 +1568,8 @@
             const sat = document.getElementById('satellite-filter').value;
             return `Sesuai Filter Aktif (${villageLabel}, ${sat === 'ALL' ? 'Semua Satelit' : sat}, ${rangeLabels[currentTimeRange] || 'Hari Ini'})`;
         }
-        pdfScopeFilteredBtn.addEventListener('click', () => runPdfGeneration(globalFilteredHotspots, scopeLabelFiltered_()));
-        pdfScopeAllBtn.addEventListener('click', () => runPdfGeneration(buildHotspotList(globalRawHotspotData, '', 'ALL', null), 'Semua Data (Tanpa Filter)'));
+        pdfScopeFilteredBtn.addEventListener('click', () => runPdfGeneration(globalFilteredHotspots, scopeLabelFiltered_(), manualForView_()));
+        pdfScopeAllBtn.addEventListener('click', () => runPdfGeneration(buildHotspotList(globalRawHotspotData, '', 'ALL', null), 'Semua Data (Tanpa Filter)', globalManualReports));
 
         const TIDAK_DIJANGKAU = 'Akses tidak bisa dijangkau / belum bisa ditindaklanjuti';
         function setPdfStatus_(msg) { pdfStatusEl.textContent = msg; pdfStatusEl.classList.remove('hidden'); }
@@ -1541,9 +1587,9 @@
 
         // Titik masuk tunggal. Mode "print" dijalankan SINKRON (sebelum await apa pun)
         // supaya jendela cetak tidak diblokir popup-blocker.
-        async function runPdfGeneration(list, scopeLabel) {
+        async function runPdfGeneration(list, scopeLabel, manualIn) {
             list = list || [];
-            const manual = globalManualReports || [];
+            const manual = manualIn || [];
             if (list.length === 0 && manual.length === 0) {
                 setPdfStatus_('Tidak ada titik panas atau laporan manual pada cakupan ini.');
                 return;
@@ -1593,7 +1639,7 @@
 
             const rowsM = manual.map((r, i) => {
                 const la = parseFloat(r.lat), ln = parseFloat(r.lng);
-                return `<tr><td class="c">${i + 1}</td><td>${e(fmtWib_(r.timestamp))}</td>` +
+                return `<tr><td class="c">${i + 1}</td><td>${e(fmtWib_(r.timestamp))}</td><td>${e(manualVillage_(r))}</td>` +
                     `<td><a href="${gm(la, ln)}" target="_blank">${la.toFixed(5)}, ${ln.toFixed(5)}</a></td>` +
                     `<td class="c">${foto(r.fotoUrl)}</td><td>${ket(r)}</td></tr>`;
             }).join('');
@@ -1621,7 +1667,7 @@
                 <div class="meta"><b>Cakupan Data:</b> ${e(scopeLabel)}<br><b>Dicetak:</b> ${e(fmtWib_(new Date().toISOString()))}<br>
                 <b>Total Titik:</b> ${list.length} &nbsp;|&nbsp; <b>Confidence Tinggi (&ge;80%):</b> ${highConf} &nbsp;|&nbsp; <b>Kelurahan Terdampak:</b> ${vs.size} &nbsp;|&nbsp; <b>FRP Maks:</b> ${maxFrp.toFixed(1)} MW &nbsp;|&nbsp; <b>Belum Ditindaklanjuti:</b> ${belum}</div>
                 ${list.length ? `<table><thead><tr><th>No</th><th>Waktu (WIB)</th><th>Kelurahan</th><th>Satelit</th><th>Conf.</th><th>FRP (MW)</th><th>Koordinat</th><th>Foto Kegiatan</th><th>Keterangan / Tindak Lanjut</th></tr></thead><tbody>${rowsH}</tbody></table>` : ''}
-                ${manual.length ? `<h2>Laporan Manual (Di Luar Titik Panas Satelit)</h2><table><thead><tr><th>No</th><th>Waktu Laporan</th><th>Koordinat</th><th>Foto Kegiatan</th><th>Tindakan / Uraian</th></tr></thead><tbody>${rowsM}</tbody></table>` : ''}
+                ${manual.length ? `<h2>Laporan Manual (Di Luar Titik Panas Satelit)</h2><table><thead><tr><th>No</th><th>Waktu Laporan</th><th>Kelurahan</th><th>Koordinat</th><th>Foto Kegiatan</th><th>Tindakan / Uraian</th></tr></thead><tbody>${rowsM}</tbody></table>` : ''}
                 <p class="meta" style="margin-top:10px;font-size:9px;color:#555">Dokumen dibuat otomatis dari Dashboard Siaga Karhutla Rakumpit.</p>
             </body></html>`;
         }
@@ -1669,7 +1715,7 @@
                 }
             };
             const linkPhoto = (getUrl) => (d) => {
-                if (d.section === 'body' && d.column.index === 7 || d.section === 'body' && d.column.index === 3 && getUrl.manual) {
+                if (d.section === 'body' && d.column.index === 7 || d.section === 'body' && d.column.index === 4 && getUrl.manual) {
                     const url = getUrl(d.row.index);
                     if (url) doc.link(d.cell.x, d.cell.y, d.cell.width, d.cell.height, { url: url });
                 }
@@ -1718,10 +1764,10 @@
                 getUrl.manual = true;
                 table(Object.assign({}, common, {
                     startY: y + 3,
-                    head: [['No', 'Waktu Laporan', 'Koordinat', 'Foto', 'Tindakan / Uraian']],
-                    body: manual.map((r, i) => [i + 1, S(fmtWib_(r.timestamp)), `${parseFloat(r.lat).toFixed(5)}, ${parseFloat(r.lng).toFixed(5)}`,
+                    head: [['No', 'Waktu Laporan', 'Kelurahan', 'Koordinat', 'Foto', 'Tindakan / Uraian']],
+                    body: manual.map((r, i) => [i + 1, S(fmtWib_(r.timestamp)), S(manualVillage_(r)), `${parseFloat(r.lat).toFixed(5)}, ${parseFloat(r.lng).toFixed(5)}`,
                         r.fotoUrl ? 'Lihat Foto' : '-', S((r.tindakan ? r.tindakan + ': ' : '') + (r.deskripsi || '-') + (r.pelapor && r.pelapor !== '-' ? ` (Pelapor: ${r.pelapor})` : ''))]),
-                    columnStyles: { 0: { cellWidth: 8 }, 1: { cellWidth: 34 }, 2: { cellWidth: 30 }, 3: { cellWidth: 18, textColor: [8, 145, 178] }, 4: { cellWidth: 'auto' } },
+                    columnStyles: { 0: { cellWidth: 8 }, 1: { cellWidth: 34 }, 2: { cellWidth: 26 }, 3: { cellWidth: 30 }, 4: { cellWidth: 18, textColor: [8, 145, 178] }, 5: { cellWidth: 'auto' } },
                     didDrawCell: linkPhoto(getUrl)
                 }));
             }
