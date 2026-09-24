@@ -309,14 +309,22 @@
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Lokasi Saat Ini
                     </button>
-                    <button id="manual-pick-map-btn" type="button"
+                    <button id="manual-gmaps-btn" type="button"
                         class="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-sky-700 bg-sky-50 hover:bg-sky-100 py-2 rounded-lg transition-colors">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                        Pilih di Peta
+                        Buka Google Maps
                     </button>
                 </div>
-                <p id="manual-pick-hint" class="hidden text-[11px] text-sky-700 font-medium text-center">Klik lokasi di peta untuk mengisi koordinat...</p>
                 <p id="manual-locate-status" class="hidden text-[11px] text-slate-500 font-medium text-center"></p>
+
+                <label class="block text-xs font-semibold text-slate-600 pt-1">Tempel Koordinat/Link dari Google Maps</label>
+                <div class="flex gap-2">
+                    <input type="text" id="manual-gmaps-paste" placeholder="mis. -1.6534, 113.6021 atau link lokasi Google Maps"
+                        class="flex-1 text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-sky-500" />
+                    <button id="manual-gmaps-apply-btn" type="button"
+                        class="shrink-0 text-xs font-semibold text-white bg-sky-600 hover:bg-sky-700 px-3 rounded-lg transition-colors">Terapkan</button>
+                </div>
+                <p class="text-[10px] text-slate-400 leading-snug">Di Google Maps: tekan lama/klik kanan titik lokasi → salin koordinat yang muncul, atau salin link dari bilah alamat setelah membuka lokasinya, lalu tempel di sini. Link pendek (maps.app.goo.gl) belum bisa dibaca otomatis — buka dulu link itu, baru salin link/koordinat dari halaman yang terbuka.</p>
 
                 <label class="block text-xs font-semibold text-slate-600 pt-1">Foto Kegiatan/Kejadian</label>
                 <input type="file" id="manual-photo-input" accept="image/*"
@@ -1156,7 +1164,7 @@
                 fetchRealtimeData(false); // muat ulang supaya popup menampilkan laporan terbaru
             } catch (err) {
                 console.error('Gagal mengirim laporan:', err);
-                reportErrorEl.textContent = 'Gagal mengirim laporan. Periksa koneksi lalu coba lagi.';
+                reportErrorEl.textContent = 'Gagal mengirim laporan: ' + (err && err.message ? err.message : 'periksa koneksi lalu coba lagi.');
                 reportErrorEl.classList.remove('hidden');
                 reportSubmitBtn.disabled = false;
                 reportSubmitBtn.textContent = 'Kirim Laporan';
@@ -1213,10 +1221,11 @@
         const manualOverlay = document.getElementById('manual-modal-overlay');
         const manualLatInput = document.getElementById('manual-lat-input');
         const manualLngInput = document.getElementById('manual-lng-input');
-        const manualPickBtn = document.getElementById('manual-pick-map-btn');
+        const manualGmapsBtn = document.getElementById('manual-gmaps-btn');
+        const manualGmapsPasteInput = document.getElementById('manual-gmaps-paste');
+        const manualGmapsApplyBtn = document.getElementById('manual-gmaps-apply-btn');
         const manualLocateBtn = document.getElementById('manual-locate-btn');
         const manualLocateStatus = document.getElementById('manual-locate-status');
-        const manualPickHint = document.getElementById('manual-pick-hint');
         const manualPhotoInput = document.getElementById('manual-photo-input');
         const manualPhotoPreview = document.getElementById('manual-photo-preview');
         const manualTindakanEl = document.getElementById('manual-tindakan');
@@ -1225,11 +1234,11 @@
         const manualErrorEl = document.getElementById('manual-modal-error');
         const manualSubmitBtn = document.getElementById('manual-submit-btn');
         let pendingManualPhoto = null;
-        let manualPickModeActive = false;
 
         function openManualModal() {
             manualLatInput.value = '';
             manualLngInput.value = '';
+            manualGmapsPasteInput.value = '';
             manualPhotoInput.value = '';
             manualPhotoPreview.classList.add('hidden');
             manualTindakanEl.value = '';
@@ -1240,36 +1249,50 @@
             manualLocateStatus.classList.add('hidden');
             manualSubmitBtn.disabled = false;
             manualSubmitBtn.textContent = 'Kirim Laporan Manual';
-            manualPickModeActive = false;
-            manualPickHint.classList.add('hidden');
             manualOverlay.classList.remove('hidden');
             manualOverlay.classList.add('flex');
         }
         function closeManualModal() {
             manualOverlay.classList.add('hidden');
             manualOverlay.classList.remove('flex');
-            manualPickModeActive = false;
-            manualPickHint.classList.add('hidden');
         }
         document.getElementById('btn-manual-report').addEventListener('click', openManualModal);
         document.getElementById('manual-modal-close').addEventListener('click', closeManualModal);
         manualOverlay.addEventListener('click', (e) => { if (e.target === manualOverlay) closeManualModal(); });
 
-        // "Pilih Titik di Peta": sembunyikan modal sementara, tunggu klik di peta,
-        // isi input lat/lng, lalu tampilkan modal lagi.
-        manualPickBtn.addEventListener('click', () => {
-            manualPickModeActive = true;
-            manualOverlay.classList.add('hidden');
-            manualOverlay.classList.remove('flex');
-            manualPickHint.classList.remove('hidden');
+        // "Buka Google Maps": buka Google Maps di tab baru supaya pengguna bisa
+        // mencari/menjelajah lokasi kejadian, lalu koordinat atau link-nya
+        // ditempel kembali ke kolom di bawah untuk otomatis diisi ke form ini.
+        manualGmapsBtn.addEventListener('click', () => {
+            window.open('https://www.google.com/maps', '_blank');
         });
-        map.on('click', (e) => {
-            if (!manualPickModeActive) return;
-            manualPickModeActive = false;
-            manualLatInput.value = e.latlng.lat.toFixed(6);
-            manualLngInput.value = e.latlng.lng.toFixed(6);
-            manualOverlay.classList.remove('hidden');
-            manualOverlay.classList.add('flex');
+
+        // Baca koordinat dari teks yang ditempel: bisa berupa "lat,lng" polos,
+        // atau link Google Maps yang mengandung pola "@lat,lng", "?q=lat,lng",
+        // maupun "!3dlat!4dlng" (link halaman tempat/place).
+        function parseGoogleMapsCoordText_(text) {
+            if (!text) return null;
+            text = text.trim();
+            let m = text.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+            if (m) return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+            m = text.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+            if (m) return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+            m = text.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+            if (m) return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+            m = text.match(/(-?\d{1,3}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);
+            if (m) return { lat: parseFloat(m[1]), lng: parseFloat(m[2]) };
+            return null;
+        }
+        manualGmapsApplyBtn.addEventListener('click', () => {
+            const parsed = parseGoogleMapsCoordText_(manualGmapsPasteInput.value);
+            manualLocateStatus.classList.remove('hidden');
+            if (!parsed || isNaN(parsed.lat) || isNaN(parsed.lng)) {
+                manualLocateStatus.textContent = 'Format tidak dikenali. Salin koordinat (lat,lng) atau link lokasi dari Google Maps, lalu tempel lagi.';
+                return;
+            }
+            manualLatInput.value = parsed.lat.toFixed(6);
+            manualLngInput.value = parsed.lng.toFixed(6);
+            manualLocateStatus.textContent = `Koordinat diisi dari Google Maps: ${parsed.lat.toFixed(6)}, ${parsed.lng.toFixed(6)}.`;
         });
 
         // "Lokasi Saat Ini": ambil koordinat GPS perangkat lewat Geolocation API browser.
@@ -1291,7 +1314,7 @@
                 },
                 (err) => {
                     console.error('Gagal mendeteksi lokasi:', err);
-                    manualLocateStatus.textContent = 'Gagal mendeteksi lokasi. Izinkan akses lokasi atau pilih titik di peta.';
+                    manualLocateStatus.textContent = 'Gagal mendeteksi lokasi. Izinkan akses lokasi, atau ambil dari Google Maps.';
                     manualLocateBtn.disabled = false;
                 },
                 { enableHighAccuracy: true, timeout: 10000 }
@@ -1361,7 +1384,7 @@
                 fetchRealtimeData(false);
             } catch (err) {
                 console.error('Gagal mengirim laporan manual:', err);
-                manualErrorEl.textContent = 'Gagal mengirim laporan. Periksa koneksi lalu coba lagi.';
+                manualErrorEl.textContent = 'Gagal mengirim laporan: ' + (err && err.message ? err.message : 'periksa koneksi lalu coba lagi.');
                 manualErrorEl.classList.remove('hidden');
                 manualSubmitBtn.disabled = false;
                 manualSubmitBtn.textContent = 'Kirim Laporan Manual';
@@ -1590,7 +1613,7 @@
             const reportOpen = !reportOverlay.classList.contains('hidden');
             const manualOpen = !manualOverlay.classList.contains('hidden');
             const pdfOpen = !pdfOverlay.classList.contains('hidden');
-            if (reportOpen || manualOpen || pdfOpen || manualPickModeActive) return;
+            if (reportOpen || manualOpen || pdfOpen) return;
             fetchRealtimeData(false);
         }, 120000);
     </script>
