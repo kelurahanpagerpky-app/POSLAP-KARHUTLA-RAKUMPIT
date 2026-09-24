@@ -1371,6 +1371,65 @@
         // --- LAPORAN PDF ---
         const pdfOverlay = document.getElementById('pdf-modal-overlay');
         const pdfStatusEl = document.getElementById('pdf-modal-status');
+
+        // --- PEMUATAN LIBRARY PDF YANG TANGGUH ---
+        // <script> statis di <head> biasanya cukup, tapi kalau jaringan kantor
+        // memblokir/gagal memuat cdnjs (sering terjadi di jaringan pemerintah),
+        // "Gagal membuat PDF" akan selalu muncul tanpa pernah bisa diperbaiki
+        // sendiri oleh pengguna. Di sini kita cek dulu apakah library sudah
+        // benar-benar siap; kalau belum, coba muat ulang dari CDN cadangan
+        // (jsDelivr) sebelum menyerah.
+        function loadScriptOnce_(url) {
+            return new Promise((resolve, reject) => {
+                const existing = document.querySelector(`script[data-src="${url}"]`);
+                if (existing && existing.dataset.loaded === 'true') { resolve(); return; }
+                const s = existing || document.createElement('script');
+                s.src = url;
+                s.dataset.src = url;
+                s.onload = () => { s.dataset.loaded = 'true'; resolve(); };
+                s.onerror = () => reject(new Error('Gagal memuat skrip: ' + url));
+                if (!existing) document.head.appendChild(s);
+            });
+        }
+        const JSPDF_SOURCES = [
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+            'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'
+        ];
+        const AUTOTABLE_SOURCES = [
+            'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js',
+            'https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js'
+        ];
+        let pdfLibsReadyPromise = null;
+        function ensurePdfLibsReady_() {
+            if (pdfLibsReadyPromise) return pdfLibsReadyPromise;
+            pdfLibsReadyPromise = (async () => {
+                if (!(window.jspdf && window.jspdf.jsPDF)) {
+                    for (const src of JSPDF_SOURCES) {
+                        try {
+                            await loadScriptOnce_(src);
+                            if (window.jspdf && window.jspdf.jsPDF) break;
+                        } catch (e) { console.error(e); }
+                    }
+                }
+                if (!(window.jspdf && window.jspdf.jsPDF)) {
+                    pdfLibsReadyPromise = null; // izinkan dicoba lagi lain kali
+                    throw new Error('Library jsPDF gagal dimuat (periksa koneksi internet, atau CDN diblokir jaringan Anda).');
+                }
+                if (typeof window.jspdf.jsPDF.API.autoTable !== 'function') {
+                    for (const src of AUTOTABLE_SOURCES) {
+                        try {
+                            await loadScriptOnce_(src);
+                            if (typeof window.jspdf.jsPDF.API.autoTable === 'function') break;
+                        } catch (e) { console.error(e); }
+                    }
+                }
+                if (typeof window.jspdf.jsPDF.API.autoTable !== 'function') {
+                    pdfLibsReadyPromise = null;
+                    throw new Error('Library jsPDF-AutoTable gagal dimuat (periksa koneksi internet, atau CDN diblokir jaringan Anda).');
+                }
+            })();
+            return pdfLibsReadyPromise;
+        }
         const pdfScopeFilteredBtn = document.getElementById('pdf-scope-filtered');
         const pdfScopeAllBtn = document.getElementById('pdf-scope-all');
 
@@ -1414,11 +1473,13 @@
             pdfStatusEl.textContent = 'Menyusun PDF...';
             pdfStatusEl.classList.remove('hidden');
             try {
+                await ensurePdfLibsReady_();
                 await generateHotspotPdfReport(list, scopeLabel);
                 closePdfModal();
             } catch (err) {
                 console.error('Gagal membuat PDF:', err);
-                pdfStatusEl.textContent = 'Gagal membuat PDF. Coba lagi.';
+                const pesan = (err && err.message) ? err.message : 'Kesalahan tidak diketahui.';
+                pdfStatusEl.textContent = 'Gagal membuat PDF: ' + pesan;
                 pdfStatusEl.classList.remove('hidden');
             }
         }
