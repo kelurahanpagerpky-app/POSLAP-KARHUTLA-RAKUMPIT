@@ -64,12 +64,18 @@
             opacity: 1;
         }
         .marker-cluster-hotspot {
-            background-color: rgba(51,65,85,0.55);
+            background-color: rgba(245,158,11,0.55);
         }
         .marker-cluster-hotspot div {
-            background-color: rgba(51,65,85,0.9);
+            background-color: rgba(245,158,11,0.92);
             color: #fff;
             font-weight: 700;
+        }
+        .marker-cluster-hotspot div svg {
+            width: 12px;
+            height: 12px;
+            margin-right: 2px;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -577,7 +583,9 @@
             maxClusterRadius: 45,
             iconCreateFunction: function (cluster) {
                 return L.divIcon({
-                    html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+                    html: '<div style="display:flex;align-items:center;justify-content:center;gap:1px">' +
+                        '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2c-3 4-6 7.5-6 11.5A6 6 0 0012 20a6 6 0 006-6.5C18 9.5 15 6 12 2z"/></svg>' +
+                        '<span>' + cluster.getChildCount() + '</span></div>',
                     className: 'marker-cluster marker-cluster-hotspot',
                     iconSize: L.point(38, 38)
                 });
