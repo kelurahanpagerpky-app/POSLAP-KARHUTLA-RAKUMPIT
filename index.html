@@ -1604,7 +1604,7 @@
         pdfScopeFilteredBtn.addEventListener('click', () => runPdfGeneration(globalFilteredHotspots, scopeLabelFiltered_(), manualForView_()));
         pdfScopeAllBtn.addEventListener('click', () => runPdfGeneration(buildHotspotList(globalRawHotspotData, '', 'ALL', null), 'Semua Data (Tanpa Filter)', globalManualReports));
 
-        const TIDAK_DIJANGKAU = 'Akses tidak bisa dijangkau / belum bisa ditindaklanjuti';
+        const TIDAK_DIJANGKAU = 'Perlu Verifikasi Lapangan / Akses tidak bisa dijangkau / belum bisa ditindaklanjuti';
         function setPdfStatus_(msg) { pdfStatusEl.textContent = msg; pdfStatusEl.classList.remove('hidden'); }
         function fmtWib_(iso) {
             const d = new Date(iso);
