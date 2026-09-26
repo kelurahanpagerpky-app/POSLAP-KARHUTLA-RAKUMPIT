@@ -7,6 +7,10 @@
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <!-- Leaflet MarkerCluster (mengelompokkan titik panas yang berdekatan agar peta tetap rapi) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -58,6 +62,14 @@
         }
         .hotspot-popup .leaflet-popup-close-button:hover {
             opacity: 1;
+        }
+        .marker-cluster-hotspot {
+            background-color: rgba(220,38,38,0.55);
+        }
+        .marker-cluster-hotspot div {
+            background-color: rgba(220,38,38,0.85);
+            color: #fff;
+            font-weight: 700;
         }
     </style>
 </head>
@@ -228,7 +240,7 @@
             Penata Kelola Sistem dan Teknologi Informasi Kelurahan Pager
         </p>
         <p class="text-xs text-slate-500 font-medium mt-1">
-            MHC 2026
+            MEMET HARIYADI CHRISTIAN, S.T - ©2026
         </p>
     </div>
 </footer>
@@ -371,6 +383,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
     
     <script>
         const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzF7GFRaAuz_4_7D00HAjGZqWEI_nV95e_Hj5BQ2Xj-3U74IAhc96kDpcL-mYJ5fIbp/exec"; 
@@ -558,7 +571,19 @@
         };
         legend.addTo(map);
 
-        var hotspotGroup = L.layerGroup().addTo(map);
+        // Cluster: titik panas yang berdekatan dikelompokkan jadi satu badge angka,
+        // pecah otomatis jadi titik masing-masing saat peta di-zoom in.
+        var hotspotGroup = L.markerClusterGroup({
+            maxClusterRadius: 45,
+            iconCreateFunction: function (cluster) {
+                return L.divIcon({
+                    html: '<div><span>' + cluster.getChildCount() + '</span></div>',
+                    className: 'marker-cluster marker-cluster-hotspot',
+                    iconSize: L.point(38, 38)
+                });
+            }
+        });
+        map.addLayer(hotspotGroup);
         var manualReportGroup = L.layerGroup().addTo(map);
         var villageSelect = document.getElementById('rk-village');
         var villageLayers = {};
