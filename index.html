@@ -77,7 +77,52 @@
             margin-right: 2px;
             flex-shrink: 0;
         }
+
+        /* ================= TEMA GELAP/TERANG ================= */
+        body, header, footer, .bg-white, .bg-slate-50, .bg-slate-100,
+        input, select, textarea {
+            transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+        }
+        html.dark body { background-color: #0b1220; color: #e2e8f0; }
+        html.dark header, html.dark footer { background-color: #111827; border-color: #263042 !important; }
+        html.dark .bg-white { background-color: #16202f; }
+        html.dark .bg-slate-50 { background-color: #0b1220; }
+        html.dark .bg-slate-100 { background-color: #1e293b; }
+        html.dark .border-slate-200, html.dark .border-slate-200\/80,
+        html.dark .border-slate-300 { border-color: #263042 !important; }
+        html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #263042; }
+        html.dark .text-slate-900, html.dark .text-slate-800 { color: #f1f5f9; }
+        html.dark .text-slate-700, html.dark .text-slate-600 { color: #cbd5e1; }
+        html.dark .text-slate-500, html.dark .text-slate-400 { color: #8391a6; }
+        html.dark input, html.dark select, html.dark textarea {
+            background-color: #16202f; color: #e2e8f0; border-color: #263042 !important;
+        }
+        html.dark input::placeholder, html.dark textarea::placeholder { color: #64748b; }
+        html.dark .hover\:bg-slate-100:hover { background-color: #1e293b; }
+        html.dark #time-range-toggle { background-color: #0b1220; }
+        html.dark table thead tr { background-color: #0b1220 !important; }
+        html.dark ::-webkit-scrollbar { width: 10px; height: 10px; }
+        html.dark ::-webkit-scrollbar-track { background: #0b1220; }
+        html.dark ::-webkit-scrollbar-thumb { background: #263042; border-radius: 8px; }
+
+        /* Tombol tema */
+        #btn-theme-toggle svg { width: 18px; height: 18px; }
+        #btn-theme-toggle .icon-moon { display: block; }
+        #btn-theme-toggle .icon-sun { display: none; }
+        html.dark #btn-theme-toggle .icon-moon { display: none; }
+        html.dark #btn-theme-toggle .icon-sun { display: block; }
     </style>
+    <script>
+        // Terapkan tema tersimpan SEBELUM body dirender, supaya tidak "berkedip"
+        // dari terang ke gelap saat halaman baru dibuka.
+        (function () {
+            try {
+                var saved = localStorage.getItem('rk_theme');
+                var isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (isDark) document.documentElement.classList.add('dark');
+            } catch (e) {}
+        })();
+    </script>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
@@ -101,6 +146,12 @@
             </nav>
 
             <div class="flex items-center gap-2">
+                <!-- Tombol Ganti Tema Gelap/Terang -->
+                <button id="btn-theme-toggle" type="button" title="Ganti tema gelap/terang"
+                    class="inline-flex items-center justify-center w-9 h-9 text-slate-600 hover:text-emerald-700 hover:bg-slate-100 rounded-xl transition-all active:scale-95 cursor-pointer">
+                    <svg class="icon-moon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    <svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                </button>
                 <!-- Tombol Update / Tarik Data Satelit Langsung ke Sheet -->
                 <button id="btn-update-satellite" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -246,7 +297,7 @@
             Penata Kelola Sistem dan Teknologi Informasi Kelurahan Pager
         </p>
         <p class="text-xs text-slate-500 font-medium mt-1">
-            MHC 2026
+            MEMET HARIYADI CHRISTIAN, S.T - ©2026
         </p>
     </div>
 </footer>
@@ -1088,6 +1139,13 @@
         document.getElementById('btn-update-satellite').addEventListener('click', () => fetchRealtimeData(true));
         document.getElementById('btn-refresh-data').addEventListener('click', () => fetchRealtimeData(false));
         document.getElementById('rk-village').addEventListener('change', () => fetchRealtimeData(false));
+
+        // --- TOMBOL TEMA GELAP/TERANG ---
+        document.getElementById('btn-theme-toggle').addEventListener('click', () => {
+            const html = document.documentElement;
+            const nowDark = html.classList.toggle('dark');
+            try { localStorage.setItem('rk_theme', nowDark ? 'dark' : 'light'); } catch (e) {}
+        });
         document.getElementById('satellite-filter').addEventListener('change', () => fetchRealtimeData(false));
         document.querySelectorAll('.time-range-btn').forEach(btn => {
             btn.addEventListener('click', () => {
