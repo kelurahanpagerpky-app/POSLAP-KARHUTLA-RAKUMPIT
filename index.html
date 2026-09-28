@@ -377,12 +377,12 @@
 
         <!-- Statistik & Grafik (di bawah peta) -->
         <section id="stats-section" class="space-y-4">
-            <div class="flex items-end justify-between flex-wrap gap-2">
-                <h3 class="text-base font-bold text-slate-800">Statistik Titik Panas</h3>
-                <p class="text-[11px] text-slate-400">Mengikuti filter satelit (dan kelurahan pada grafik). Jumlah = titik unik per hari (WIB).</p>
-            </div>
             <div id="stats-period-cards" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
-            <div id="stats-village-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3"></div>
+            <div>
+                <h3 class="text-base font-bold text-slate-800">Statistik Hotspot per Kelurahan (Hari Ini)</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Jumlah titik panas hari ini per kelurahan, lengkap dengan rincian satelit yang mendeteksi.</p>
+            </div>
+            <div id="stats-village-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
                     <div class="flex items-center justify-between gap-2 mb-3"><h4 class="text-sm font-bold text-slate-800">Tren Harian (7 Hari)</h4><span id="chart-daily-meta" class="chip"></span></div>
@@ -442,6 +442,10 @@
                     <input id="rh-date" type="date" class="px-2.5 py-2 text-xs font-semibold border border-slate-300 rounded-lg bg-slate-50 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
                     <button id="rh-next" type="button" title="Hari berikutnya" class="w-9 h-9 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold cursor-pointer">&rsaquo;</button>
                     <button id="rh-today" type="button" class="px-3 h-9 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 cursor-pointer">Hari Ini</button>
+                    <button id="rh-print" type="button" class="inline-flex items-center gap-1.5 px-3 h-9 rounded-lg text-xs font-bold rk-btn-gold cursor-pointer">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"/></svg>
+                        Cetak PDF Tanggal Ini
+                    </button>
                 </div>
             </div>
             <div id="report-date-chips" class="flex items-center gap-1.5 flex-wrap"></div>
@@ -609,6 +613,16 @@
         let globalReportsByKey = {}; // Laporan aksi/foto kegiatan per titik panas, kunci = hotspotKey
         let globalManualReports = []; // Laporan manual di luar titik panas satelit
         let globalRawHotspotData = []; // Data mentah (belum difilter) dari tarikan terakhir, dipakai untuk PDF "Semua Data"
+        let globalDailyStats = []; // Statistik harian dari server (14 hari), dipakai grafik tren & kartu kelurahan
+        let globalReportDates = {}; // {"YYYY-MM-DD": jumlahLaporan} dari server, dipakai tombol tanggal riwayat laporan
+        const dateDataCache = new Map(); // Cache hasil fetch ?date=YYYY-MM-DD (laporan & foto hari-hari sebelumnya)
+        function fetchDateData_(date) {
+            if (dateDataCache.has(date)) return dateDataCache.get(date);
+            const p = fetch(`${GAS_API_URL}?date=${date}&_=${Date.now()}`, { cache: 'no-store' }).then(r => r.json());
+            dateDataCache.set(date, p);
+            p.catch(() => dateDataCache.delete(date));
+            return p;
+        }
         let pendingReportPhoto = null; // {base64, mime, nama} hasil kompresi foto yang dipilih di modal
 
         // Kunci unik per titik panas (lokasi + satelit, dibulatkan 3 desimal).
@@ -1087,6 +1101,8 @@
                     result.reports.forEach(rep => { globalReportsByKey[rep.hotspotKey] = rep; });
                 }
                 globalManualReports = (result && Array.isArray(result.manualReports)) ? result.manualReports : [];
+                globalDailyStats = (result && Array.isArray(result.dailyStats)) ? result.dailyStats : [];
+                globalReportDates = (result && result.reportDates && typeof result.reportDates === 'object') ? result.reportDates : {};
                 
                 if (isUpdate) {
                     alert("Berhasil menarik data satelit terbaru ke Spreadsheet dan memperbarui dashboard!");
@@ -1354,48 +1370,63 @@
             </div>`;
         }
 
-        // Ringkasan tanggal yang punya laporan + diagnostik data dari server
-        function reportDateCounts_() {
-            const c = {}, today = getTodayWIB();
-            const add = (ts) => { const d = reportDateOf_(ts) || today; c[d] = (c[d] || 0) + 1; };
-            Object.values(globalReportsByKey || {}).forEach(r => add(r.timestamp || r.waktu || r.createdAt));
-            (globalManualReports || []).forEach(r => add(r.timestamp));
-            return c;
-        }
+        // Ringkasan tanggal yang punya laporan (dari server, mencakup hari-hari sebelumnya)
+        // + diagnostik data yang diterima
         function renderReportMeta_() {
-            const c = reportDateCounts_(), dates = Object.keys(c).sort().reverse(), sel = reportDate_();
+            const c = globalReportDates || {}, dates = Object.keys(c).sort().reverse(), sel = reportDate_();
             document.getElementById('report-date-chips').innerHTML = dates.length
                 ? '<span class="text-[11px] text-slate-500 mr-1">Tanggal ada laporan:</span>' + dates.slice(0, 14).map(d =>
                     `<button type="button" data-d="${d}" class="px-2.5 py-1 rounded-full text-[11px] font-bold border transition-colors cursor-pointer ${d === sel ? 'bg-emerald-600 text-white border-emerald-600' : 'border-slate-200 text-slate-600 hover:bg-slate-100'}">${d.slice(8)}/${d.slice(5, 7)} (${c[d]})</button>`).join('')
                 : '';
-            const nH = Object.keys(globalReportsByKey || {}).length, nM = (globalManualReports || []).length;
-            document.getElementById('report-diag').textContent = (nH + nM === 0)
-                ? 'Server belum mengirim satu pun laporan.'
-                : `Data dari server: ${nH} laporan titik panas + ${nM} laporan manual • terlama: ${dates.length ? dates[dates.length - 1] : '-'}, terbaru: ${dates.length ? dates[0] : '-'}.`;
+            const totalRep = dates.reduce((a, d) => a + c[d], 0);
+            document.getElementById('report-diag').textContent = dates.length
+                ? `Total ${totalRep} laporan (60 hari terakhir) • terlama: ${dates[dates.length - 1]}, terbaru: ${dates[0]}.`
+                : 'Server belum mengirim satu pun laporan.';
             return dates;
         }
         document.getElementById('report-date-chips').addEventListener('click', (e) => {
             const b = e.target.closest('[data-d]'); if (b) setReportDate_(b.dataset.d);
         });
-        function renderReportHistory() {
+        // Bangun daftar item riwayat untuk tanggal d. Hari ini memakai data yang sudah
+        // dimuat (globalReportsByKey/globalManualReports); tanggal lain diambil dari
+        // server lewat ?date=... (di-cache) supaya laporan & foto hari-hari sebelumnya
+        // tetap bisa dilihat dan dicetak.
+        async function reportItemsForDate_(d) {
+            const v = villageSelect.value, today = getTodayWIB();
+            if (d === today) {
+                return hotspotReportsForDate_().map(o => Object.assign(o, { manual: false }))
+                    .concat(manualForView_().map(r => ({ rep: r, lat: parseFloat(r.lat), lng: parseFloat(r.lng), village: manualVillage_(r), manual: true })));
+            }
+            const payload = await fetchDateData_(d);
+            const reports = (payload && payload.reports) || [];
+            const manual = (payload && payload.manualReports) || [];
+            const satOf = (key) => { const i = key.lastIndexOf('_'); return i > -1 ? key.slice(i + 1) : ''; };
+            return reports.filter(r => !v || r.kelurahan === v).map(r => ({
+                rep: r, lat: r.lat, lng: r.lng, village: r.kelurahan, sat: satOf(r.hotspotKey || ''), manual: false
+            })).concat(manual.filter(r => !v || r.kelurahan === v).map(r => ({
+                rep: r, lat: parseFloat(r.lat), lng: parseFloat(r.lng), village: r.kelurahan, manual: true
+            })));
+        }
+        let reportHistoryToken_ = 0;
+        async function renderReportHistory() {
             const d = reportDate_(), today = getTodayWIB();
             const dateEl = document.getElementById('rh-date');
             dateEl.value = d; dateEl.max = today;
             document.getElementById('rh-next').disabled = d >= today;
             document.getElementById('rh-next').classList.toggle('opacity-40', d >= today);
-            const items = hotspotReportsForDate_().map(o => Object.assign(o, { manual: false }))
-                .concat(manualForView_().map(r => ({ rep: r, lat: parseFloat(r.lat), lng: parseFloat(r.lng), village: manualVillage_(r), manual: true })));
-            items.sort((a, b) => (Date.parse(b.rep.timestamp || b.rep.waktu || b.rep.createdAt) || 0) - (Date.parse(a.rep.timestamp || a.rep.waktu || a.rep.createdAt) || 0));
-            const vLabel = villageSelect.value ? ` di Kel. ${villageSelect.value}` : '';
-            document.getElementById('report-date-summary').textContent = `${fmtDateId_(d)}${d === today ? ' (hari ini)' : ''} • ${items.length} laporan${vLabel}`;
             const dates = renderReportMeta_();
-            const oldest = dates.length ? dates[dates.length - 1] : '';
-            const hint = (d < oldest || !oldest)
-                ? `Server hanya mengirim laporan mulai ${oldest || 'hari ini'}. Bila laporan tanggal ini ada di Spreadsheet, pengaturan backend (Code.gs) yang membatasi datanya.`
-                : 'Tidak ada laporan pada tanggal ini.';
+            const vLabel = villageSelect.value ? ` di Kel. ${villageSelect.value}` : '';
+            document.getElementById('report-date-summary').textContent = `${fmtDateId_(d)}${d === today ? ' (hari ini)' : ''}${vLabel} — memuat...`;
+            const token = ++reportHistoryToken_;
+            let items = [];
+            try { items = await reportItemsForDate_(d); }
+            catch (err) { console.error('Gagal memuat laporan tanggal ' + d, err); }
+            if (token !== reportHistoryToken_) return; // pengguna sudah pindah tanggal
+            items.sort((a, b) => (Date.parse(b.rep.timestamp || b.rep.waktu || b.rep.createdAt) || 0) - (Date.parse(a.rep.timestamp || a.rep.waktu || a.rep.createdAt) || 0));
+            document.getElementById('report-date-summary').textContent = `${fmtDateId_(d)}${d === today ? ' (hari ini)' : ''} • ${items.length} laporan${vLabel}`;
             document.getElementById('report-history-list').innerHTML = items.length
                 ? items.map(reportCardHtml_).join('')
-                : `<p class="md:col-span-2 py-6 text-center text-sm text-slate-400 italic">${esc(hint)}</p>`;
+                : `<p class="md:col-span-2 py-6 text-center text-sm text-slate-400 italic">Tidak ada laporan pada tanggal ini. Gunakan tombol &lsaquo; atau tanggal di atas untuk melihat hari lain.</p>`;
         }
         function setReportDate_(ymd) {
             const today = getTodayWIB();
@@ -1408,6 +1439,30 @@
         document.getElementById('rh-next').addEventListener('click', () => setReportDate_(shiftDate_(reportDate_(), 1)));
         document.getElementById('rh-today').addEventListener('click', () => setReportDate_(getTodayWIB()));
         document.getElementById('rh-date').addEventListener('change', (e) => setReportDate_(e.target.value));
+        document.getElementById('rh-print').addEventListener('click', async () => {
+            const btn = document.getElementById('rh-print'), d = reportDate_(), today = getTodayWIB(), orig = btn.innerHTML;
+            btn.disabled = true; btn.innerHTML = 'Menyiapkan...';
+            try {
+                const v = villageSelect.value;
+                let hotspots, manual, reportsByKey;
+                if (d === today) {
+                    hotspots = buildHotspotList(globalRawHotspotData, v, 'ALL', null);
+                    manual = manualForView_();
+                    reportsByKey = globalReportsByKey;
+                } else {
+                    const payload = await fetchDateData_(d);
+                    hotspots = normalizeHotspots_((payload && payload.data) || []).filter(h => !v || h.village === v);
+                    manual = ((payload && payload.manualReports) || []).filter(r => !v || r.kelurahan === v);
+                    reportsByKey = (payload && payload.hotspotReports) || {};
+                }
+                await runPdfGeneration(hotspots, `Laporan Kegiatan Tanggal ${fmtDateId_(d)}${v ? ' — Kel. ' + v : ''}`, manual, reportsByKey);
+            } catch (err) {
+                console.error(err);
+                alert('Gagal menyiapkan laporan PDF untuk tanggal ini: ' + (err.message || err));
+            } finally {
+                btn.disabled = false; btn.innerHTML = orig;
+            }
+        });
 
         // ---- STATISTIK & GRAFIK DI BAWAH PETA ----
         function barChartSvg_(items, color) {
@@ -1492,6 +1547,21 @@
             wrap.onmouseleave = () => { tip.classList.remove('show'); if (cur) cur.classList.remove('on'); };
         }
 
+        // Statistik harian (kartu per kelurahan + grafik tren) memakai globalDailyStats
+        // dari server, yang mencakup arsip Riwayat_Hotspot -- BUKAN hanya data 48 jam
+        // yang sedang dimuat -- sehingga tetap akurat untuk kemarin dan hari-hari sebelumnya.
+        function dailyEntry_(d) { return (globalDailyStats || []).find(e => e.date === d) || { date: d, cells: {} }; }
+        function dayTotal_(d) { return Object.values(dailyEntry_(d).cells || {}).reduce((a, b) => a + b, 0); }
+        function villageBreakdown_(d, village) {
+            const cells = dailyEntry_(d).cells || {}, out = {};
+            Object.keys(cells).forEach(k => {
+                const sep = k.lastIndexOf('|'), v = k.slice(0, sep), s = k.slice(sep + 1);
+                if (village && v !== village) return;
+                out[v] = out[v] || {}; out[v][s] = (out[v][s] || 0) + cells[k];
+            });
+            return out;
+        }
+
         function renderStatistics() {
             const now = Date.now(), DAY = 864e5;
             const sat = document.getElementById('satellite-filter').value;
@@ -1505,34 +1575,42 @@
                 ? 'Belum ada data dari server.'
                 : `Data dari server: ${st.raw} baris • terbaca: ${st.valid} • waktu tidak terbaca: ${st.noTime}` + (st.newest ? ` • rentang: ${fmtWibFromEpoch_(st.oldest)} s/d ${fmtWibFromEpoch_(st.newest)}` : '');
 
-            const days = [];
-            for (let i = 6; i >= 0; i--) days.push(wibDateOf_(now - i * DAY));
-            const today = days[6], yesterday = days[5];
-            const uniqPerDay = (rows) => { const m = {}; rows.forEach(h => { const d = wibDateOf_(h.epoch); (m[d] = m[d] || new Set()).add(hotspotKeyOf(h.lat, h.lng, h.satellite)); }); return m; };
-            const cnt = (m, d) => (m[d] ? m[d].size : 0);
+            const today = getTodayWIB(), yesterday = shiftDate_(today, -1);
+            const stats7 = (globalDailyStats || []).slice(-7);
+            const days = stats7.length ? stats7.map(e => e.date) : Array.from({ length: 7 }, (_, i) => shiftDate_(today, i - 6));
 
-            // Kartu periode
-            const dayMap = uniqPerDay(scoped);
+            // Kartu periode: "Hari ini"/"Kemarin"/"7 hari" dari statistik server (mencakup arsip);
+            // "24 jam terakhir" tetap dari data langsung karena itu jendela bergulir, bukan per-tanggal-kalender.
             const c24 = new Set(scoped.filter(h => h.epoch >= now - DAY).map(h => hotspotKeyOf(h.lat, h.lng, h.satellite) + '|' + h.epoch)).size;
-            const c7 = days.reduce((a, d) => a + cnt(dayMap, d), 0);
+            const c7 = days.reduce((a, d) => a + dayTotal_(d), 0);
             const card = (label, val, color) => `<div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs border-l-4" style="border-left-color:${color}"><p class="text-xs font-semibold text-slate-500">${label}</p><p class="text-2xl font-black text-slate-800 mt-1">${val}</p></div>`;
             document.getElementById('stats-period-cards').innerHTML =
-                card('Hari ini', cnt(dayMap, today), '#dc2626') + card('Kemarin', cnt(dayMap, yesterday), '#f59e0b') +
+                card('Hari ini', dayTotal_(today), '#dc2626') + card('Kemarin', dayTotal_(yesterday), '#f59e0b') +
                 card('24 jam terakhir (deteksi)', c24, '#0ea5e9') + card('7 hari terakhir', c7, '#059669');
 
-            // Kartu per kelurahan (nama kelurahan + jumlah hari ini)
+            // Kartu per kelurahan: total hari ini + rincian per satelit (gaya kartu per kecamatan)
+            const todayBreak = villageBreakdown_(today), yestBreak = villageBreakdown_(yesterday);
             document.getElementById('stats-village-cards').innerHTML = GEOJSON.features.map(f => {
-                const name = f.properties.village;
-                const m = uniqPerDay(all.filter(h => h.village === name));
-                const week = days.reduce((a, d) => a + cnt(m, d), 0);
-                return `<div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-xs" style="border-top:4px solid ${getVillageColor(f.properties.village_code)}">
-                    <p class="text-xs font-bold text-slate-700 truncate" title="${esc(name)}">${esc(name)}</p>
-                    <p class="text-2xl font-black text-slate-800 mt-1">${cnt(m, today)} <span class="text-[11px] font-semibold text-slate-400">hari ini</span></p>
-                    <p class="text-[11px] text-slate-500 mt-0.5">Kemarin ${cnt(m, yesterday)} • 7 hari ${week}</p></div>`;
+                const name = f.properties.village, color = getVillageColor(f.properties.village_code);
+                const satMap = todayBreak[name] || {};
+                const total = Object.values(satMap).reduce((a, b) => a + b, 0);
+                const rows = Object.entries(satMap).sort((a, b) => b[1] - a[1]);
+                const yestTotal = Object.values(yestBreak[name] || {}).reduce((a, b) => a + b, 0);
+                const listHtml = rows.length
+                    ? rows.map(([s, v]) => `<div class="flex items-center justify-between text-xs py-1"><span class="text-slate-600 font-medium">${esc(s)}</span><span class="font-bold text-slate-800">${v}</span></div>`).join('')
+                    : `<p class="text-xs text-slate-400 italic py-1">Belum ada titik panas hari ini</p>`;
+                return `<div class="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+                    <div class="flex items-center justify-between gap-2">
+                        <span class="flex items-center gap-2 text-sm font-bold text-slate-800"><span class="w-2.5 h-2.5 rounded-full shrink-0" style="background:${color}"></span>${esc(name)}</span>
+                        <span class="text-xl font-black text-slate-800">${total}</span>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-slate-100 divide-y divide-slate-50">${listHtml}</div>
+                    <p class="text-[10px] text-slate-400 mt-2">Kemarin: ${yestTotal}</p>
+                </div>`;
             }).join('');
 
-            // Grafik tren harian
-            const dailyItems = days.map(d => ({ label: d.slice(8) + '/' + d.slice(5, 7), value: cnt(dayMap, d), tip: fmtDateId_(d) }));
+            // Grafik tren harian (7 hari, dari statistik server)
+            const dailyItems = days.map(d => ({ label: d.slice(8) + '/' + d.slice(5, 7), value: dayTotal_(d), tip: fmtDateId_(d) }));
             mountChart_('chart-daily', lineChartSvg_(dailyItems, '#10b981', 'daily', { values: true }));
             const dTotal = dailyItems.reduce((a, i) => a + i.value, 0), dPeak = dailyItems.reduce((a, i) => i.value > a.value ? i : a, dailyItems[0]);
             document.getElementById('chart-daily-meta').textContent = dTotal ? `Total ${dTotal} • puncak ${dPeak.value} (${dPeak.label})` : 'Belum ada deteksi';
@@ -2169,32 +2247,34 @@
 
         // Titik masuk tunggal. Mode "print" dijalankan SINKRON (sebelum await apa pun)
         // supaya jendela cetak tidak diblokir popup-blocker.
-        async function runPdfGeneration(list, scopeLabel, manualIn) {
+        async function runPdfGeneration(list, scopeLabel, manualIn, reportsByKeyIn) {
             list = list || [];
             const manual = manualIn || [];
+            const reportsByKey = reportsByKeyIn || globalReportsByKey;
             if (list.length === 0 && manual.length === 0) {
                 setPdfStatus_('Tidak ada titik panas atau laporan manual pada cakupan ini.');
                 return;
             }
             if (document.getElementById('pdf-format').value === 'print') {
-                try { openPrintReport_(list, manual, scopeLabel); closePdfModal(); }
+                try { openPrintReport_(list, manual, scopeLabel, reportsByKey); closePdfModal(); }
                 catch (err) { console.error(err); setPdfStatus_('Gagal membuka mode cetak: ' + (err.message || err)); }
                 return;
             }
             setPdfStatus_('Menyusun PDF...');
             try {
                 await ensurePdfLibsReady_();
-                generateHotspotPdfReport(list, manual, scopeLabel);
+                generateHotspotPdfReport(list, manual, scopeLabel, reportsByKey);
                 closePdfModal();
             } catch (err) {
                 console.error('Gagal membuat PDF:', err);
                 setPdfStatus_('Unduh langsung gagal (' + (err.message || err) + '). Membuka mode cetak sebagai gantinya...');
-                try { openPrintReport_(list, manual, scopeLabel); } catch (e2) { setPdfStatus_('Gagal: ' + (e2.message || e2)); }
+                try { openPrintReport_(list, manual, scopeLabel, reportsByKey); } catch (e2) { setPdfStatus_('Gagal: ' + (e2.message || e2)); }
             }
         }
 
         // --- MODE CETAK: laporan HTML A4 landscape + foto, dicetak / "Simpan sebagai PDF" ---
-        function buildPrintHtml_(list, manual, scopeLabel) {
+        function buildPrintHtml_(list, manual, scopeLabel, reportsByKey) {
+            reportsByKey = reportsByKey || globalReportsByKey;
             const e = (v) => esc(v == null ? '' : v);
             const thumb = (url) => { const m = /[?&]id=([^&]+)/.exec(url || ''); return m ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w480` : url; };
             const foto = (url) => url ? `<a href="${e(url)}" target="_blank"><img class="foto" src="${e(thumb(url))}" onerror="this.onerror=null;this.src='${e(url)}'"></a>` : '-';
@@ -2207,11 +2287,11 @@
                 vs.add(h.village);
                 if (h.confidence >= 80) highConf++;
                 if (h.frp > maxFrp) maxFrp = h.frp;
-                if (!globalReportsByKey[hotspotKeyOf(h.lat, h.lng, h.satellite)]) belum++;
+                if (!reportsByKey[hotspotKeyOf(h.lat, h.lng, h.satellite)]) belum++;
             });
 
             const rowsH = list.map((h, i) => {
-                const rep = globalReportsByKey[hotspotKeyOf(h.lat, h.lng, h.satellite)];
+                const rep = reportsByKey[hotspotKeyOf(h.lat, h.lng, h.satellite)];
                 return `<tr><td class="c">${i + 1}</td><td>${e(h.time)}</td><td>${e(h.village)}</td><td>${e(h.satellite)}</td>` +
                     `<td class="c">${h.confidence}%</td><td class="c">${h.frp.toFixed(1)}</td>` +
                     `<td><a href="${gm(h.lat, h.lng)}" target="_blank">${h.lat.toFixed(5)}, ${h.lng.toFixed(5)}</a></td>` +
@@ -2254,8 +2334,8 @@
             </body></html>`;
         }
 
-        function openPrintReport_(list, manual, scopeLabel) {
-            const html = buildPrintHtml_(list, manual, scopeLabel);
+        function openPrintReport_(list, manual, scopeLabel, reportsByKey) {
+            const html = buildPrintHtml_(list, manual, scopeLabel, reportsByKey);
             let target = window.open('', '_blank');
             let frame = null;
             if (!target) { // popup diblokir -> cetak lewat iframe tersembunyi
@@ -2276,7 +2356,8 @@
         }
 
         // --- MODE UNDUH LANGSUNG (jsPDF + AutoTable), tabel tanpa foto ---
-        function generateHotspotPdfReport(list, manual, scopeLabel) {
+        function generateHotspotPdfReport(list, manual, scopeLabel, reportsByKey) {
+            reportsByKey = reportsByKey || globalReportsByKey;
             const jsPDF = window.jspdf.jsPDF;
             const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
             const W = doc.internal.pageSize.getWidth();
@@ -2317,13 +2398,13 @@
                 vs.add(h.village);
                 if (h.confidence >= 80) highConf++;
                 if (h.frp > maxFrp) maxFrp = h.frp;
-                if (!globalReportsByKey[hotspotKeyOf(h.lat, h.lng, h.satellite)]) belum++;
+                if (!reportsByKey[hotspotKeyOf(h.lat, h.lng, h.satellite)]) belum++;
             });
             doc.text(`Total Titik: ${list.length}  |  Confidence Tinggi (>=80%): ${highConf}  |  Kelurahan Terdampak: ${vs.size}  |  FRP Maks: ${maxFrp.toFixed(1)} MW  |  Belum Ditindaklanjuti: ${belum}`, 14, 39);
 
             let y = 44;
             if (list.length) {
-                const repOf = (h) => globalReportsByKey[hotspotKeyOf(h.lat, h.lng, h.satellite)];
+                const repOf = (h) => reportsByKey[hotspotKeyOf(h.lat, h.lng, h.satellite)];
                 table(Object.assign({}, common, {
                     startY: y,
                     head: [['No', 'Waktu (WIB)', 'Kelurahan', 'Satelit', 'Conf.', 'FRP (MW)', 'Koordinat', 'Foto', 'Keterangan / Tindak Lanjut']],
