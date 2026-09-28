@@ -444,7 +444,9 @@
                     <button id="rh-today" type="button" class="px-3 h-9 rounded-lg text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 cursor-pointer">Hari Ini</button>
                 </div>
             </div>
+            <div id="report-date-chips" class="flex items-center gap-1.5 flex-wrap"></div>
             <div id="report-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+            <p id="report-diag" class="text-[11px] text-slate-400"></p>
         </section>
     </main>
 
@@ -1148,7 +1150,7 @@
                                 ) +
                                 (existingReport.fotoUrl
                                     ? `<a href="${esc(existingReport.fotoUrl)}" target="_blank" class="block">` +
-                                        `<img src="${esc(existingReport.fotoUrl)}" class="w-full h-28 object-cover rounded-lg border border-slate-200" alt="Foto kegiatan">` +
+                                        photoImg_(existingReport.fotoUrl, "w-full h-28 object-cover rounded-lg border border-slate-200", "Foto kegiatan") +
                                       `</a>`
                                     : ''
                                 ) +
@@ -1292,6 +1294,27 @@
             renderTablePage();
         });
 
+        // ---- FOTO LAPORAN (Google Drive) ----
+        // Link Drive (uc?id=... / open?id=... / file/d/ID/view) tidak bisa dipakai langsung
+        // sebagai src <img>. Dipakai URL thumbnail; bila gagal dicoba jalur cadangan,
+        // dan bila tetap gagal tampil tautan "buka foto" (bukan ikon gambar rusak).
+        function driveIdOf_(u) { const m = String(u || '').match(/(?:\/d\/|[?&]id=)([\w-]{15,})/); return m ? m[1] : ''; }
+        function photoImg_(url, cls, alt) {
+            const id = driveIdOf_(url);
+            const first = id ? `https://drive.google.com/thumbnail?id=${id}&sz=w1000` : url;
+            return `<img src="${esc(first)}" data-id="${esc(id)}" data-link="${esc(url)}" loading="lazy" referrerpolicy="no-referrer" onerror="photoFail_(this)" class="${cls}" alt="${esc(alt)}">`;
+        }
+        function photoFail_(img) {
+            const id = img.dataset.id, step = Number(img.dataset.step || 0);
+            if (id && step === 0) { img.dataset.step = 1; img.src = `https://lh3.googleusercontent.com/d/${id}=w1000`; return; }
+            if (id && step === 1) { img.dataset.step = 2; img.src = `https://drive.google.com/uc?export=view&id=${id}`; return; }
+            const a = document.createElement('a');
+            a.href = img.dataset.link; a.target = '_blank'; a.rel = 'noopener';
+            a.className = 'flex items-center justify-center gap-1.5 w-full h-16 rounded-lg border border-dashed border-slate-300 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-50';
+            a.textContent = 'Foto tidak bisa ditampilkan — buka di tab baru';
+            img.replaceWith(a);
+        }
+
         // ---- RIWAYAT LAPORAN PER TANGGAL ----
         function fmtDateId_(ymd) {
             const [y, m, d] = ymd.split('-').map(Number);
@@ -1325,11 +1348,35 @@
                 <div class="flex items-center justify-between gap-2 flex-wrap">${tag}<span class="text-[11px] text-slate-400">${esc(fmtWib_(rep.timestamp || rep.waktu || rep.createdAt))}</span></div>
                 <p class="text-xs font-bold text-slate-800">Kel. ${esc(o.village || '-')}${rep.pelapor && rep.pelapor !== '-' ? ' <span class="font-medium text-slate-500">• ' + esc(rep.pelapor) + '</span>' : ''}</p>
                 ${rep.tindakan ? `<span class="self-start text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">${esc(rep.tindakan)}</span>` : ''}
-                ${rep.fotoUrl ? `<a href="${esc(rep.fotoUrl)}" target="_blank" class="block"><img src="${esc(rep.fotoUrl)}" loading="lazy" class="w-full h-32 object-cover rounded-lg border border-slate-200" alt="Foto kegiatan"></a>` : ''}
+                ${rep.fotoUrl ? `<a href="${esc(rep.fotoUrl)}" target="_blank" class="block">${photoImg_(rep.fotoUrl, "w-full h-40 object-cover rounded-lg border border-slate-200", "Foto kegiatan")}</a>` : ''}
                 <p class="text-xs text-slate-700 leading-snug">${esc(rep.deskripsi || '-')}</p>
                 ${hasLoc ? `<div class="flex items-center justify-between gap-2 pt-1 mt-auto"><span class="text-[10px] text-slate-400 font-mono">${o.lat.toFixed(5)}, ${o.lng.toFixed(5)}</span><a href="${url}" target="_blank" class="route-btn">Google Maps</a></div>` : ''}
             </div>`;
         }
+
+        // Ringkasan tanggal yang punya laporan + diagnostik data dari server
+        function reportDateCounts_() {
+            const c = {}, today = getTodayWIB();
+            const add = (ts) => { const d = reportDateOf_(ts) || today; c[d] = (c[d] || 0) + 1; };
+            Object.values(globalReportsByKey || {}).forEach(r => add(r.timestamp || r.waktu || r.createdAt));
+            (globalManualReports || []).forEach(r => add(r.timestamp));
+            return c;
+        }
+        function renderReportMeta_() {
+            const c = reportDateCounts_(), dates = Object.keys(c).sort().reverse(), sel = reportDate_();
+            document.getElementById('report-date-chips').innerHTML = dates.length
+                ? '<span class="text-[11px] text-slate-500 mr-1">Tanggal ada laporan:</span>' + dates.slice(0, 14).map(d =>
+                    `<button type="button" data-d="${d}" class="px-2.5 py-1 rounded-full text-[11px] font-bold border transition-colors cursor-pointer ${d === sel ? 'bg-emerald-600 text-white border-emerald-600' : 'border-slate-200 text-slate-600 hover:bg-slate-100'}">${d.slice(8)}/${d.slice(5, 7)} (${c[d]})</button>`).join('')
+                : '';
+            const nH = Object.keys(globalReportsByKey || {}).length, nM = (globalManualReports || []).length;
+            document.getElementById('report-diag').textContent = (nH + nM === 0)
+                ? 'Server belum mengirim satu pun laporan.'
+                : `Data dari server: ${nH} laporan titik panas + ${nM} laporan manual • terlama: ${dates.length ? dates[dates.length - 1] : '-'}, terbaru: ${dates.length ? dates[0] : '-'}.`;
+            return dates;
+        }
+        document.getElementById('report-date-chips').addEventListener('click', (e) => {
+            const b = e.target.closest('[data-d]'); if (b) setReportDate_(b.dataset.d);
+        });
         function renderReportHistory() {
             const d = reportDate_(), today = getTodayWIB();
             const dateEl = document.getElementById('rh-date');
@@ -1341,9 +1388,14 @@
             items.sort((a, b) => (Date.parse(b.rep.timestamp || b.rep.waktu || b.rep.createdAt) || 0) - (Date.parse(a.rep.timestamp || a.rep.waktu || a.rep.createdAt) || 0));
             const vLabel = villageSelect.value ? ` di Kel. ${villageSelect.value}` : '';
             document.getElementById('report-date-summary').textContent = `${fmtDateId_(d)}${d === today ? ' (hari ini)' : ''} • ${items.length} laporan${vLabel}`;
+            const dates = renderReportMeta_();
+            const oldest = dates.length ? dates[dates.length - 1] : '';
+            const hint = (d < oldest || !oldest)
+                ? `Server hanya mengirim laporan mulai ${oldest || 'hari ini'}. Bila laporan tanggal ini ada di Spreadsheet, pengaturan backend (Code.gs) yang membatasi datanya.`
+                : 'Tidak ada laporan pada tanggal ini.';
             document.getElementById('report-history-list').innerHTML = items.length
                 ? items.map(reportCardHtml_).join('')
-                : `<p class="md:col-span-2 py-6 text-center text-sm text-slate-400 italic">Tidak ada laporan pada tanggal ini. Gunakan tombol &lsaquo; untuk melihat hari sebelumnya.</p>`;
+                : `<p class="md:col-span-2 py-6 text-center text-sm text-slate-400 italic">${esc(hint)}</p>`;
         }
         function setReportDate_(ymd) {
             const today = getTodayWIB();
@@ -1763,7 +1815,7 @@
                                 : '') +
                             (rep.fotoUrl
                                 ? `<a href="${esc(rep.fotoUrl)}" target="_blank" class="block">` +
-                                    `<img src="${esc(rep.fotoUrl)}" class="w-full h-28 object-cover rounded-lg border border-slate-200" alt="Foto laporan">` +
+                                    photoImg_(rep.fotoUrl, "w-full h-28 object-cover rounded-lg border border-slate-200", "Foto laporan") +
                                   `</a>`
                                 : '') +
                             `<p class="text-slate-700 text-[11px] leading-snug">${esc(rep.deskripsi)}</p>` +
