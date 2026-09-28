@@ -112,6 +112,113 @@
         html.dark #btn-theme-toggle .icon-moon { display: none; }
         html.dark #btn-theme-toggle .icon-sun { display: block; }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%A5%3C/text%3E%3C/svg%3E">
+    <style>
+        /* ================= TAMPILAN MODERN: HIJAU HUTAN + AKSEN EMAS ================= */
+        :root {
+            --f900:#0a3325; --f800:#0d4632; --f700:#116043; --em:#10b981; --gold:#e0b043; --gold-d:#a97c12;
+            --page:#f1f6f2; --card:#ffffff; --card2:#f4f8f5; --line:#dde8e1; --ink:#10261d; --mut:#5d7267;
+            --shadow:0 1px 2px rgba(10,51,37,.05), 0 10px 26px -14px rgba(10,51,37,.22);
+        }
+        html.dark {
+            --page:#08130f; --card:#0f1e17; --card2:#142a20; --line:#1f382c; --ink:#e8f2ec; --mut:#8fa89b;
+            --shadow:0 1px 2px rgba(0,0,0,.45), 0 12px 30px -16px rgba(0,0,0,.7);
+        }
+        html { scroll-behavior:smooth; }
+        [id] { scroll-margin-top: 92px; }
+        body {
+            font-family:'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            color:var(--ink);
+            background:
+                radial-gradient(900px 380px at 88% -60px, rgba(16,185,129,.14), transparent 70%),
+                radial-gradient(760px 340px at -8% 8%, rgba(224,176,67,.11), transparent 70%),
+                var(--page);
+        }
+        html.dark body { background-color:var(--page); color:var(--ink); }
+        :focus-visible { outline:2px solid var(--gold); outline-offset:2px; }
+        .uppercase { text-transform:none !important; letter-spacing:0 !important; }
+
+        /* permukaan kartu */
+        main .bg-white, footer.bg-white { background-color:var(--card); border-color:var(--line); }
+        main .bg-white.rounded-2xl { border-radius:1.25rem; box-shadow:var(--shadow); }
+        html.dark .bg-white { background-color:var(--card); }
+        html.dark .bg-slate-50 { background-color:var(--page); }
+        html.dark .bg-slate-100 { background-color:var(--card2); }
+        html.dark .border-slate-200, html.dark .border-slate-200\/80, html.dark .border-slate-300 { border-color:var(--line) !important; }
+        html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color:var(--line); }
+        html.dark input, html.dark select, html.dark textarea { background-color:var(--card); border-color:var(--line) !important; }
+        html.dark .hover\:bg-slate-100:hover { background-color:var(--card2); }
+        html.dark #time-range-toggle { background-color:var(--page); }
+        html.dark footer { background-color:var(--card); border-color:var(--line) !important; }
+        html.dark ::-webkit-scrollbar-track { background:var(--page); }
+        html.dark ::-webkit-scrollbar-thumb { background:var(--line); }
+
+        /* header kaca */
+        .rk-header { background:rgba(255,255,255,.82); backdrop-filter:blur(14px) saturate(1.4); -webkit-backdrop-filter:blur(14px) saturate(1.4); border-bottom:1px solid var(--line); }
+        html.dark .rk-header { background:rgba(8,19,15,.82) !important; border-color:var(--line) !important; }
+        .rk-logo { background:linear-gradient(135deg,var(--f800),var(--f700)); color:var(--gold); box-shadow:inset 0 0 0 1px rgba(224,176,67,.45), 0 6px 14px -6px rgba(10,51,37,.6); }
+        .rk-sub { color:var(--gold-d); }
+        html.dark .rk-sub { color:var(--gold); }
+        .nav-link { padding:.5rem .8rem; border-radius:.75rem; color:var(--mut); white-space:nowrap; transition:background-color .15s, color .15s; }
+        .nav-link:hover { background:rgba(16,185,129,.1); color:var(--f700); }
+        .nav-link.active { background:rgba(16,185,129,.14); color:var(--f700); }
+        html.dark .nav-link:hover, html.dark .nav-link.active { color:var(--gold); }
+
+        /* tombol */
+        .rk-btn-gold { color:#3a2a00; background:linear-gradient(135deg,#f0c75e,#dba72c); box-shadow:0 8px 18px -8px rgba(219,167,44,.8); }
+        .rk-btn-gold:hover { filter:brightness(1.05); }
+        .rk-btn-solid { color:#fff; background:linear-gradient(135deg,var(--f700),var(--f800)); box-shadow:0 8px 18px -8px rgba(10,51,37,.7); }
+        .rk-btn-solid:hover { filter:brightness(1.12); }
+        .rk-btn-glass { color:#fff; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.26); backdrop-filter:blur(6px); }
+        .rk-btn-glass:hover { background:rgba(255,255,255,.22); }
+        .route-btn { background:var(--f800); border-radius:.55rem; padding:4px 10px; }
+        .route-btn:hover { background:var(--f700); }
+
+        /* hero */
+        .hero-card { background:linear-gradient(135deg,var(--f900) 0%,var(--f800) 55%,#0f5a44 100%); box-shadow:0 26px 44px -26px rgba(10,51,37,.7); isolation:isolate; }
+        .hero-card::before { content:""; position:absolute; inset:0; z-index:-1; background-image:url("data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="620" height="380" viewBox="0 0 620 380" fill="none" stroke="%23e0b043" stroke-width="1"%3E%3Cpath d="M-20 60 C 90 20%2C170 120%2C280 70 S 470 10%2C640 80" /%3E%3Cpath d="M-20 86 C 90 46%2C170 146%2C280 96 S 470 36%2C640 106" /%3E%3Cpath d="M-20 112 C 90 72%2C170 172%2C280 122 S 470 62%2C640 132" /%3E%3Cpath d="M-20 138 C 90 98%2C170 198%2C280 148 S 470 88%2C640 158" /%3E%3Cpath d="M-20 164 C 90 124%2C170 224%2C280 174 S 470 114%2C640 184" /%3E%3Cpath d="M-20 190 C 90 150%2C170 250%2C280 200 S 470 140%2C640 210" /%3E%3Cpath d="M-20 216 C 90 176%2C170 276%2C280 226 S 470 166%2C640 236" /%3E%3Cpath d="M-20 242 C 90 202%2C170 302%2C280 252 S 470 192%2C640 262" /%3E%3Cpath d="M-20 268 C 90 228%2C170 328%2C280 278 S 470 218%2C640 288" /%3E%3Cpath d="M-20 294 C 90 254%2C170 354%2C280 304 S 470 244%2C640 314" /%3E%3Cpath d="M-20 320 C 90 280%2C170 380%2C280 330 S 470 270%2C640 340" /%3E%3Cpath d="M-20 346 C 90 306%2C170 406%2C280 356 S 470 296%2C640 366" /%3E%3C/svg%3E"); background-size:620px 380px; background-position:right -40px center; background-repeat:no-repeat; opacity:.2; }
+        .hero-card::after { content:""; position:absolute; inset:0; z-index:-1; background:radial-gradient(520px 260px at 100% 0, rgba(224,176,67,.28), transparent 70%); }
+        .hero-card strong { color:var(--gold); }
+
+        /* KPI */
+        .kpi { position:relative; overflow:hidden; display:flex; align-items:center; gap:.9rem; padding:1.05rem 1.15rem; border-radius:1.25rem; background:var(--card); border:1px solid var(--line); box-shadow:var(--shadow); }
+        .kpi::after { content:""; position:absolute; right:-26px; top:-26px; width:96px; height:96px; border-radius:50%; background:var(--tint); opacity:.1; }
+        .kpi-icon { flex:none; width:46px; height:46px; border-radius:14px; display:grid; place-items:center; color:var(--tint); background:var(--tint-bg); }
+        .kpi-icon svg { width:22px; height:22px; }
+        .kpi-label { font-size:.75rem; font-weight:600; color:var(--mut); }
+        .kpi-value { font-size:1.9rem; font-weight:800; line-height:1.1; color:var(--ink); margin-top:.15rem; }
+        .kpi-value span { font-size:.8rem; font-weight:700; color:var(--mut); }
+        .chip { display:inline-flex; align-items:center; gap:.35rem; padding:.2rem .6rem; border-radius:999px; font-size:.7rem; font-weight:700; color:var(--f700); background:rgba(16,185,129,.12); }
+        html.dark .chip { color:var(--gold); background:rgba(224,176,67,.12); }
+
+        /* peta */
+        #gis-map { height:560px; border-radius:1rem; }
+        @media (max-width:640px) { #gis-map { height:420px; } }
+        .leaflet-bar, .leaflet-control-layers { border:none !important; border-radius:.8rem !important; box-shadow:0 6px 18px -6px rgba(0,0,0,.35) !important; overflow:hidden; }
+
+        /* tabel */
+        main table thead tr { background:var(--card2) !important; }
+        main table thead th { font-size:.72rem; font-weight:700; color:var(--mut); padding-top:.85rem; padding-bottom:.85rem; }
+        main table tbody tr:hover { background:rgba(16,185,129,.07); }
+        main select, main input[type=date] { border-radius:.85rem; }
+
+        /* grafik kurva */
+        .chart-wrap { position:relative; }
+        .chart-tip { position:absolute; pointer-events:none; background:#0a3325; color:#fff; font-size:11px; font-weight:600; padding:5px 9px; border-radius:9px; transform:translate(-50%,-135%); white-space:nowrap; opacity:0; transition:opacity .12s; box-shadow:0 8px 18px -6px rgba(0,0,0,.5); z-index:5; }
+        .chart-tip.show { opacity:1; }
+        .cpt .guide { opacity:0; }
+        .cpt:hover .guide, .cpt.on .guide { opacity:1; }
+        .cpt .hd { transition:r .12s; }
+        .cpt:hover .hd, .cpt.on .hd { r:6; }
+        .chart-empty { position:absolute; inset:0; display:grid; place-items:center; font-size:.75rem; color:var(--mut); font-style:italic; pointer-events:none; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation:none !important; transition:none !important; }
+            html { scroll-behavior:auto; }
+        }
+    </style>
     <script>
         // Terapkan tema tersimpan SEBELUM body dirender, supaya tidak "berkedip"
         // dari terang ke gelap saat halaman baru dibuka.
@@ -124,26 +231,27 @@
         })();
     </script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+<body class="antialiased min-h-screen flex flex-col">
 
     <!-- Top Navigation Bar -->
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs">
+    <header class="rk-header sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-emerald-600/20">
+                <div class="w-10 h-10 rounded-xl rk-logo flex items-center justify-center font-black text-lg">
                     PR
                 </div>
                 <div>
                     <h1 class="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight leading-tight">POSLAP TERPADU KARHUTLA</h1>
-                    <p class="text-xs text-emerald-700 font-medium">Kecamatan Rakumpit</p>
+                    <p class="text-xs rk-sub font-semibold">Kecamatan Rakumpit</p>
                 </div>
             </div>
 
-            <nav class="hidden md:flex items-center space-x-1 text-sm font-semibold">
-                <a href="#dashboard" class="px-3 py-2 rounded-lg text-emerald-700 bg-emerald-50 transition-colors">Dashboard</a>
-                <a href="#gis-map" class="px-3 py-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-slate-100 transition-colors">Peta Interaktif</a>
-                <a href="#hotspot-table-body" class="px-3 py-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-slate-100 transition-colors">Daftar Hotspot</a>
-                <a href="#report-history" class="px-3 py-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-slate-100 transition-colors">Riwayat Laporan</a>
+            <nav class="hidden md:flex items-center gap-1 text-sm font-semibold">
+                <a href="#dashboard" data-nav="0" class="nav-link">Dashboard</a>
+                <a href="#peta-section" data-nav="1" class="nav-link">Peta</a>
+                <a href="#stats-section" data-nav="2" class="nav-link">Statistik</a>
+                <a href="#daftar-hotspot" data-nav="3" class="nav-link">Daftar Hotspot</a>
+                <a href="#report-history" data-nav="4" class="nav-link">Riwayat Laporan</a>
             </nav>
 
             <div class="flex items-center gap-2">
@@ -154,32 +262,33 @@
                     <svg class="icon-sun" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 </button>
                 <!-- Tombol Update / Tarik Data Satelit Langsung ke Sheet -->
-                <button id="btn-update-satellite" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white bg-amber-600 hover:bg-amber-700 rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer">
+                <button id="btn-update-satellite" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rk-btn-gold rounded-xl transition-all active:scale-95 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="hidden sm:inline">Update Data Satelit</span>
                 </button>
                 
                 <!-- Tombol Refresh Tampilan -->
-                <button id="btn-refresh-data" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-sm transition-all active:scale-95 cursor-pointer">
+                <button id="btn-refresh-data" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-semibold rk-btn-solid rounded-xl transition-all active:scale-95 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                     <span class="hidden sm:inline">Refresh</span>
                 </button>
             </div>
         </div>
+        <nav class="md:hidden flex gap-1 overflow-x-auto px-3 pb-2 text-xs font-semibold"><a href="#dashboard" data-nav="0" class="nav-link">Dashboard</a><a href="#peta-section" data-nav="1" class="nav-link">Peta</a><a href="#stats-section" data-nav="2" class="nav-link">Statistik</a><a href="#daftar-hotspot" data-nav="3" class="nav-link">Daftar Hotspot</a><a href="#report-history" data-nav="4" class="nav-link">Riwayat Laporan</a></nav>
     </header>
 
     <!-- Main Container -->
     <main id="dashboard" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full flex-grow space-y-6">
         
         <!-- Hero Banner -->
-        <div class="bg-gradient-to-br from-emerald-700 via-emerald-600 to-teal-800 rounded-2xl p-6 sm:p-8 text-white shadow-lg flex flex-col justify-between gap-6 relative overflow-hidden">
+        <div class="hero-card rounded-3xl p-6 sm:p-9 text-white flex flex-col justify-between gap-7 relative overflow-hidden">
             <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
             <div class="space-y-2 relative z-10">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/25 backdrop-blur-md text-white border border-white/15">
                     <span class="w-2 h-2 rounded-full bg-emerald-300 animate-pulse"></span>
                     Terhubung Menggunakan Google Apps Script & Database dari NASA FIRMS
                 </span>
-                <h2 class="text-2xl sm:text-3xl font-black tracking-tight">Dashboard Siaga Kebakaran Hutan & Lahan</h2>
+                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight">Dashboard Siaga Kebakaran Hutan & Lahan</h2>
                 <p class="text-emerald-100 text-sm max-w-2xl font-normal leading-relaxed">
                     Pengawasan terpadu titik panas (hotspot) multi-satelit khusus wilayah administratif Kecamatan Rakumpit.
                 </p>
@@ -200,15 +309,15 @@
 
                 <!-- Tombol Laporan ke WhatsApp & Laporan Manual -->
                 <div class="flex items-center gap-2 flex-wrap">
-                    <button id="btn-pdf-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
+                    <button id="btn-pdf-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold rk-btn-glass rounded-xl transition-all active:scale-95 cursor-pointer">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                         <span>Laporan PDF</span>
                     </button>
-                    <button id="btn-manual-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-sky-600 hover:bg-sky-700 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
+                    <button id="btn-manual-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold rk-btn-glass rounded-xl transition-all active:scale-95 cursor-pointer">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <span>Laporan Manual</span>
                     </button>
-                    <button id="btn-whatsapp-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer">
+                    <button id="btn-whatsapp-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold rk-btn-gold rounded-xl transition-all active:scale-95 cursor-pointer">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                         <span>Kirim Laporan via WhatsApp</span>
                     </button>
@@ -239,26 +348,30 @@
 
         <!-- Statistik -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs border-l-4 border-l-emerald-600 flex flex-col justify-between">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Titik Panas</h3>
-                <p id="total-hotspot" class="text-3xl font-black text-slate-800 mt-2">0</p>
+            <div class="kpi" style="--tint:#dc2626;--tint-bg:rgba(220,38,38,.12)">
+                <div class="kpi-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2c-3 4-6 7.5-6 11.5A6 6 0 0012 20a6 6 0 006-6.5C18 9.5 15 6 12 2z"/></svg></div>
+                <div><p class="kpi-label">Total titik panas</p><p id="total-hotspot" class="kpi-value">0</p></div>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs border-l-4 border-l-amber-500 flex flex-col justify-between">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Confidence Tinggi (&ge;80)</h3>
-                <p id="high-confidence" class="text-3xl font-black text-amber-500 mt-2">0</p>
+            <div class="kpi" style="--tint:#d99a06;--tint-bg:rgba(217,154,6,.14)">
+                <div class="kpi-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.6-1.6A12 12 0 0112 3a12 12 0 01-8.6 3.4A12 12 0 003 12c0 5.2 3.4 9.6 9 11 5.6-1.4 9-5.8 9-11 0-1.2-.1-2.4-.4-3.6z"/></svg></div>
+                <div><p class="kpi-label">Confidence tinggi (&ge;80)</p><p id="high-confidence" class="kpi-value">0</p></div>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs border-l-4 border-l-blue-600 flex flex-col justify-between">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Kelurahan Terdampak</h3>
-                <p id="affected-villages" class="text-3xl font-black text-blue-600 mt-2">0</p>
+            <div class="kpi" style="--tint:#0284c7;--tint-bg:rgba(2,132,199,.12)">
+                <div class="kpi-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+                <div><p class="kpi-label">Kelurahan terdampak</p><p id="affected-villages" class="kpi-value">0</p></div>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs border-l-4 border-l-rose-500 flex flex-col justify-between">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Max FRP</h3>
-                <p id="max-frp" class="text-3xl font-black text-rose-500 mt-2">0 <span class="text-sm font-bold">MW</span></p>
+            <div class="kpi" style="--tint:#059669;--tint-bg:rgba(5,150,105,.13)">
+                <div class="kpi-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+                <div><p class="kpi-label">FRP tertinggi</p><p id="max-frp" class="kpi-value">0 <span>MW</span></p></div>
             </div>
         </div>
 
         <!-- Peta -->
-        <div class="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm">
+        <div id="peta-section" class="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm">
+            <div class="flex items-center justify-between gap-2 px-2 pt-1 pb-3">
+                <h3 class="text-base font-bold text-slate-800">Peta Sebaran Titik Panas</h3>
+                <span id="map-count" class="chip">0 titik</span>
+            </div>
             <div id="gis-map"></div>
         </div>
 
@@ -272,12 +385,12 @@
             <div id="stats-village-cards" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3"></div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
-                    <h4 class="text-sm font-bold text-slate-800 mb-3">Tren Harian (7 Hari)</h4>
-                    <div id="chart-daily"></div>
+                    <div class="flex items-center justify-between gap-2 mb-3"><h4 class="text-sm font-bold text-slate-800">Tren Harian (7 Hari)</h4><span id="chart-daily-meta" class="chip"></span></div>
+                    <div id="chart-daily" class="chart-wrap"></div>
                 </div>
                 <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
-                    <h4 class="text-sm font-bold text-slate-800 mb-3">Per Jam (24 Jam Terakhir, WIB)</h4>
-                    <div id="chart-hourly"></div>
+                    <div class="flex items-center justify-between gap-2 mb-3"><h4 class="text-sm font-bold text-slate-800">Per Jam (24 Jam Terakhir, WIB)</h4><span id="chart-hourly-meta" class="chip"></span></div>
+                    <div id="chart-hourly" class="chart-wrap"></div>
                 </div>
             </div>
             <div class="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs">
@@ -287,7 +400,7 @@
         </section>
 
         <!-- Tabel -->
-        <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs overflow-hidden space-y-4">
+        <div id="daftar-hotspot" class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs overflow-hidden space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-3">
                 <h3 class="text-base font-bold text-slate-800">Daftar Titik Panas (Wilayah Kecamatan Rakumpit)</h3>
                 <div class="inline-flex rounded-xl border border-slate-200 bg-slate-50 p-1 gap-1" id="time-range-toggle">
@@ -1110,6 +1223,7 @@
             }
 
             document.getElementById('total-hotspot').textContent = filtered.length;
+            document.getElementById('map-count').textContent = filtered.length + ' titik panas';
             document.getElementById('high-confidence').textContent = highConfCount;
             document.getElementById('affected-villages').textContent = affectedSet.size;
             document.getElementById('max-frp').innerHTML = maxFrpVal.toFixed(1) + ` <span class="text-sm font-bold">MW</span>`;
@@ -1259,6 +1373,73 @@
             return `<svg viewBox="0 0 ${W} ${H}" class="w-full h-auto text-slate-500" role="img">${g}</svg>`;
         }
 
+        // ---- GRAFIK KURVA (spline monoton: halus, tidak pernah melengkung di bawah nol) ----
+        function smoothPath_(pts) {
+            const n = pts.length; if (n < 2) return '';
+            const dx = [], m = [], t = new Array(n);
+            for (let i = 0; i < n - 1; i++) { dx[i] = pts[i + 1][0] - pts[i][0]; m[i] = (pts[i + 1][1] - pts[i][1]) / dx[i]; }
+            t[0] = m[0]; t[n - 1] = m[n - 2];
+            for (let i = 1; i < n - 1; i++) {
+                t[i] = (m[i - 1] * m[i] <= 0) ? 0 : 3 * (dx[i - 1] + dx[i]) / ((2 * dx[i] + dx[i - 1]) / m[i - 1] + (dx[i] + 2 * dx[i - 1]) / m[i]);
+            }
+            const f = (v) => v.toFixed(1);
+            let d = `M${f(pts[0][0])},${f(pts[0][1])}`;
+            for (let i = 0; i < n - 1; i++) {
+                const h = dx[i] / 3;
+                d += ` C${f(pts[i][0] + h)},${f(pts[i][1] + t[i] * h)} ${f(pts[i + 1][0] - h)},${f(pts[i + 1][1] - t[i + 1] * h)} ${f(pts[i + 1][0])},${f(pts[i + 1][1])}`;
+            }
+            return d;
+        }
+
+        // items: [{label, value, tip}] -> SVG kurva + area gradien + titik interaktif
+        function lineChartSvg_(items, color, uid, opts = {}) {
+            const W = 560, H = 220, L = 32, R = 14, T = 26, B = 28, n = items.length;
+            const maxV = Math.max(0, ...items.map(i => i.value));
+            const top = maxV <= 4 ? 4 : Math.ceil(maxV / 4) * 4;
+            const X = (i) => L + i * (W - L - R) / (n - 1);
+            const Y = (v) => T + (H - T - B) * (1 - v / top);
+            const pts = items.map((it, i) => [X(i), Y(it.value)]);
+            const line = smoothPath_(pts);
+            const area = `${line} L${X(n - 1).toFixed(1)},${Y(0)} L${X(0).toFixed(1)},${Y(0)} Z`;
+            let g = `<defs><linearGradient id="grad-${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".38"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>`;
+            for (let k = 0; k <= 4; k++) {
+                const v = top * k / 4, y = Y(v);
+                g += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="currentColor" stroke-dasharray="${k ? '3 4' : ''}" opacity="${k ? .13 : .3}"/><text x="${L - 6}" y="${y + 3}" text-anchor="end" font-size="9.5" fill="currentColor" opacity=".6">${Math.round(v)}</text>`;
+            }
+            g += `<path d="${area}" fill="url(#grad-${uid})"/><path d="${line}" fill="none" stroke="${color}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+            const every = n > 12 ? 3 : 1, peak = items.findIndex(i => i.value === maxV);
+            const step = (W - L - R) / (n - 1);
+            items.forEach((it, i) => {
+                const x = X(i), y = Y(it.value);
+                g += `<g class="cpt" data-tip="${esc(it.tip || it.label)}: <b>${it.value}</b> titik">`;
+                g += `<line class="guide" x1="${x}" x2="${x}" y1="${T - 6}" y2="${Y(0)}" stroke="${color}" stroke-width="1" stroke-dasharray="3 3"/>`;
+                g += `<circle class="hd" cx="${x}" cy="${y}" r="${opts.dots === false && i !== peak ? 0 : 3.6}" fill="#fff" stroke="${color}" stroke-width="2.2"/>`;
+                if (maxV > 0 && (opts.values ? it.value > 0 : (i === peak))) g += `<text x="${x}" y="${y - 9}" text-anchor="middle" font-size="10.5" font-weight="800" fill="${color}">${it.value}</text>`;
+                if (i % every === 0 || i === n - 1) g += `<text x="${x}" y="${H - 8}" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">${esc(it.label)}</text>`;
+                g += `<rect x="${x - step / 2}" y="0" width="${step}" height="${H}" fill="transparent"/></g>`;
+            });
+            return `<svg viewBox="0 0 ${W} ${H}" class="w-full h-auto text-slate-500" role="img">${g}</svg>` + (maxV === 0 ? '<div class="chart-empty">Belum ada deteksi pada periode ini</div>' : '');
+        }
+        function mountChart_(id, html) {
+            const wrap = document.getElementById(id);
+            wrap.innerHTML = html + '<div class="chart-tip"></div>';
+            const tip = wrap.querySelector('.chart-tip');
+            let cur = null;
+            const show = (e) => {
+                const pt = e.target.closest && e.target.closest('.cpt');
+                if (!pt) return;
+                if (cur) cur.classList.remove('on');
+                cur = pt; pt.classList.add('on');
+                tip.innerHTML = pt.dataset.tip;
+                const a = pt.querySelector('.hd').getBoundingClientRect(), w = wrap.getBoundingClientRect();
+                tip.style.left = (a.left - w.left + a.width / 2) + 'px';
+                tip.style.top = (a.top - w.top) + 'px';
+                tip.classList.add('show');
+            };
+            wrap.onmousemove = show; wrap.onclick = show;
+            wrap.onmouseleave = () => { tip.classList.remove('show'); if (cur) cur.classList.remove('on'); };
+        }
+
         function renderStatistics() {
             const now = Date.now(), DAY = 864e5;
             const sat = document.getElementById('satellite-filter').value;
@@ -1299,12 +1480,18 @@
             }).join('');
 
             // Grafik tren harian
-            document.getElementById('chart-daily').innerHTML = barChartSvg_(days.map(d => ({ label: d.slice(8) + '/' + d.slice(5, 7), value: cnt(dayMap, d) })), '#059669');
+            const dailyItems = days.map(d => ({ label: d.slice(8) + '/' + d.slice(5, 7), value: cnt(dayMap, d), tip: fmtDateId_(d) }));
+            mountChart_('chart-daily', lineChartSvg_(dailyItems, '#10b981', 'daily', { values: true }));
+            const dTotal = dailyItems.reduce((a, i) => a + i.value, 0), dPeak = dailyItems.reduce((a, i) => i.value > a.value ? i : a, dailyItems[0]);
+            document.getElementById('chart-daily-meta').textContent = dTotal ? `Total ${dTotal} • puncak ${dPeak.value} (${dPeak.label})` : 'Belum ada deteksi';
 
             // Grafik per jam (24 jam terakhir)
             const hours = Array.from({ length: 24 }, (_, i) => ({ label: String(wibHourOf_(now - (23 - i) * 3600e3)).padStart(2, '0'), value: 0 }));
             scoped.forEach(h => { const ago = Math.floor((now - h.epoch) / 3600e3); if (ago >= 0 && ago < 24) hours[23 - ago].value++; });
-            document.getElementById('chart-hourly').innerHTML = barChartSvg_(hours, '#f59e0b');
+            const hourItems = hours.map(h => Object.assign(h, { tip: `Pukul ${h.label}.00–${h.label}.59 WIB` }));
+            mountChart_('chart-hourly', lineChartSvg_(hourItems, '#d99a06', 'hourly', { dots: false }));
+            const hTotal = hourItems.reduce((a, i) => a + i.value, 0), hPeak = hourItems.reduce((a, i) => i.value > a.value ? i : a, hourItems[0]);
+            document.getElementById('chart-hourly-meta').textContent = hTotal ? `Total ${hTotal} • puncak jam ${hPeak.label}.00` : 'Belum ada deteksi';
 
             // Per satelit sesuai rentang waktu aktif
             const rangeLabel = { TODAY: 'Hari Ini', '24H': '24 Jam Terakhir', '7D': '7 Hari Terakhir' }[currentTimeRange] || 'Hari Ini';
@@ -2122,6 +2309,23 @@
         let popupIsOpen = false;
         map.on('popupopen', () => { popupIsOpen = true; });
         map.on('popupclose', () => { popupIsOpen = false; });
+
+
+        // --- MENU AKTIF SESUAI POSISI SCROLL ---
+        (function () {
+            const links = Array.from(document.querySelectorAll('.nav-link'));
+            const ids = ['dashboard', 'peta-section', 'stats-section', 'daftar-hotspot', 'report-history'];
+            let queued = false;
+            function spy() {
+                queued = false;
+                let cur = 0;
+                ids.forEach((id, i) => { const el = document.getElementById(id); if (el && el.getBoundingClientRect().top <= 130) cur = i; });
+                if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) cur = ids.length - 1;
+                links.forEach(a => a.classList.toggle('active', Number(a.dataset.nav) === cur));
+            }
+            window.addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(spy); } }, { passive: true });
+            spy();
+        })();
 
         // Muat data otomatis saat halaman dibuka
         fetchRealtimeData(false);
