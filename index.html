@@ -2852,7 +2852,8 @@
                 v.temp = (b && b.t != null) ? parseFloat(b.t) : (v.omTemp != null ? v.omTemp : null);
                 v.hum = (b && b.hu != null) ? parseFloat(b.hu) : (v.omHum != null ? v.omHum : null);
                 v.weatherDesc = b ? (b.weather_desc || '') : '';
-                if (!v.wind && b && b.ws != null && b.wd_deg != null) v.wind = { speed: parseFloat(b.ws) / 3.6, dir: parseFloat(b.wd_deg), src: 'BMKG' };
+                // Angin: BMKG (per kelurahan) diutamakan; Open-Meteo hanya cadangan bila BMKG tidak tersedia
+                if (b && b.ws != null && b.wd_deg != null && !isNaN(parseFloat(b.ws)) && !isNaN(parseFloat(b.wd_deg))) v.wind = { speed: parseFloat(b.ws) / 3.6, dir: parseFloat(b.wd_deg), src: 'BMKG' };
             });
             globalWeather = { byVillage: by, updatedAt: new Date(), bmkgOk: bmkgOk };
 
@@ -3028,7 +3029,7 @@
                 let sw = 0, su = 0, sv = 0;
                 for (let k = 0; k < vecs.length; k++) {
                     const dy = ll.lat - vecs[k].lat, dx = (ll.lng - vecs[k].lng) * Math.cos(ll.lat * Math.PI / 180);
-                    const w = 1 / (dx * dx + dy * dy + 1e-6);
+                    const d2 = dx * dx + dy * dy, w = 1 / (d2 * d2 + 1e-9); // bobot tajam: tiap kelurahan memakai arah angin BMKG-nya sendiri
                     sw += w; su += w * vecs[k].u; sv += w * vecs[k].v;
                 }
                 wf.gu[r * wf.cols + c] = su / sw; wf.gv[r * wf.cols + c] = sv / sw;
@@ -3367,7 +3368,7 @@
             const notes = [];
             if (layerState.ispu) notes.push('<b>ISPU</b>: warna penanda mengikuti kategori — hijau Baik (0–50), biru Sedang (51–100), kuning Tidak Sehat (101–200), merah Sangat Tidak Sehat (201–300), hitam Berbahaya (&gt;300). Data model CAMS, bukan stasiun resmi DLH.');
             if (layerState.wind) notes.push(windMode === 'flow'
-                ? '<b>Angin</b>: garis bergerak = aliran angin (warna = kecepatan, m/s) hasil interpolasi data tiap kelurahan. Garis oranye putus-putus = proyeksi arah penjalaran api dari tiap titik panas. Ganti ke <i>Panah</i> pada kartu angin untuk melihat nilai per kelurahan.'
+                ? '<b>Angin</b>: garis bergerak = aliran angin (warna = kecepatan, m/s) hasil interpolasi data angin BMKG tiap kelurahan (arah bisa berbeda antarwilayah). Garis oranye putus-putus = proyeksi arah penjalaran api dari tiap titik panas. Ganti ke <i>Panah</i> pada kartu angin untuk melihat nilai per kelurahan.'
                 : '<b>Angin</b>: panah menunjuk arah angin bertiup, angka = kecepatan (m/s). Garis oranye putus-putus = proyeksi arah penjalaran api dari tiap titik panas.');
             if (layerState.cloud) notes.push('<b>Awan</b>: citra satelit Himawari-9 (JMA) lewat NASA GIBS — putar atau geser waktu pada panel. Angka pada penanda = tutupan awan prakiraan BMKG per kelurahan.');
             if (layerState.rain) notes.push('<b>Hujan</b>: warna kelurahan = tingkat hujan prakiraan BMKG pada jam terpilih. Gunakan ◄ ► untuk berpindah waktu.');
