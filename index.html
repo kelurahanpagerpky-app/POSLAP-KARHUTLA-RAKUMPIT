@@ -242,6 +242,43 @@
         .src-link:hover { text-decoration:underline; }
         html.dark .src-link { color:var(--gold); }
 
+
+        /* animasi angin, kartu kompas & panel awan/hujan */
+        #map-wrap { position:relative; }
+        #wind-flow { position:absolute; inset:0; z-index:410; pointer-events:none; border-radius:1rem; }
+        .wx-float { position:absolute; top:10px; right:10px; z-index:1000; width:208px; background:rgba(255,255,255,.96); border:1px solid #e2e8f0; border-radius:14px; padding:10px 12px; box-shadow:0 6px 20px rgba(15,23,42,.18); font:12px/1.4 system-ui,sans-serif; color:#0f172a; }
+        html.dark .wx-float, html.dark .wx-panel { background:rgba(15,23,42,.94); border-color:#334155; color:#e2e8f0; }
+        .wx-float .row { display:flex; align-items:center; gap:10px; }
+        .wx-float .big { font-size:20px; font-weight:800; line-height:1; }
+        .wx-float .sub { font-size:11px; opacity:.75; }
+        .wx-seg { display:inline-flex; border:1px solid #cbd5e1; border-radius:8px; overflow:hidden; margin-top:8px; }
+        .wx-seg button { font:700 11px system-ui; padding:4px 10px; background:transparent; color:inherit; cursor:pointer; border:0; }
+        .wx-seg button.on { background:#15803d; color:#fff; }
+        .wx-scale { height:8px; border-radius:6px; margin-top:8px; background:linear-gradient(90deg,#7dd3fc,#34d399 35%,#fde047 55%,#fb923c 78%,#ef4444); }
+        .wx-scale-l { display:flex; justify-content:space-between; font-size:10px; opacity:.7; margin-top:2px; }
+        #wx-panels { position:absolute; left:10px; bottom:26px; z-index:1000; display:flex; flex-direction:column; gap:8px; width:min(340px, calc(100% - 20px)); pointer-events:none; }
+        .wx-panel { pointer-events:auto; background:rgba(255,255,255,.96); border:1px solid #e2e8f0; border-radius:14px; padding:10px 12px; box-shadow:0 6px 20px rgba(15,23,42,.18); font:12px/1.45 system-ui,sans-serif; color:#0f172a; }
+        .wx-panel .hd { display:flex; align-items:center; gap:6px; }
+        .wx-panel .hd b { font-size:13px; flex:1; }
+        .wx-panel .pill { font:700 10px system-ui; padding:2px 8px; border-radius:999px; background:#e0f2fe; color:#0369a1; }
+        .wx-panel .ib { width:26px; height:26px; border-radius:8px; border:1px solid #cbd5e1; background:transparent; color:inherit; cursor:pointer; font-weight:800; line-height:1; }
+        .wx-panel .ib:disabled { opacity:.35; cursor:default; }
+        .wx-panel .time { font-weight:700; margin:6px 0 2px; }
+        .wx-panel .muted { font-size:11px; opacity:.7; }
+        .wx-panel input[type=range] { width:100%; accent-color:#15803d; }
+        .wx-grad { height:8px; border-radius:6px; background:linear-gradient(90deg,#e2e8f0,#94a3b8 35%,#6366f1 65%,#be123c); margin-top:4px; }
+        .wx-leg { display:flex; flex-wrap:wrap; gap:4px 10px; margin-top:6px; font-size:11px; }
+        .wx-leg i { display:inline-block; width:11px; height:11px; border-radius:3px; margin-right:4px; vertical-align:-1px; border:1px solid rgba(0,0,0,.15); }
+        .wx-btn { margin-top:8px; width:100%; padding:6px 10px; border-radius:9px; border:1px solid #15803d; color:#15803d; background:transparent; font:700 11px system-ui; cursor:pointer; }
+        html.dark .wx-btn { color:#86efac; border-color:#86efac; }
+        .wx-panel.collapsed .body { display:none; }
+        #wx-table-modal { position:fixed; inset:0; z-index:5000; background:rgba(15,23,42,.55); display:flex; align-items:center; justify-content:center; padding:16px; }
+        #wx-table-modal .box { background:#fff; color:#0f172a; border-radius:16px; max-width:760px; width:100%; max-height:85vh; overflow:auto; padding:16px; }
+        html.dark #wx-table-modal .box { background:#0f172a; color:#e2e8f0; }
+        #wx-table-modal table { width:100%; border-collapse:collapse; font-size:12px; }
+        #wx-table-modal th, #wx-table-modal td { padding:6px 8px; border-bottom:1px solid rgba(148,163,184,.35); text-align:left; }
+        @media (max-width:640px) { .wx-float { width:170px; top:6px; right:6px; padding:8px 10px; } #wx-panels { left:6px; bottom:22px; } }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation:none !important; transition:none !important; }
             html { scroll-behavior:auto; }
@@ -418,38 +455,16 @@
                 <button type="button" data-layer="cloud" class="layer-chip"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 18a4 4 0 01-.5-7.97A5.5 5.5 0 0117 9.5 4.25 4.25 0 0116.75 18H7z"/></svg>Awan</button>
                 <button type="button" data-layer="rain" class="layer-chip"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 15a4 4 0 01-.5-7.97A5.5 5.5 0 0117 6.5 4.25 4.25 0 0116.75 15M8 19l-1 2m5-2l-1 2m5-2l-1 2"/></svg>Hujan</button>
             </div>
-            <div id="gis-map"></div>
+            <div id="map-wrap" class="relative">
+                <div id="gis-map"></div>
+                <div id="wind-card" class="wx-float hidden"></div>
+                <div id="wx-panels" class="hidden">
+                    <div id="cloud-panel" class="wx-panel hidden"></div>
+                    <div id="rain-panel" class="wx-panel hidden"></div>
+                </div>
+            </div>
             <p id="wx-note" class="text-[11px] text-slate-400 leading-relaxed px-2 pt-3 pb-1">Pilih tombol <b>ISPU</b>, <b>Angin</b>, <b>Awan</b>, atau <b>Hujan</b> untuk menampilkan data cuaca &amp; kualitas udara per kelurahan. Klik penanda untuk melihat rincian.</p>
         </div>
-
-        <!-- Sumber Data -->
-        <section id="sumber-data" class="space-y-3">
-            <div>
-                <h3 class="text-base font-bold text-slate-800">Sumber Data</h3>
-                <p class="text-[11px] text-slate-400 mt-0.5">Data cuaca dan kualitas udara yang ditampilkan di peta berasal dari layanan berikut.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                <div class="src-card">
-                    <div class="src-title"><span class="src-dot" style="background:#0ea5e9"></span>BMKG</div>
-                    <p class="src-desc">Prakiraan cuaca per desa/kelurahan (suhu, kelembapan, curah hujan, tutupan awan, angin) dari API publik BMKG.</p>
-                    <div class="src-tags"><span class="src-tag">Per desa/kelurahan</span><span class="src-tag">Diperbarui berkala</span><span id="src-bmkg-status" class="src-tag">Memuat...</span></div>
-                    <a class="src-link" href="https://data.bmkg.go.id" target="_blank" rel="noopener">data.bmkg.go.id</a>
-                </div>
-                <div class="src-card">
-                    <div class="src-title"><span class="src-dot" style="background:#10b981"></span>Open-Meteo</div>
-                    <p class="src-desc">Data angin ketinggian 10 m untuk animasi aliran angin, panah angin, dan proyeksi arah penjalaran api pada titik panas.</p>
-                    <div class="src-tags"><span class="src-tag">Angin 10 m</span><span class="src-tag">Cadangan: prakiraan angin BMKG</span></div>
-                    <a class="src-link" href="https://open-meteo.com" target="_blank" rel="noopener">open-meteo.com</a>
-                </div>
-                <div class="src-card">
-                    <div class="src-title"><span class="src-dot" style="background:#a855f7"></span>Copernicus CAMS</div>
-                    <p class="src-desc">PM10, PM2.5, SO₂, CO, O₃, dan NO₂ per desa/kelurahan dari model kualitas udara global CAMS (Copernicus) via Open-Meteo Air Quality API dengan <code>cell_selection=nearest</code> (nilai diambil dari sel grid model terdekat dengan titik tengah tiap desa/kelurahan), lalu dikonversi menjadi indeks ISPU (Permen LHK No. 14/2020). HC tidak tersedia; acuan resmi tetap stasiun pemantau DLH.</p>
-                    <div class="src-tags"><span class="src-tag">±40 km · per jam</span><span class="src-tag">ISPU dari 6 parameter</span></div>
-                    <p class="text-[11px] text-slate-400 mt-2">Diperbarui: <b id="src-cams-updated">-</b></p>
-                    <a class="src-link" href="https://atmosphere.copernicus.eu" target="_blank" rel="noopener">atmosphere.copernicus.eu</a>
-                </div>
-            </div>
-        </section>
 
         <!-- Statistik & Grafik (di bawah peta) -->
         <section id="stats-section" class="space-y-4">
@@ -527,6 +542,94 @@
             <div id="report-date-chips" class="flex items-center gap-1.5 flex-wrap"></div>
             <div id="report-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
             <p id="report-diag" class="text-[11px] text-slate-400"></p>
+        </section>
+
+        <!-- Sumber Data (paling bawah) -->
+        <section id="sumber-data" class="space-y-5">
+            <div>
+                <h3 class="text-base font-bold text-slate-800">Sumber Data</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Seluruh data pada dashboard ini berasal dari layanan dan satelit berikut. Data model dan prakiraan bersifat perkiraan, bukan pengukuran resmi di lokasi.</p>
+            </div>
+            <div class="space-y-2.5">
+                <div><h4 class="text-sm font-bold text-slate-700">Titik Panas &amp; Satelit</h4><p class="text-[11px] text-slate-400">Deteksi hotspot diambil dari satelit pengamat bumi melalui NASA FIRMS (near real-time).</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#ef4444"></span>NASA FIRMS (LANCE)</div>
+                    <p class="src-desc">Sistem informasi kebakaran NASA yang mendistribusikan deteksi titik panas aktif mendekati waktu nyata. Dashboard menarik data area Kecamatan Rakumpit secara berkala melalui Google Apps Script, lalu menyimpannya ke spreadsheet.</p>
+                    <div class="src-tags"><span class="src-tag">Near real-time</span><span class="src-tag">Diperbarui tiap 5 menit</span></div>
+                    <a class="src-link" href="https://firms.modaps.eosdis.nasa.gov" target="_blank" rel="noopener">firms.modaps.eosdis.nasa.gov</a>
+                </div>
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#f97316"></span>VIIRS: Suomi NPP, NOAA-20 &amp; NOAA-21</div>
+                    <p class="src-desc">Sensor VIIRS (375 m) pada tiga satelit orbit kutub: Suomi NPP (SNPP), NOAA-20 (JPSS-1), dan NOAA-21 (JPSS-2). Resolusi spasial tinggi, cocok untuk api kecil. Kolom <i>confidence</i>: rendah / nominal / tinggi.</p>
+                    <div class="src-tags"><span class="src-tag">SNPP</span><span class="src-tag">NOAA-20</span><span class="src-tag">NOAA-21</span><span class="src-tag">375 m</span></div>
+                    <a class="src-link" href="https://www.earthdata.nasa.gov/data/instruments/viirs" target="_blank" rel="noopener">www.earthdata.nasa.gov/data/instruments/viirs</a>
+                </div>
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#eab308"></span>MODIS: Terra &amp; Aqua</div>
+                    <p class="src-desc">Sensor MODIS (1 km) pada satelit Terra dan Aqua. Resolusi lebih kasar, tetapi menambah frekuensi pengamatan harian. Confidence berupa angka 0–100%.</p>
+                    <div class="src-tags"><span class="src-tag">Terra</span><span class="src-tag">Aqua</span><span class="src-tag">1 km</span></div>
+                    <a class="src-link" href="https://www.earthdata.nasa.gov/data/instruments/modis" target="_blank" rel="noopener">www.earthdata.nasa.gov/data/instruments/modis</a>
+                </div>
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#6366f1"></span>Himawari-9 (JMA) via NASA GIBS</div>
+                    <p class="src-desc">Citra satelit geostasioner Himawari-9 (sensor AHI, Band 13 inframerah bersih) milik Badan Meteorologi Jepang, ditampilkan sebagai animasi awan pada peta lewat layanan tile NASA GIBS. Pembaruan tiap 10 menit dengan keterlambatan penyediaan sekitar 1 jam.</p>
+                    <div class="src-tags"><span class="src-tag">Geostasioner</span><span class="src-tag">10 menit</span><span class="src-tag">± 2 km</span></div>
+                    <a class="src-link" href="https://earthdata.nasa.gov/gibs" target="_blank" rel="noopener">earthdata.nasa.gov/gibs</a>
+                </div>
+                </div>
+            </div>
+            <div class="space-y-2.5">
+                <div><h4 class="text-sm font-bold text-slate-700">Cuaca &amp; Kualitas Udara</h4><p class="text-[11px] text-slate-400">Data tampil di tombol ISPU, Angin, Awan, dan Hujan pada peta.</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#0ea5e9"></span>BMKG</div>
+                    <p class="src-desc">Prakiraan cuaca per desa/kelurahan (suhu, kelembapan, curah hujan, tutupan awan, angin) dari API publik BMKG. Dipakai untuk panel Prakiraan Hujan dan nilai awan per kelurahan.</p>
+                    <div class="src-tags"><span class="src-tag">Per desa/kelurahan</span><span class="src-tag">Prakiraan 3 jam-an</span><span class="src-tag"><span id="src-bmkg-status">Memuat...</span></span></div>
+                    <a class="src-link" href="https://data.bmkg.go.id" target="_blank" rel="noopener">data.bmkg.go.id</a>
+                </div>
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#10b981"></span>Open-Meteo</div>
+                    <p class="src-desc">Data angin ketinggian 10 m untuk animasi aliran angin, panah angin, dan proyeksi arah penjalaran api pada titik panas. Juga cadangan awan, hujan, suhu, dan kelembapan bila BMKG tidak terjangkau.</p>
+                    <div class="src-tags"><span class="src-tag">Angin 10 m</span><span class="src-tag">Cadangan: prakiraan angin BMKG</span></div>
+                    <a class="src-link" href="https://open-meteo.com" target="_blank" rel="noopener">open-meteo.com</a>
+                </div>
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#a855f7"></span>Copernicus CAMS</div>
+                    <p class="src-desc">PM10, PM2.5, SO₂, CO, O₃, dan NO₂ per desa/kelurahan dari model kualitas udara global CAMS (Copernicus) via Open-Meteo Air Quality API dengan <code>cell_selection=nearest</code> (nilai diambil dari sel grid model terdekat dengan titik tengah tiap desa/kelurahan), lalu dikonversi menjadi indeks ISPU (Permen LHK No. 14/2020). HC tidak tersedia; acuan resmi tetap stasiun pemantau DLH.</p>
+                    <div class="src-tags"><span class="src-tag">±40 km · per jam</span><span class="src-tag">ISPU dari 6 parameter</span></div>
+                    <p class="text-[11px] text-slate-400">Diperbarui: <b id="src-cams-updated">-</b></p>
+                    <a class="src-link" href="https://atmosphere.copernicus.eu" target="_blank" rel="noopener">atmosphere.copernicus.eu</a>
+                </div>
+                </div>
+            </div>
+            <div class="space-y-2.5">
+                <div><h4 class="text-sm font-bold text-slate-700">Peta Dasar, Wilayah &amp; Sistem</h4><p class="text-[11px] text-slate-400">Latar peta, batas wilayah, dan infrastruktur penyimpanan data.</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3.5">
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#14b8a6"></span>Peta dasar</div>
+                    <p class="src-desc">Jalan: OpenStreetMap contributors. Satelit: Esri World Imagery (Esri, Maxar, Earthstar Geographics, USDA, USGS, GeoEye, dan kontributor lain). Pemilih titik laporan manual juga dapat memakai Google Maps.</p>
+                    <div class="src-tags"><span class="src-tag">OpenStreetMap</span><span class="src-tag">Esri World Imagery</span><span class="src-tag">Google Maps</span></div>
+                    <a class="src-link" href="https://www.openstreetmap.org" target="_blank" rel="noopener">www.openstreetmap.org</a>
+                </div>
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#16a34a"></span>Batas wilayah</div>
+                    <p class="src-desc">Poligon 7 kelurahan Kecamatan Rakumpit (Bukit Sua, Gaung Baru, Mungku Baru, Pager, Panjehang, Petuk Barunai, Petuk Bukit) berbentuk GeoJSON. Titik panas dipetakan ke kelurahan lewat uji titik-dalam-poligon (Turf.js).</p>
+                    <div class="src-tags"><span class="src-tag">GeoJSON</span><span class="src-tag">7 kelurahan</span></div>
+                </div>
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#64748b"></span>Penyimpanan &amp; server</div>
+                    <p class="src-desc">Google Apps Script menarik data tiap beberapa menit dan menyimpannya di Google Sheets (DataHotspot, Riwayat_Hotspot, Laporan, DataUdara, Riwayat_Udara). Dashboard ini dihosting di GitHub Pages.</p>
+                    <div class="src-tags"><span class="src-tag">Google Apps Script</span><span class="src-tag">Google Sheets</span><span class="src-tag">GitHub Pages</span></div>
+                </div>
+                <div class="src-card">
+                    <div class="src-title"><span class="src-dot" style="background:#94a3b8"></span>Pustaka perangkat lunak</div>
+                    <p class="src-desc">Leaflet (peta) dan Leaflet.markercluster, Turf.js (analisis spasial), jsPDF + AutoTable (laporan PDF), serta Tailwind CSS.</p>
+                    <div class="src-tags"><span class="src-tag">Leaflet</span><span class="src-tag">Turf.js</span><span class="src-tag">jsPDF</span></div>
+                    <a class="src-link" href="https://leafletjs.com" target="_blank" rel="noopener">leafletjs.com</a>
+                </div>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -2352,6 +2455,43 @@
             }
         }
 
+        // --- Data cuaca & kualitas udara untuk laporan PDF (kondisi terkini saat dicetak) ---
+        function pdfWeatherData_() {
+            const W = (typeof globalWeather !== 'undefined' && globalWeather && globalWeather.byVillage) || {};
+            const nowS = Date.now() / 1000;
+            const rows = [];
+            let any = false;
+            const f = (x, d) => (x === null || x === undefined || isNaN(x)) ? '-' : Number(x).toFixed(d);
+            VILLAGE_POINTS.forEach(pt => {
+                const v = W[pt.name] || {};
+                const aq = v.aq || {};
+                const cat = v.ispu ? ispuCat_(v.ispu.value) : null;
+                let rr = null;
+                if (v.series && v.series.length) {
+                    let best = null, bd = Infinity;
+                    v.series.forEach(r => { const d = Math.abs(r[0] - nowS); if (d < bd) { bd = d; best = r; } });
+                    if (best && bd <= 2 * 3600) rr = { mm: best[1], desc: best[3] || '', cloud: best[2] };
+                } else if (v.rain !== null && v.rain !== undefined) rr = { mm: v.rain, desc: v.weatherDesc || '', cloud: v.cloud };
+                const lv = RAIN_LV[rainLevel_(rr && rr.mm, rr && rr.desc)].t;
+                if (v.ispu || v.wind || rr) any = true;
+                rows.push({
+                    name: pt.name,
+                    ispu: v.ispu ? String(v.ispu.value) : '-', cat: cat ? cat.t : '-', dom: v.ispu ? ISPU_LABEL[v.ispu.dom] : '-',
+                    domPlain: v.ispu ? ({ pm10: 'PM10', pm25: 'PM2.5', so2: 'SO2', co: 'CO', o3: 'O3', no2: 'NO2' })[v.ispu.dom] : '-',
+                    pm10: f(aq.pm10, 1), pm25: f(aq.pm25, 1), so2: f(aq.so2, 1), co: f(aq.co, 0), o3: f(aq.o3, 1), no2: f(aq.no2, 1),
+                    wsp: v.wind ? f(v.wind.speed, 1) : '-',
+                    wdir: v.wind ? `${Math.round(v.wind.dir)}° ${compass_(v.wind.dir)}` : '-',
+                    wfrom: v.wind ? dirName_(v.wind.dir) : '-', wto: v.wind ? dirName_(v.wind.dir + 180) : '-',
+                    rain: rr ? f(rr.mm, 1) : '-', rainLv: rr ? lv : 'Tidak ada data', cloud: rr && rr.cloud != null ? f(rr.cloud, 0) : (v.cloud != null ? f(v.cloud, 0) : '-')
+                });
+            });
+            return {
+                any: any, rows: rows,
+                time: (globalWeather && globalWeather.updatedAt) ? fmtWxTime_(globalWeather.updatedAt) : '-',
+                src: (globalWeather && globalWeather.bmkgOk > 0) ? 'BMKG' : 'Open-Meteo'
+            };
+        }
+
         // --- MODE CETAK: laporan HTML A4 landscape + foto, dicetak / "Simpan sebagai PDF" ---
         function buildPrintHtml_(list, manual, scopeLabel, reportsByKey) {
             reportsByKey = reportsByKey || globalReportsByKey;
@@ -2410,6 +2550,18 @@
                 <b>Total Titik:</b> ${list.length} &nbsp;|&nbsp; <b>Confidence Tinggi (&ge;80%):</b> ${highConf} &nbsp;|&nbsp; <b>Kelurahan Terdampak:</b> ${vs.size} &nbsp;|&nbsp; <b>FRP Maks:</b> ${maxFrp.toFixed(1)} MW &nbsp;|&nbsp; <b>Belum Ditindaklanjuti:</b> ${belum}</div>
                 ${list.length ? `<table><thead><tr><th>No</th><th>Waktu (WIB)</th><th>Kelurahan</th><th>Satelit</th><th>Conf.</th><th>FRP (MW)</th><th>Koordinat</th><th>Foto Kegiatan</th><th>Keterangan / Tindak Lanjut</th></tr></thead><tbody>${rowsH}</tbody></table>` : ''}
                 ${manual.length ? `<h2>Laporan Manual (Di Luar Titik Panas Satelit)</h2><table><thead><tr><th>No</th><th>Waktu Laporan</th><th>Kelurahan</th><th>Koordinat</th><th>Foto Kegiatan</th><th>Tindakan / Uraian</th></tr></thead><tbody>${rowsM}</tbody></table>` : ''}
+                ${(() => {
+                    const wx = pdfWeatherData_();
+                    if (!wx.any) return '<h2>Kondisi Cuaca &amp; Kualitas Udara</h2><p class="meta">Data cuaca dan ISPU belum tersedia saat laporan dicetak.</p>';
+                    const tr = wx.rows.map(r => `<tr><td>${e(r.name)}</td><td class="c"><b>${e(r.ispu)}</b></td><td>${e(r.cat)}</td><td class="c">${e(r.dom)}</td>` +
+                        `<td class="c">${r.pm10}</td><td class="c">${r.pm25}</td><td class="c">${r.so2}</td><td class="c">${r.co}</td><td class="c">${r.o3}</td><td class="c">${r.no2}</td>` +
+                        `<td class="c">${r.wsp}</td><td>${e(r.wdir)}<br>dari ${e(r.wfrom)}, menuju ${e(r.wto)}</td><td class="c">${r.rain}</td><td>${e(r.rainLv)}</td><td class="c">${r.cloud}</td></tr>`).join('');
+                    return `<h2 style="page-break-before:auto">Kondisi Cuaca &amp; Kualitas Udara per Kelurahan</h2>
+                    <div class="meta">Kondisi terkini saat laporan dicetak &mdash; diperbarui ${e(wx.time)}. Sumber: Copernicus CAMS via Open-Meteo (ISPU, 6 parameter), Open-Meteo (angin 10 m), ${e(wx.src)} (hujan &amp; awan).</div>
+                    <table><thead><tr><th rowspan="2">Kelurahan</th><th colspan="3">ISPU</th><th colspan="6">Parameter ISPU (&micro;g/m&sup3;)</th><th colspan="2">Angin</th><th colspan="2">Hujan</th><th rowspan="2">Awan (%)</th></tr>
+                    <tr><th>Indeks</th><th>Kategori</th><th>Dominan</th><th>PM10</th><th>PM2.5</th><th>SO&#8322;</th><th>CO</th><th>O&#8323;</th><th>NO&#8322;</th><th>Kec. (m/s)</th><th>Arah</th><th>mm</th><th>Tingkat</th></tr></thead><tbody>${tr}</tbody></table>
+                    <p class="meta" style="font-size:9px;color:#555">Kategori ISPU (Permen LHK No. 14/2020): 0&ndash;50 Baik, 51&ndash;100 Sedang, 101&ndash;200 Tidak Sehat, 201&ndash;300 Sangat Tidak Sehat, &gt;300 Berbahaya. Arah angin = arah asal angin (derajat dari utara). Nilai berasal dari model/prakiraan, bukan pengukuran stasiun resmi.</p>`;
+                })()}
                 <p class="meta" style="margin-top:10px;font-size:9px;color:#555">Dokumen dibuat otomatis dari Dashboard Siaga Karhutla Rakumpit.</p>
             </body></html>`;
         }
@@ -2513,6 +2665,32 @@
                     columnStyles: { 0: { cellWidth: 8 }, 1: { cellWidth: 34 }, 2: { cellWidth: 26 }, 3: { cellWidth: 30 }, 4: { cellWidth: 18, textColor: [8, 145, 178] }, 5: { cellWidth: 'auto' } },
                     didDrawCell: linkPhoto(getUrl)
                 }));
+            }
+
+            // Kondisi cuaca & kualitas udara (6 parameter ISPU, angin, hujan)
+            {
+                const wx = pdfWeatherData_();
+                if (y > H - 50) { doc.addPage(); y = 16; }
+                doc.setFont('helvetica', 'bold'); doc.setFontSize(10);
+                doc.text('Kondisi Cuaca & Kualitas Udara per Kelurahan', 14, y);
+                doc.setFont('helvetica', 'normal'); doc.setFontSize(8);
+                if (!wx.any) {
+                    doc.text('Data cuaca dan ISPU belum tersedia saat laporan dicetak.', 14, y + 5);
+                } else {
+                    doc.text(doc.splitTextToSize(S('Kondisi terkini saat laporan dicetak - diperbarui ' + wx.time + '. Sumber: Copernicus CAMS via Open-Meteo (ISPU), Open-Meteo (angin), ' + wx.src + ' (hujan & awan).'), W - 28), 14, y + 5);
+                    table(Object.assign({}, common, {
+                        startY: y + 8,
+                        head: [[{ content: 'Kelurahan', rowSpan: 2 }, { content: 'ISPU', colSpan: 3 }, { content: 'Parameter ISPU (ug/m3)', colSpan: 6 }, { content: 'Angin', colSpan: 3 }, { content: 'Hujan', colSpan: 2 }, { content: 'Awan (%)', rowSpan: 2 }],
+                               ['Indeks', 'Kategori', 'Dominan', 'PM10', 'PM2.5', 'SO2', 'CO', 'O3', 'NO2', 'Kec. (m/s)', 'Arah (dari)', 'Menuju', 'mm', 'Tingkat']],
+                        body: wx.rows.map(r => [S(r.name), r.ispu, S(r.cat), S(r.domPlain), r.pm10, r.pm25, r.so2, r.co, r.o3, r.no2, r.wsp, S(r.wdir), S(r.wto), r.rain, S(r.rainLv), r.cloud]),
+                        styles: { fontSize: 6.5, cellPadding: 1.2, valign: 'middle', halign: 'center' },
+                        columnStyles: { 0: { halign: 'left', cellWidth: 24 }, 2: { halign: 'left' }, 11: { halign: 'left' }, 12: { halign: 'left' }, 14: { halign: 'left' } }
+                    }));
+                    const fy = ((doc.lastAutoTable && doc.lastAutoTable.finalY) || y) + 4;
+                    doc.setFontSize(7);
+                    doc.text(S('Kategori ISPU (Permen LHK No. 14/2020): 0-50 Baik, 51-100 Sedang, 101-200 Tidak Sehat, 201-300 Sangat Tidak Sehat, >300 Berbahaya. Arah = arah asal angin (derajat dari utara).'), 14, fy);
+                    doc.text('Nilai berasal dari model/prakiraan, bukan pengukuran stasiun resmi.', 14, fy + 4);
+                }
             }
 
             const fileDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });
@@ -2641,11 +2819,15 @@
                         ((j && j.data && j.data[0] && j.data[0].cuaca) || []).forEach(day => (day || []).forEach(e => flat.push(e)));
                         const now = Date.now();
                         let best = null, bd = Infinity;
+                        const ser = [];
                         flat.forEach(e => {
                             const t = Date.parse(String(e.local_datetime || '').replace(' ', 'T') + '+07:00');
-                            if (!isNaN(t) && Math.abs(t - now) < bd) { bd = Math.abs(t - now); best = e; }
+                            if (isNaN(t)) return;
+                            if (Math.abs(t - now) < bd) { bd = Math.abs(t - now); best = e; }
+                            if (t >= now - 3 * 3600e3 && ser.length < 24) ser.push([Math.round(t / 1000), parseFloat(e.tp) || 0, parseFloat(e.tcc) || 0, String(e.weather_desc || '')]);
                         });
                         if (best) { by[p.name].bmkg = best; bmkgOk++; }
+                        if (ser.length) by[p.name].series = ser;
                     }).catch(e => console.error('BMKG ' + p.name + ':', e))
             );
             await Promise.all([aqReq, fcReq].concat(bmkgReqs));
@@ -2724,9 +2906,364 @@
         const COMPASS_ = ['U', 'TL', 'T', 'TG', 'S', 'BD', 'B', 'BL'];
         function compass_(deg) { return COMPASS_[Math.round(((deg % 360) + 360) % 360 / 45) % 8]; }
 
+        // ---------- Mode angin, tingkat hujan, utilitas waktu ----------
+        let windMode = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'arrow' : 'flow';
+        const DIR_NAMES_ = ['Utara', 'Timur Laut', 'Timur', 'Tenggara', 'Selatan', 'Barat Daya', 'Barat', 'Barat Laut'];
+        function dirName_(deg) { return DIR_NAMES_[Math.round(((deg % 360) + 360) % 360 / 45) % 8]; }
+        function windCat_(sp) {
+            if (sp < 1.5) return 'Angin tenang';
+            if (sp < 3.4) return 'Angin lemah';
+            if (sp < 5.5) return 'Angin sedang';
+            if (sp < 8) return 'Angin cukup kencang';
+            if (sp < 11) return 'Angin kencang';
+            return 'Angin sangat kencang';
+        }
+        function windColor_(sp) {
+            return sp < 2 ? '#7dd3fc' : (sp < 5 ? '#34d399' : (sp < 8 ? '#fde047' : (sp < 11 ? '#fb923c' : '#ef4444')));
+        }
+        function windVectors_() {
+            const out = [];
+            VILLAGE_POINTS.forEach(p => {
+                const v = globalWeather.byVillage[p.name];
+                if (!v || !v.wind) return;
+                const to = (v.wind.dir + 180) * Math.PI / 180, sp = v.wind.speed;
+                out.push({ lat: p.lat, lng: p.lng, u: sp * Math.sin(to), v: sp * Math.cos(to), sp: sp });
+            });
+            return out;
+        }
+        function fmtSlot_(t) {
+            const d = new Date(t * 1000);
+            return d.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Jakarta' }) + ' · ' +
+                d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' }).replace(':', '.') + ' WIB';
+        }
+        const RAIN_LV = {
+            none:   { t: 'Tidak hujan', c: '#e2e8f0' },
+            ringan: { t: 'Ringan', c: '#7dd3fc' },
+            sedang: { t: 'Sedang', c: '#3b82f6' },
+            lebat:  { t: 'Lebat', c: '#7c3aed' },
+            petir:  { t: 'Petir', c: '#dc2626' },
+            nodata: { t: 'Tidak ada data', c: '#9ca3af' }
+        };
+        function rainLevel_(mm, desc) {
+            if (mm === null || mm === undefined || isNaN(mm)) return 'nodata';
+            const d = String(desc || '').toLowerCase();
+            if (d.indexOf('petir') >= 0) return 'petir';
+            if (d.indexOf('lebat') >= 0) return 'lebat';
+            if (d.indexOf('sedang') >= 0 && d.indexOf('hujan') >= 0) return 'sedang';
+            if (d.indexOf('ringan') >= 0 && d.indexOf('hujan') >= 0) return 'ringan';
+            if (mm <= 0) return d.indexOf('hujan') >= 0 ? 'ringan' : 'none';
+            return mm < 5 ? 'ringan' : (mm < 10 ? 'sedang' : 'lebat');
+        }
+        // Daftar waktu prakiraan (epoch detik) gabungan semua kelurahan
+        function rainSlots_() {
+            const set = {};
+            Object.values(globalWeather.byVillage).forEach(v => (v.series || []).forEach(r => { set[r[0]] = 1; }));
+            return Object.keys(set).map(Number).sort((a, b) => a - b);
+        }
+        let rainSel = null;
+        function rainSelSlot_() {
+            const slots = rainSlots_();
+            if (!slots.length) return null;
+            if (rainSel === null || slots.indexOf(rainSel) < 0) {
+                const now = Date.now() / 1000;
+                rainSel = slots.reduce((b, t) => Math.abs(t - now) < Math.abs(b - now) ? t : b, slots[0]);
+            }
+            return rainSel;
+        }
+        // Nilai hujan kelurahan pada waktu t (null = pakai nilai terkini)
+        function rainAt_(v, t) {
+            if (v.series && v.series.length && t !== null) {
+                let best = null, bd = Infinity;
+                v.series.forEach(r => { const d = Math.abs(r[0] - t); if (d < bd) { bd = d; best = r; } });
+                if (best && bd <= 2 * 3600) return { t: best[0], mm: best[1], cloud: best[2], desc: best[3] || '' };
+                return null;
+            }
+            if (v.rain !== null && v.rain !== undefined) return { t: null, mm: v.rain, cloud: v.cloud, desc: v.weatherDesc || '' };
+            return null;
+        }
+        function rainPopup_(name, v, t) {
+            const r = rainAt_(v, t), lv = RAIN_LV[rainLevel_(r && r.mm, r && r.desc)];
+            const rows = [['Tingkat', lv.t], ['Curah hujan', r ? fmtN_(r.mm, 1) + ' mm' : '-'], ['Cuaca', (r && r.desc) || '-'], ['Tutupan awan', r ? fmtN_(r.cloud, 0) + '%' : '-']];
+            if (t !== null) rows.unshift(['Waktu', fmtSlot_(t)]);
+            let html = wxPopup_('Prakiraan hujan Kel. ' + name, rows);
+            if (v.series && v.series.length) {
+                const nxt = v.series.filter(x => t === null || x[0] > t).slice(0, 4);
+                if (nxt.length) html += '<div class="wx-pop" style="margin-top:6px"><b class="t">Berikutnya</b><table>' +
+                    nxt.map(x => `<tr><td>${esc(fmtSlot_(x[0]))}</td><td>${esc(fmtN_(x[1], 1))} mm</td></tr>`).join('') + '</table></div>';
+            }
+            return html;
+        }
+
+        // ---------- Animasi aliran angin (kanvas partikel) ----------
+        const windFlow = { canvas: null, ctx: null, parts: [], gu: null, gv: null, cols: 0, rows: 0, cell: 16, w: 0, h: 0, raf: 0, moving: false, last: 0 };
+        function windFlowResize_() {
+            const wf = windFlow, el = document.getElementById('gis-map');
+            if (!wf.canvas) return;
+            const dpr = window.devicePixelRatio || 1;
+            wf.w = el.clientWidth; wf.h = el.clientHeight;
+            wf.canvas.style.width = wf.w + 'px'; wf.canvas.style.height = wf.h + 'px';
+            wf.canvas.width = Math.round(wf.w * dpr); wf.canvas.height = Math.round(wf.h * dpr);
+            wf.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        function windFlowGrid_() {
+            const wf = windFlow, vecs = windVectors_();
+            if (!vecs.length) { wf.gu = null; return; }
+            wf.cols = Math.ceil(wf.w / wf.cell) + 1; wf.rows = Math.ceil(wf.h / wf.cell) + 1;
+            wf.gu = new Float32Array(wf.cols * wf.rows); wf.gv = new Float32Array(wf.cols * wf.rows);
+            for (let r = 0; r < wf.rows; r++) for (let c = 0; c < wf.cols; c++) {
+                const ll = map.containerPointToLatLng([c * wf.cell, r * wf.cell]);
+                let sw = 0, su = 0, sv = 0;
+                for (let k = 0; k < vecs.length; k++) {
+                    const dy = ll.lat - vecs[k].lat, dx = (ll.lng - vecs[k].lng) * Math.cos(ll.lat * Math.PI / 180);
+                    const w = 1 / (dx * dx + dy * dy + 1e-6);
+                    sw += w; su += w * vecs[k].u; sv += w * vecs[k].v;
+                }
+                wf.gu[r * wf.cols + c] = su / sw; wf.gv[r * wf.cols + c] = sv / sw;
+            }
+        }
+        function windFlowSeed_() {
+            const wf = windFlow, n = Math.max(250, Math.min(1400, Math.round(wf.w * wf.h / 700)));
+            wf.parts = [];
+            for (let i = 0; i < n; i++) wf.parts.push({ x: Math.random() * wf.w, y: Math.random() * wf.h, age: Math.floor(Math.random() * 80) });
+        }
+        function windFlowFrame_(ts) {
+            const wf = windFlow;
+            wf.raf = requestAnimationFrame(windFlowFrame_);
+            if (wf.moving || !wf.gu || ts - wf.last < 28) return;
+            wf.last = ts;
+            const ctx = wf.ctx;
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = 'rgba(0,0,0,0.075)';
+            ctx.fillRect(0, 0, wf.w, wf.h);
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.lineWidth = 1.7; ctx.lineCap = 'round';
+            for (let i = 0; i < wf.parts.length; i++) {
+                const p = wf.parts[i];
+                const c = Math.min(wf.cols - 1, Math.max(0, Math.round(p.x / wf.cell))), r = Math.min(wf.rows - 1, Math.max(0, Math.round(p.y / wf.cell)));
+                const u = wf.gu[r * wf.cols + c], v = wf.gv[r * wf.cols + c], sp = Math.sqrt(u * u + v * v);
+                const nx = p.x + u * 0.9, ny = p.y - v * 0.9; // y layar terbalik
+                ctx.strokeStyle = windColor_(sp);
+                ctx.globalAlpha = 0.85;
+                ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(nx, ny); ctx.stroke();
+                p.x = nx; p.y = ny; p.age++;
+                if (p.age > 90 || nx < 0 || ny < 0 || nx > wf.w || ny > wf.h) {
+                    p.x = Math.random() * wf.w; p.y = Math.random() * wf.h; p.age = Math.floor(Math.random() * 20);
+                }
+            }
+            ctx.globalAlpha = 1;
+        }
+        function windFlowRebuild_() {
+            const wf = windFlow; if (!wf.canvas) return;
+            windFlowResize_(); windFlowGrid_(); windFlowSeed_();
+            wf.ctx.clearRect(0, 0, wf.w, wf.h);
+            wf.moving = false;
+        }
+        function windFlowStart_() {
+            const wf = windFlow;
+            if (!wf.canvas) {
+                wf.canvas = document.createElement('canvas');
+                wf.canvas.id = 'wind-flow';
+                document.getElementById('map-wrap').appendChild(wf.canvas);
+                wf.ctx = wf.canvas.getContext('2d');
+            }
+            wf.canvas.style.display = 'block';
+            windFlowRebuild_();
+            if (!wf.raf) wf.raf = requestAnimationFrame(windFlowFrame_);
+        }
+        function windFlowStop_() {
+            const wf = windFlow;
+            if (wf.raf) { cancelAnimationFrame(wf.raf); wf.raf = 0; }
+            if (wf.canvas) { wf.ctx.clearRect(0, 0, wf.w, wf.h); wf.canvas.style.display = 'none'; }
+        }
+        map.on('movestart zoomstart', () => { if (windFlow.raf) { windFlow.moving = true; windFlow.ctx.clearRect(0, 0, windFlow.w, windFlow.h); } });
+        map.on('moveend zoomend resize', () => { if (windFlow.raf) windFlowRebuild_(); });
+        window.addEventListener('resize', () => { if (windFlow.raf) windFlowRebuild_(); });
+
+        // ---------- Kartu angin (kompas) ----------
+        function updateWindCard_() {
+            const el = document.getElementById('wind-card');
+            const vecs = layerState.wind ? windVectors_() : [];
+            if (!layerState.wind) { el.classList.add('hidden'); return; }
+            el.classList.remove('hidden');
+            if (!vecs.length) { el.innerHTML = '<b>Angin</b><div class="sub">Data angin belum tersedia.</div>'; return; }
+            let u = 0, v = 0, mx = 0;
+            vecs.forEach(a => { u += a.u; v += a.v; mx = Math.max(mx, a.sp); });
+            u /= vecs.length; v /= vecs.length;
+            const sp = Math.sqrt(u * u + v * v);
+            const to = (Math.atan2(u, v) * 180 / Math.PI + 360) % 360, from = (to + 180) % 360;
+            const t = globalWeather.updatedAt;
+            el.innerHTML =
+                `<div class="row"><svg width="58" height="58" viewBox="0 0 58 58" aria-hidden="true">
+                    <circle cx="29" cy="29" r="26" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+                    <text x="29" y="10" text-anchor="middle" font-size="8" font-weight="700" fill="currentColor">U</text>
+                    <text x="50" y="32" text-anchor="middle" font-size="8" font-weight="700" fill="currentColor">T</text>
+                    <text x="29" y="54" text-anchor="middle" font-size="8" font-weight="700" fill="currentColor">S</text>
+                    <text x="8" y="32" text-anchor="middle" font-size="8" font-weight="700" fill="currentColor">B</text>
+                    <g transform="rotate(${to.toFixed(0)} 29 29)"><path d="M29 14L35 40L29 35L23 40Z" fill="${windColor_(sp)}" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/></g>
+                </svg>
+                <div><div class="big">${sp.toFixed(1)} <span style="font-size:11px;font-weight:700">m/s</span></div>
+                <div class="sub">${(sp * 3.6).toFixed(1)} km/jam</div></div></div>
+                <div style="margin-top:6px;font-weight:700">${windCat_(sp)}</div>
+                <div class="sub">dari ${dirName_(from)} (${Math.round(from)}°) → menuju ${dirName_(to)}</div>
+                <div class="sub">Rata-rata 7 kelurahan · maks ${mx.toFixed(1)} m/s</div>
+                <div class="wx-seg"><button type="button" data-wmode="flow" class="${windMode === 'flow' ? 'on' : ''}">Aliran</button><button type="button" data-wmode="arrow" class="${windMode === 'arrow' ? 'on' : ''}">Panah</button></div>
+                <div class="wx-scale"></div><div class="wx-scale-l"><span>0</span><span>5</span><span>10</span><span>14+ m/s</span></div>
+                <div class="sub" style="margin-top:4px;display:flex;justify-content:space-between;align-items:center"><span>${t ? 'Diperbarui ' + t.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' }).replace(':', '.') + ' WIB' : ''}</span><button type="button" data-wact="refresh" class="ib" style="width:auto;padding:0 8px;height:22px;border:1px solid #cbd5e1;border-radius:7px;background:transparent;color:inherit;cursor:pointer;font-size:11px" title="Muat ulang data angin">↻</button></div>`;
+        }
+        document.getElementById('wind-card').addEventListener('click', (e) => {
+            const m = e.target.closest('[data-wmode]');
+            if (m) { windMode = m.dataset.wmode; renderWeatherLayers(); return; }
+            if (e.target.closest('[data-wact="refresh"]')) { fetchWeatherData(); }
+        });
+
+        // ---------- Panel Awan (citra Himawari-9 via NASA GIBS) ----------
+        const GIBS_LAYER = 'Himawari_AHI_Band13_Clean_Infrared';
+        const cloudSt = { tile: null, frames: [], idx: 0, timer: null, playing: false, err: 0, ok: 0 };
+        function gibsUrl_(t) {
+            return `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/${GIBS_LAYER}/default/${new Date(t).toISOString().replace(/\.\d{3}Z$/, 'Z')}/GoogleMapsCompatible_Level6/{z}/{y}/{x}.png`;
+        }
+        function ageLabel_(t) {
+            const m = Math.max(0, Math.round((Date.now() - t) / 60000));
+            return m < 60 ? m + ' menit lalu' : Math.floor(m / 60) + ' jam ' + (m % 60) + ' menit lalu';
+        }
+        function cloudShow_() {
+            const st = cloudSt; if (!st.tile) return;
+            const t = st.frames[st.idx];
+            st.tile.setUrl(gibsUrl_(t));
+            const set = (id, f) => { const e = document.getElementById(id); if (e) f(e); };
+            set('cp-time', e => e.textContent = fmtSlot_(t / 1000));
+            set('cp-age', e => e.textContent = ageLabel_(t));
+            set('cp-slider', e => e.value = st.idx);
+        }
+        function cloudPlay_(on) {
+            const st = cloudSt;
+            st.playing = on;
+            if (st.timer) { clearInterval(st.timer); st.timer = null; }
+            if (on) st.timer = setInterval(() => { st.idx = (st.idx + 1) % st.frames.length; cloudShow_(); }, 900);
+            const b = document.getElementById('cp-play'); if (b) b.textContent = on ? '❚❚' : '▶';
+        }
+        function cloudStart_() {
+            const st = cloudSt;
+            const last = Math.floor((Date.now() - 50 * 60e3) / 600e3) * 600e3; // GIBS menyediakan citra dengan jeda ±1 jam
+            st.frames = []; for (let i = 12; i >= 0; i--) st.frames.push(last - i * 600e3);
+            st.idx = st.frames.length - 1; st.err = 0; st.ok = 0;
+            st.tile = L.tileLayer(gibsUrl_(st.frames[st.idx]), {
+                maxNativeZoom: 6, maxZoom: 18, opacity: 0.7, zIndex: 5, crossOrigin: true,
+                attribution: 'Himawari-9 &copy; JMA via NASA GIBS'
+            }).addTo(map);
+            st.tile.on('tileload', () => { st.ok++; const n = document.getElementById('cp-warn'); if (n) n.classList.add('hidden'); });
+            st.tile.on('tileerror', () => { st.err++; if (st.err >= 3 && !st.ok) { const n = document.getElementById('cp-warn'); if (n) n.classList.remove('hidden'); } });
+            const el = document.getElementById('cloud-panel');
+            el.innerHTML = `<div class="hd"><b>Awan · Himawari-9</b><span class="pill">JMA</span><button type="button" class="ib" data-collapse="cloud-panel" title="Ciutkan">–</button></div>
+                <div class="body">
+                <div class="time" id="cp-time">-</div><div class="muted" id="cp-age"></div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+                    <button type="button" class="ib" id="cp-play" title="Putar / jeda">❚❚</button>
+                    <input type="range" id="cp-slider" min="0" max="${st.frames.length - 1}" value="${st.idx}" aria-label="Waktu citra awan" />
+                </div>
+                <div class="wx-grad"></div>
+                <div class="wx-scale-l"><span>Cerah</span><span>Awan</span><span>Awan tebal / hujan</span><span>Badai</span></div>
+                <div id="cp-warn" class="muted hidden" style="color:#b45309;margin-top:4px">Citra untuk waktu ini belum tersedia di NASA GIBS. Geser slider ke waktu lebih awal.</div>
+                <div class="muted" style="margin-top:4px">Inframerah Band 13 · NASA GIBS · tiap 10 menit</div></div>`;
+            cloudPlay_(true);
+        }
+        function cloudStop_() {
+            const st = cloudSt;
+            cloudPlay_(false);
+            if (st.tile) { map.removeLayer(st.tile); st.tile = null; }
+        }
+        document.getElementById('cloud-panel').addEventListener('click', (e) => {
+            if (e.target.closest('#cp-play')) cloudPlay_(!cloudSt.playing);
+        });
+        document.getElementById('cloud-panel').addEventListener('input', (e) => {
+            if (e.target.id === 'cp-slider') { cloudPlay_(false); cloudSt.idx = parseInt(e.target.value, 10) || 0; cloudShow_(); }
+        });
+
+        // ---------- Panel Prakiraan Hujan ----------
+        function renderRainPanel_() {
+            const el = document.getElementById('rain-panel');
+            const slots = rainSlots_(), sel = rainSelSlot_();
+            const i = slots.indexOf(sel), W = globalWeather.byVillage;
+            let n = 0, tot = VILLAGE_POINTS.length;
+            VILLAGE_POINTS.forEach(p => {
+                const v = W[p.name]; if (!v) return;
+                const r = rainAt_(v, sel), lv = rainLevel_(r && r.mm, r && r.desc);
+                if (lv !== 'none' && lv !== 'nodata') n++;
+            });
+            const src = globalWeather.bmkgOk > 0 ? 'BMKG' : 'Open-Meteo';
+            const collapsed = el.classList.contains('collapsed');
+            const rel = sel === null ? '' : (() => { const h = Math.round((sel * 1000 - Date.now()) / 3600e3); return Math.abs(h) < 2 ? 'sekarang' : (h > 0 ? '+' + h + ' jam' : h + ' jam'); })();
+            el.innerHTML = `<div class="hd"><b>Prakiraan Hujan</b><span class="pill">${src}</span><button type="button" class="ib" data-collapse="rain-panel" title="Ciutkan">${collapsed ? '+' : '–'}</button></div>
+                <div class="body">
+                <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+                    <button type="button" class="ib" data-rain="-1" ${i <= 0 ? 'disabled' : ''} title="Sebelumnya">◄</button>
+                    <div style="flex:1;text-align:center"><div class="time" style="margin:0">${sel === null ? 'Kondisi terkini' : esc(fmtSlot_(sel))}</div><div class="muted">${esc(rel)}</div></div>
+                    <button type="button" class="ib" data-rain="1" ${i < 0 || i >= slots.length - 1 ? 'disabled' : ''} title="Berikutnya">►</button>
+                </div>
+                <div class="wx-leg">${['ringan', 'sedang', 'lebat', 'petir', 'none', 'nodata'].map(k => `<span><i style="background:${RAIN_LV[k].c}"></i>${RAIN_LV[k].t}</span>`).join('')}</div>
+                <div style="margin-top:6px;font-weight:700">Hujan di ${n} dari ${tot} desa/kelurahan</div>
+                <div class="muted">${src} · diperbarui ${globalWeather.updatedAt ? esc(fmtWxTime_(globalWeather.updatedAt)) : '-'}</div>
+                <button type="button" class="wx-btn" data-rain-table="1">Lihat tabel data</button>
+                <div class="muted" style="margin-top:6px">Klik kelurahan di peta untuk rincian.</div></div>`;
+        }
+        document.getElementById('rain-panel').addEventListener('click', (e) => {
+            const nav = e.target.closest('[data-rain]');
+            if (nav) {
+                const slots = rainSlots_(), i = slots.indexOf(rainSelSlot_()) + parseInt(nav.dataset.rain, 10);
+                if (i >= 0 && i < slots.length) { rainSel = slots[i]; renderWeatherLayers(); }
+                return;
+            }
+            if (e.target.closest('[data-rain-table]')) openRainTable_();
+        });
+        document.getElementById('wx-panels').addEventListener('click', (e) => {
+            const c = e.target.closest('[data-collapse]'); if (!c) return;
+            const pn = document.getElementById(c.dataset.collapse);
+            pn.classList.toggle('collapsed');
+            c.textContent = pn.classList.contains('collapsed') ? '+' : '–';
+        });
+        function openRainTable_() {
+            const sel = rainSelSlot_(), W = globalWeather.byVillage;
+            const rows = VILLAGE_POINTS.map(p => {
+                const v = W[p.name] || {}, r = rainAt_(v, sel), lv = RAIN_LV[rainLevel_(r && r.mm, r && r.desc)];
+                return `<tr><td>${esc(p.name)}</td><td><i style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${lv.c};margin-right:5px;border:1px solid rgba(0,0,0,.2)"></i>${lv.t}</td><td>${r ? fmtN_(r.mm, 1) : '-'}</td><td>${esc((r && r.desc) || '-')}</td><td>${r ? fmtN_(r.cloud, 0) : '-'}</td></tr>`;
+            }).join('');
+            const m = document.createElement('div');
+            m.id = 'wx-table-modal';
+            m.innerHTML = `<div class="box"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px"><div><b>Prakiraan Hujan per Kelurahan</b><div class="muted" style="font-size:11px;opacity:.7">${sel === null ? 'Kondisi terkini' : esc(fmtSlot_(sel))} · ${globalWeather.bmkgOk > 0 ? 'BMKG' : 'Open-Meteo'}</div></div><button type="button" class="ib" data-close="1" style="width:30px;height:30px;border:1px solid #cbd5e1;border-radius:8px;background:transparent;color:inherit;cursor:pointer">✕</button></div>
+                <table><thead><tr><th>Kelurahan</th><th>Tingkat</th><th>Hujan (mm)</th><th>Cuaca</th><th>Awan (%)</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+            m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) m.remove(); });
+            document.body.appendChild(m);
+        }
+
+        function syncWeatherPanels_() {
+            // Awan
+            if (layerState.cloud && !cloudSt.tile) cloudStart_();
+            if (!layerState.cloud && cloudSt.tile) cloudStop_();
+            document.getElementById('cloud-panel').classList.toggle('hidden', !layerState.cloud);
+            // Hujan
+            const rp = document.getElementById('rain-panel');
+            rp.classList.toggle('hidden', !layerState.rain);
+            if (layerState.rain) renderRainPanel_();
+            document.getElementById('wx-panels').classList.toggle('hidden', !(layerState.cloud || layerState.rain));
+            // Angin
+            updateWindCard_();
+            if (layerState.wind && windMode === 'flow') windFlowStart_(); else windFlowStop_();
+        }
+
         function renderWeatherLayers() {
             weatherGroup.clearLayers();
             const W = globalWeather.byVillage;
+            const rsel = layerState.rain ? rainSelSlot_() : null;
+
+            // Hujan: warnai poligon kelurahan sesuai tingkat hujan pada waktu terpilih
+            if (layerState.rain) {
+                GEOJSON.features.forEach(f => {
+                    const nm = f.properties.village, v = W[nm] || {}, r = rainAt_(v, rsel), lv = RAIN_LV[rainLevel_(r && r.mm, r && r.desc)];
+                    weatherGroup.addLayer(L.geoJSON(f, { style: { color: '#1e293b', weight: 1.2, fillColor: lv.c, fillOpacity: lv.t === 'Tidak hujan' ? 0.25 : 0.55 } })
+                        .bindPopup(rainPopup_(nm, v, rsel)));
+                });
+            }
+
             VILLAGE_POINTS.forEach(p => {
                 const v = W[p.name]; if (!v) return;
                 const ll = [p.lat, p.lng];
@@ -2740,25 +3277,33 @@
                 if (layerState.cloud && v.cloud !== null && v.cloud !== undefined) {
                     const c = v.cloud, col = c < 25 ? '#0ea5e9' : (c < 60 ? '#64748b' : '#334155');
                     weatherGroup.addLayer(wxBadge_(ll, Math.round(c) + '%', col, slot++,
-                        wxPopup_('Tutupan awan Kel. ' + p.name, [['Tutupan awan', Math.round(c) + '%'], ['Cuaca', v.weatherDesc || '-'], ['Suhu', fmtN_(v.temp, 1) + ' °C'], ['Kelembapan', fmtN_(v.hum, 0) + '%']])));
+                        wxPopup_('Tutupan awan Kel. ' + p.name, [['Tutupan awan', Math.round(c) + '%'], ['Cuaca', v.weatherDesc || '-'], ['Suhu', fmtN_(v.temp, 1) + ' °C'], ['Kelembapan', fmtN_(v.hum, 0) + '%'], ['Citra', 'Himawari-9 (panel Awan)']])));
                 }
-                if (layerState.rain && v.rain !== null && v.rain !== undefined) {
-                    const r = v.rain, col = r <= 0 ? '#94a3b8' : (r < 1 ? '#38bdf8' : (r < 5 ? '#2563eb' : (r < 20 ? '#7c3aed' : '#be123c')));
-                    weatherGroup.addLayer(wxBadge_(ll, fmtN_(r, 1) + ' mm', col, slot++,
-                        wxPopup_('Curah hujan Kel. ' + p.name, [['Curah hujan', fmtN_(r, 1) + ' mm'], ['Cuaca', v.weatherDesc || '-'], ['Kelembapan', fmtN_(v.hum, 0) + '%'], ['Tutupan awan', fmtN_(v.cloud, 0) + '%']])));
+                if (layerState.rain) {
+                    const r = rainAt_(v, rsel);
+                    if (r) {
+                        const lv = RAIN_LV[rainLevel_(r.mm, r.desc)];
+                        weatherGroup.addLayer(wxBadge_(ll, fmtN_(r.mm, 1) + ' mm', lv.c === '#e2e8f0' ? '#94a3b8' : lv.c, slot++, rainPopup_(p.name, v, rsel)));
+                    }
                 }
                 if (layerState.wind && v.wind) {
-                    const sp = v.wind.speed, rot = (v.wind.dir + 180) % 360; // panah menunjuk arah angin bertiup (menuju)
+                    const sp = v.wind.speed, rot = (v.wind.dir + 180) % 360; // menuju
                     const col = sp < 3 ? '#0ea5e9' : (sp < 6 ? '#16a34a' : (sp < 10 ? '#d99a06' : '#dc2626'));
-                    const offset = slot === 0 ? 0 : 28 * slot + 5;
-                    weatherGroup.addLayer(L.marker(ll, {
-                        icon: L.divIcon({
-                            className: '',
-                            html: `<div class="wx-arrow"><svg viewBox="0 0 24 24" style="transform:rotate(${rot}deg)"><path d="M12 2L19 21L12 16.5L5 21Z" fill="${col}" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg><span>${sp.toFixed(1)}</span></div>`,
-                            iconSize: [34, 34], iconAnchor: [17, 17 - offset]
-                        }),
-                        zIndexOffset: 400
-                    }).bindPopup(wxPopup_('Angin Kel. ' + p.name, [['Kecepatan', sp.toFixed(1) + ' m/s (' + (sp * 3.6).toFixed(1) + ' km/jam)'], ['Dari arah', Math.round(v.wind.dir) + '° (' + compass_(v.wind.dir) + ')'], ['Bertiup menuju', compass_(rot)], ['Sumber', v.wind.src]])));
+                    const popup = wxPopup_('Angin Kel. ' + p.name, [['Kecepatan', sp.toFixed(1) + ' m/s (' + (sp * 3.6).toFixed(1) + ' km/jam)'], ['Dari arah', Math.round(v.wind.dir) + '° (' + dirName_(v.wind.dir) + ')'], ['Bertiup menuju', dirName_(rot)], ['Kategori', windCat_(sp)], ['Sumber', v.wind.src]]);
+                    if (windMode === 'arrow') {
+                        const offset = slot === 0 ? 0 : 28 * slot + 5;
+                        weatherGroup.addLayer(L.marker(ll, {
+                            icon: L.divIcon({
+                                className: '',
+                                html: `<div class="wx-arrow"><svg viewBox="0 0 24 24" style="transform:rotate(${rot}deg)"><path d="M12 2L19 21L12 16.5L5 21Z" fill="${col}" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg><span>${sp.toFixed(1)}</span></div>`,
+                                iconSize: [34, 34], iconAnchor: [17, 17 - offset]
+                            }),
+                            zIndexOffset: 400
+                        }).bindPopup(popup));
+                    } else {
+                        weatherGroup.addLayer(L.circleMarker(ll, { radius: 6, color: '#fff', weight: 2, fillColor: col, fillOpacity: 1 }).bindPopup(popup)
+                            .bindTooltip(sp.toFixed(1) + ' m/s ' + compass_(rot)));
+                    }
                 }
             });
 
@@ -2773,15 +3318,18 @@
                     weatherGroup.addLayer(L.circleMarker([to[1], to[0]], { radius: 3, color: '#f97316', fillColor: '#f97316', fillOpacity: 1, weight: 1 }));
                 });
             }
+            syncWeatherPanels_();
             updateWxNote_();
         }
 
         function updateWxNote_() {
             const notes = [];
             if (layerState.ispu) notes.push('<b>ISPU</b>: warna penanda mengikuti kategori — hijau Baik (0–50), biru Sedang (51–100), kuning Tidak Sehat (101–200), merah Sangat Tidak Sehat (201–300), hitam Berbahaya (&gt;300). Data model CAMS, bukan stasiun resmi DLH.');
-            if (layerState.wind) notes.push('<b>Angin</b>: panah menunjuk arah angin bertiup, angka = kecepatan (m/s). Garis oranye putus-putus = proyeksi arah penjalaran api dari tiap titik panas.');
-            if (layerState.cloud) notes.push('<b>Awan</b>: persentase tutupan awan per kelurahan.');
-            if (layerState.rain) notes.push('<b>Hujan</b>: curah hujan prakiraan terdekat (mm) per kelurahan.');
+            if (layerState.wind) notes.push(windMode === 'flow'
+                ? '<b>Angin</b>: garis bergerak = aliran angin (warna = kecepatan, m/s) hasil interpolasi data tiap kelurahan. Garis oranye putus-putus = proyeksi arah penjalaran api dari tiap titik panas. Ganti ke <i>Panah</i> pada kartu angin untuk melihat nilai per kelurahan.'
+                : '<b>Angin</b>: panah menunjuk arah angin bertiup, angka = kecepatan (m/s). Garis oranye putus-putus = proyeksi arah penjalaran api dari tiap titik panas.');
+            if (layerState.cloud) notes.push('<b>Awan</b>: citra satelit Himawari-9 (JMA) lewat NASA GIBS — putar atau geser waktu pada panel. Angka pada penanda = tutupan awan prakiraan BMKG per kelurahan.');
+            if (layerState.rain) notes.push('<b>Hujan</b>: warna kelurahan = tingkat hujan prakiraan BMKG pada jam terpilih. Gunakan ◄ ► untuk berpindah waktu.');
             document.getElementById('wx-note').innerHTML = notes.length ? notes.join('<br>')
                 : 'Pilih tombol <b>ISPU</b>, <b>Angin</b>, <b>Awan</b>, atau <b>Hujan</b> untuk menampilkan data cuaca &amp; kualitas udara per kelurahan. Klik penanda untuk melihat rincian.';
         }
@@ -2793,6 +3341,7 @@
             const btn = document.querySelector(`#layer-chips [data-layer="${name}"]`);
             if (btn) btn.classList.toggle('on', on);
         }
+
         document.getElementById('layer-chips').addEventListener('click', (e) => {
             const b = e.target.closest('[data-layer]'); if (!b) return;
             setLayer_(b.dataset.layer, !b.classList.contains('on'));
