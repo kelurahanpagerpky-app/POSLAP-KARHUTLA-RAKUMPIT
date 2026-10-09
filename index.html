@@ -2760,7 +2760,7 @@
             let xb = 0, ib = 0;
             for (let i = 0; i < bp.length; i++) {
                 if (x <= bp[i] || i === bp.length - 1) {
-                    return Math.min(500, (ISPU_IDX[i] - ib) / (bp[i] - xb) * (x - xb) + ib);
+                    return (ISPU_IDX[i] - ib) / (bp[i] - xb) * (x - xb) + ib; // tanpa batas 500: nilai asli diteruskan secara linear
                 }
                 xb = bp[i]; ib = ISPU_IDX[i];
             }
