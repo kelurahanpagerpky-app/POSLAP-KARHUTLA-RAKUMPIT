@@ -332,6 +332,131 @@
             *, *::before, *::after { animation:none !important; transition:none !important; }
             html { scroll-behavior:auto; }
         }
+    
+        /* ===== POP UP ANGIN & AWAN MODERN (kartu mengambang, panel & popup penanda) ===== */
+        .wx-float { top:64px; right:10px; width:244px; padding:0; border-radius:18px; overflow:hidden; background:rgba(255,255,255,.93); -webkit-backdrop-filter:blur(12px) saturate(1.3); backdrop-filter:blur(12px) saturate(1.3); border:1px solid rgba(226,232,240,.95); box-shadow:0 10px 30px rgba(15,23,42,.22); }
+        html.dark .wx-float { background:rgba(15,23,42,.92); border-color:#334155; }
+        .wc-hd { display:flex; align-items:center; gap:8px; padding:9px 10px 9px 12px; background:linear-gradient(135deg,#0f766e,#0e7490); color:#fff; }
+        .wc-ico { width:26px; height:26px; border-radius:9px; background:rgba(255,255,255,.2); display:grid; place-items:center; flex:none; }
+        .wc-ico svg { width:16px; height:16px; }
+        .wc-ttl { flex:1; min-width:0; line-height:1.15; }
+        .wc-ttl b { display:block; font-size:13px; }
+        .wc-ttl span { font-size:10px; opacity:.85; }
+        .wc-mini { display:none; font:700 11px system-ui,sans-serif; background:rgba(255,255,255,.2); padding:2px 8px; border-radius:99px; white-space:nowrap; }
+        .wx-float.collapsed .wc-mini { display:inline-block; }
+        .wx-float.collapsed .wc-body, .wx-float.collapsed .wc-ttl span { display:none; }
+        .wc-ib { width:26px; height:26px; border-radius:8px; border:0; background:rgba(255,255,255,.2); color:#fff; font-weight:800; cursor:pointer; line-height:1; flex:none; }
+        .wc-ib:hover { background:rgba(255,255,255,.32); }
+        .wc-body { padding:10px 12px 11px; }
+        .wc-main { display:flex; align-items:center; gap:12px; }
+        .wc-main svg { flex:none; width:84px; height:84px; }
+        .wc-speed { font-size:28px; font-weight:800; line-height:1; }
+        .wc-speed small { font-size:11px; font-weight:700; opacity:.7; margin-left:3px; }
+        .wc-kmh { font-size:11px; opacity:.7; margin:3px 0 7px; }
+        .wc-cat { display:inline-flex; align-items:center; gap:6px; font:700 11px system-ui,sans-serif; padding:3px 9px; border-radius:99px; background:rgba(148,163,184,.18); }
+        .wc-cat i { width:8px; height:8px; border-radius:50%; background:var(--c,#16a34a); }
+        .wc-cells { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:10px; }
+        .wc-cell { background:rgba(148,163,184,.14); border-radius:10px; padding:5px 8px; min-width:0; }
+        .wc-cell span { display:block; font-size:9.5px; opacity:.7; }
+        .wc-cell b { font-size:12px; }
+        .wc-foot { display:flex; justify-content:space-between; align-items:center; gap:6px; margin-top:8px; font-size:10.5px; opacity:.8; }
+        .wc-foot .wc-rf { width:auto; height:24px; padding:0 9px; border:1px solid rgba(148,163,184,.5); border-radius:8px; background:transparent; color:inherit; cursor:pointer; font-size:12px; }
+        .wx-float .wx-seg { margin-top:10px; width:100%; display:flex; border-radius:10px; }
+        .wx-float .wx-seg button { flex:1; padding:6px 8px; }
+
+        .wx-panel { padding:0; border-radius:18px; overflow:hidden; -webkit-backdrop-filter:blur(12px) saturate(1.3); backdrop-filter:blur(12px) saturate(1.3); background:rgba(255,255,255,.94); }
+        .wx-panel .hd { padding:9px 10px 9px 12px; background:linear-gradient(135deg,#334155,#475569); color:#fff; gap:8px; }
+        #cloud-panel .hd { background:linear-gradient(135deg,#0369a1,#0ea5e9); }
+        #rain-panel .hd { background:linear-gradient(135deg,#1d4ed8,#3b82f6); }
+        .wx-panel .hd .pill { background:rgba(255,255,255,.22); color:#fff; }
+        .wx-panel .hd .ib { border:0; background:rgba(255,255,255,.22); color:#fff; }
+        .wx-panel .body { padding:10px 12px 12px; }
+        .wp-ico { width:28px; height:28px; border-radius:9px; background:rgba(255,255,255,.2); display:grid; place-items:center; flex:none; }
+        .wp-ico svg { width:17px; height:17px; }
+        .wp-ttl { flex:1; min-width:0; line-height:1.15; }
+        .wx-panel .hd .wp-ttl b { display:block; flex:none; font-size:13px; }
+        .wp-ttl span { font-size:10px; opacity:.85; }
+        .cp-timebox { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+        .cp-timebox .time { margin:0; font-size:13px; }
+        .cp-live { font:800 9px system-ui,sans-serif; letter-spacing:.06em; padding:3px 7px; border-radius:99px; background:#dc2626; color:#fff; flex:none; }
+        .cp-ctl { display:flex; align-items:center; gap:10px; margin-top:10px; }
+        #cp-play { width:34px; height:34px; border-radius:50%; border:0; background:#0ea5e9; color:#fff; font-size:12px; flex:none; box-shadow:0 4px 10px -3px rgba(14,165,233,.7); }
+        .cp-ends { display:flex; justify-content:space-between; font-size:10px; opacity:.65; margin:3px 0 0 44px; }
+        .wx-panel input[type=range] { -webkit-appearance:none; appearance:none; height:6px; border-radius:99px; background:rgba(148,163,184,.4); outline:none; flex:1; margin:0; }
+        .wx-panel input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:20px; height:20px; border-radius:50%; background:#0ea5e9; border:3px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.4); cursor:pointer; }
+        .wx-panel input[type=range]::-moz-range-thumb { width:14px; height:14px; border-radius:50%; background:#0ea5e9; border:3px solid #fff; box-shadow:0 1px 5px rgba(0,0,0,.4); cursor:pointer; }
+        .wx-grad { background:linear-gradient(90deg,#1e293b,#64748b 30%,#e2e8f0 60%,#fff); border:1px solid rgba(148,163,184,.4); height:9px; margin-top:10px; }
+        html.dark .wx-panel { background:rgba(15,23,42,.94); }
+        @media (max-width:640px) {
+            .wx-float { width:204px; top:58px; right:6px; padding:0; }
+            .wc-main svg { width:68px; height:68px; } .wc-speed { font-size:24px; }
+            #wx-panels { width:min(320px, calc(100% - 12px)); }
+        }
+
+        /* popup penanda angin & awan */
+        .wp-wind { display:flex; align-items:center; gap:10px; }
+        .wp-wind svg { flex:none; width:84px; height:84px; }
+        .wp-wind .col { flex:1; display:grid; gap:6px; min-width:0; }
+        .wp-wind .col .rp-c, .wp-g2 .rp-c { margin:0; }
+        .wp-g2 { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:8px; }
+        .wp-scale { position:relative; height:8px; border-radius:6px; margin-top:12px; background:linear-gradient(90deg,#7dd3fc,#34d399 35%,#fde047 55%,#fb923c 78%,#ef4444); }
+        .wp-scale i { position:absolute; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#fff; border:3px solid #0f172a; box-shadow:0 1px 4px rgba(0,0,0,.4); }
+        .wp-gauge { height:10px; border-radius:99px; background:rgba(148,163,184,.25); overflow:hidden; margin:2px 0 8px; }
+        .wp-gauge i { display:block; height:100%; border-radius:99px; }
+        .ip-body .wx-scale-l { margin-top:3px; }
+
+        /* ===== SUMBER AIR ===== */
+        .ws-pin { background:none !important; border:0 !important; }
+        .layer-chip.ws-accent { border-color:#0d9488; color:#0d9488; }
+        html.dark .layer-chip.ws-accent { color:#5eead4; border-color:#0d9488; }
+        .layer-chip.ws-accent:hover { background:rgba(13,148,136,.1); }
+        #gis-map.ws-picking, #gis-map.ws-picking .leaflet-grab { cursor:crosshair; }
+        #ws-near-panel { position:absolute; left:50%; transform:translateX(-50%); bottom:14px; z-index:1002; width:min(430px, calc(100% - 20px)); }
+        .wn-card { background:rgba(255,255,255,.97); border:1px solid #e2e8f0; border-radius:18px; box-shadow:0 12px 32px rgba(15,23,42,.3); overflow:hidden; font:12px/1.4 system-ui,'Plus Jakarta Sans',sans-serif; color:#0f172a; max-height:min(60vh,380px); overflow-y:auto; }
+        html.dark .wn-card { background:rgba(15,23,42,.97); border-color:#334155; color:#e2e8f0; }
+        .wn-hd { position:sticky; top:0; z-index:1; display:flex; align-items:center; gap:8px; padding:10px 10px 10px 14px; color:#fff; background:linear-gradient(135deg,#0e7490,#0d9488); }
+        .wn-hd b { flex:1; font-size:13px; }
+        .wn-hd button { width:28px; height:28px; border:0; border-radius:9px; background:rgba(255,255,255,.22); color:#fff; cursor:pointer; font-weight:800; }
+        .wn-sub { padding:8px 14px 2px; font-size:11px; opacity:.7; }
+        .wn-list { padding:6px 8px 8px; display:grid; gap:6px; }
+        .wn-item { display:flex; align-items:center; gap:10px; width:100%; text-align:left; padding:8px 10px; border-radius:12px; border:1px solid rgba(148,163,184,.35); background:transparent; color:inherit; cursor:pointer; }
+        .wn-item:hover { border-color:var(--c,#0d9488); }
+        .wn-item.best { background:rgba(13,148,136,.1); border-color:#0d9488; }
+        .wn-ico { width:34px; height:34px; border-radius:11px; background:var(--c); display:grid; place-items:center; flex:none; }
+        .wn-t { flex:1; min-width:0; }
+        .wn-t b { display:block; font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .wn-t small { opacity:.7; font-size:10.5px; }
+        .wn-d { font-weight:800; font-size:13px; white-space:nowrap; }
+        .wn-tag { font:800 9px system-ui,sans-serif; color:#fff; background:#0d9488; padding:2px 6px; border-radius:99px; margin-left:6px; vertical-align:1px; }
+        .wn-act { display:flex; gap:8px; padding:0 8px 10px; }
+        .wn-act a, .wn-act button { flex:1; text-align:center; padding:9px 8px; border-radius:11px; font:700 11.5px system-ui,sans-serif; cursor:pointer; text-decoration:none; border:1px solid #0d9488; color:#0d9488; background:transparent; }
+        .wn-act a.pri { background:#0d9488; color:#fff; }
+        .wn-msg { padding:10px 14px 6px; font-size:12px; line-height:1.55; }
+        .ws-dist { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:8px 14px 0; padding:9px 12px; border-radius:12px; background:rgba(13,148,136,.12); border:1px solid rgba(13,148,136,.3); }
+        .ws-dist small { display:block; font-size:10px; opacity:.75; }
+        .ws-dist b { font-size:20px; font-weight:800; }
+        .ws-dist span { font-size:10.5px; opacity:.7; }
+        .ws-best, .ws-rank { font:800 10px system-ui,sans-serif; font-style:normal; padding:3px 8px; border-radius:99px; color:#fff; background:#0d9488; white-space:nowrap; }
+        .ws-rank { background:#64748b; }
+        .ws-reco { margin:7px 14px 0; font-size:11px; opacity:.9; }
+        .ws-reco button { background:none; border:0; padding:0; color:#0d9488; font-weight:800; cursor:pointer; text-decoration:underline; font-size:11px; text-align:left; }
+        html.dark .ws-reco button { color:#5eead4; }
+        .ws-locate { display:block; width:calc(100% - 28px); margin:8px 14px 0; padding:9px; border-radius:11px; border:1.5px dashed #0d9488; background:transparent; color:#0d9488; font:700 12px system-ui,sans-serif; cursor:pointer; }
+        html.dark .ws-locate { color:#5eead4; }
+        .ws-act { display:flex; gap:6px; padding:8px 14px 0; }
+        .ws-act a, .ws-act button { flex:1; text-align:center; padding:9px 6px; border-radius:11px; font:700 11.5px system-ui,sans-serif; cursor:pointer; text-decoration:none; border:0; color:#fff; background:#0f172a; }
+        .ws-act .ghost { background:rgba(148,163,184,.25); color:inherit; }
+        .ws-act .danger { background:#dc2626; }
+        .ws-toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); z-index:6000; background:#0f172a; color:#fff; padding:10px 16px; border-radius:12px; font:600 12px/1.4 system-ui,sans-serif; max-width:calc(100vw - 32px); box-shadow:0 8px 24px rgba(0,0,0,.35); text-align:center; }
+        .ws-type { display:flex; flex-direction:column; align-items:center; gap:4px; padding:10px 4px; border-radius:12px; border:1.5px solid #e2e8f0; background:#fff; font:700 11px system-ui,sans-serif; color:#475569; cursor:pointer; transition:all .15s; }
+        .ws-type svg { width:24px; height:24px; stroke:var(--c); }
+        .ws-type.on { border-color:var(--c); background:color-mix(in srgb, var(--c) 12%, #fff); color:var(--c); box-shadow:0 0 0 2px color-mix(in srgb, var(--c) 25%, transparent); }
+        html.dark .ws-type { background:var(--card); border-color:var(--line); color:var(--ink); }
+        html.dark .ws-type.on { background:color-mix(in srgb, var(--c) 28%, var(--card)); color:#fff; }
+        #ws-admin-modal { position:fixed; inset:0; z-index:5000; background:rgba(15,23,42,.55); display:flex; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(2px); }
+        #ws-admin-modal .box { background:#fff; color:#0f172a; border-radius:18px; width:min(340px,100%); overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,.35); font:13px/1.45 system-ui,sans-serif; }
+        html.dark #ws-admin-modal .box { background:#0f172a; color:#e2e8f0; }
+        @media (max-width:640px) { #ws-near-panel { bottom:10px; } .wn-card { max-height:52vh; } }
     </style>
     <script>
         // Terapkan tema tersimpan SEBELUM body dirender, supaya tidak "berkedip"
@@ -355,7 +480,7 @@
                     PR
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight leading-tight">DASHBOARD TERPADU KARHUTLA</h1>
+                    <h1 class="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight leading-tight">POSLAPDU KARHUTLA</h1>
                     <p class="text-xs rk-sub font-semibold">Kecamatan Rakumpit</p>
                 </div>
             </div>
@@ -431,6 +556,10 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <span>Laporan Manual</span>
                     </button>
+                    <button id="btn-water-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold rk-btn-glass rounded-xl transition-all active:scale-95 cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c3 4 6 7 6 10.5a6 6 0 01-12 0C6 10 9 7 12 3z"/></svg>
+                        <span>Sumber Air</span>
+                    </button>
                     <button id="btn-whatsapp-report" class="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold rk-btn-gold rounded-xl transition-all active:scale-95 cursor-pointer">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
                         <span>Kirim Laporan via WhatsApp</span>
@@ -503,10 +632,14 @@
                 <button type="button" data-layer="wind" class="layer-chip"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8h10a3 3 0 10-3-3M3 12h15a3 3 0 11-3 3M3 16h7"/></svg>Angin</button>
                 <button type="button" data-layer="cloud" class="layer-chip"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 18a4 4 0 01-.5-7.97A5.5 5.5 0 0117 9.5 4.25 4.25 0 0116.75 18H7z"/></svg>Awan</button>
                 <button type="button" data-layer="rain" class="layer-chip"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 15a4 4 0 01-.5-7.97A5.5 5.5 0 0117 6.5 4.25 4.25 0 0116.75 15M8 19l-1 2m5-2l-1 2m5-2l-1 2"/></svg>Hujan</button>
+                <button type="button" data-layer="water" class="layer-chip on"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3c3 4 6 7 6 10.5a6 6 0 01-12 0C6 10 9 7 12 3z"/></svg>Sumber Air</button>
+                <button type="button" id="btn-water-near" class="layer-chip ws-accent" title="Cari sumber air terdekat dari lokasi Anda"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 2v3m0 14v3M2 12h3m14 0h3"/><circle cx="12" cy="12" r="8"/></svg>Sumber Air Terdekat</button>
+                <button type="button" id="btn-water-admin" class="layer-chip" title="Mode admin: edit/hapus titik sumber air"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path stroke-linecap="round" d="M8 11V8a4 4 0 018 0v3"/></svg><span id="water-admin-label">Admin</span></button>
             </div>
             <div id="map-wrap" class="relative">
                 <div id="gis-map"></div>
                 <div id="wind-card" class="wx-float hidden"></div>
+                <div id="ws-near-panel" class="hidden"></div>
                 <div id="wx-panels" class="hidden">
                     <div id="cloud-panel" class="wx-panel hidden"></div>
                     <div id="rain-panel" class="wx-panel hidden"></div>
@@ -817,6 +950,58 @@
         </div>
     </div>
 
+    <!-- Modal Sumber Air: input titik sumber air terdekat (sungai, kolam, sumur, embung). Admin memakai modal ini juga untuk edit. -->
+    <div id="water-modal-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] hidden items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
+            <div class="px-5 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,#0e7490,#0d9488)">
+                <h3 id="water-modal-title" class="text-white font-bold text-sm">Tambah Titik Sumber Air</h3>
+                <button id="water-modal-close" class="text-white/80 hover:text-white text-xl leading-none" aria-label="Tutup">&times;</button>
+            </div>
+            <div class="p-5 space-y-3">
+                <label class="block text-xs font-semibold text-slate-600">Jenis Sumber Air</label>
+                <div id="ws-type-group" class="grid grid-cols-4 gap-2"></div>
+
+                <label class="block text-xs font-semibold text-slate-600 pt-1">Nama / Penanda Sumber Air</label>
+                <input type="text" id="ws-nama" maxlength="100" placeholder="mis. Embung Desa Pager, Sungai Rungan"
+                    class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+
+                <label class="block text-xs font-semibold text-slate-600 pt-1">Pilih Lokasi di Peta</label>
+                <p class="text-[11px] text-slate-500 leading-snug">Ketuk peta untuk menaruh pin, lalu geser pin bila perlu. Ganti tampilan (Google Maps / Satelit) lewat ikon di kanan atas peta.</p>
+                <div id="water-picker-map" class="w-full h-64 rounded-xl border border-slate-200 overflow-hidden" style="isolation:isolate"></div>
+                <p id="ws-locate-status" class="text-[11px] text-slate-500 font-medium">Belum ada lokasi dipilih.</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="ws-locate-btn" type="button" class="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 py-2.5 rounded-lg transition-colors">Gunakan Lokasi Saya</button>
+                    <button id="ws-gmaps-btn" type="button" class="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 py-2.5 rounded-lg transition-colors">Cek di Google Maps</button>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="number" step="any" id="ws-lat" placeholder="Latitude" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                    <input type="number" step="any" id="ws-lng" placeholder="Longitude" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                </div>
+                <label class="block text-xs font-semibold text-slate-600 pt-1">Kelurahan</label>
+                <select id="ws-kel" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"></select>
+                <p class="text-[10px] text-slate-400 -mt-1">Terisi otomatis dari posisi pin. Boleh kosong bila di luar Kecamatan Rakumpit.</p>
+                <details class="text-[11px] text-slate-500">
+                    <summary class="cursor-pointer font-semibold text-teal-700">Punya koordinat atau link dari Google Maps?</summary>
+                    <div class="flex gap-2 mt-2">
+                        <input type="text" id="ws-gmaps-paste" placeholder="mis. -1.6534, 113.6021 atau link Google Maps" class="flex-1 text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                        <button id="ws-gmaps-apply" type="button" class="shrink-0 text-xs font-semibold text-white bg-teal-600 hover:bg-teal-700 px-3 rounded-lg transition-colors">Terapkan</button>
+                    </div>
+                </details>
+
+                <label class="block text-xs font-semibold text-slate-600 pt-1">Keterangan (opsional)</label>
+                <textarea id="ws-ket" rows="3" maxlength="500" placeholder="Contoh: air tersedia sepanjang tahun, bisa dijangkau mobil tangki, kedalaman ±3 m."
+                    class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+
+                <label class="block text-xs font-semibold text-slate-600 pt-1">Nama Pelapor (opsional)</label>
+                <input type="text" id="ws-pelapor" maxlength="60" placeholder="Nama petugas/pelapor"
+                    class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+
+                <p id="ws-error" class="hidden text-[11px] text-rose-600 font-medium"></p>
+                <button id="ws-submit" class="w-full text-white text-xs font-bold py-2.5 rounded-xl transition-colors shadow-sm disabled:opacity-50" style="background:linear-gradient(135deg,#0e7490,#0d9488)">Simpan Titik Sumber Air</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Leaflet JS & Script Utama -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
@@ -1028,6 +1213,8 @@
                 dot('#dc2626') + 'Titik panas, confidence &ge; 80%<br>' +
                 dot('#f59e0b') + 'Titik panas, confidence &lt; 80%<br>' +
                 dot('#0ea5e9') + 'Laporan manual<br>' +
+                dot('#0e7490') + 'Sungai &middot; ' + dot('#0d9488') + 'Kolam<br>' +
+                dot('#6d28d9') + 'Sumur &middot; ' + dot('#1d4ed8') + 'Embung<br>' +
                 '<div style="margin-top:4px;padding-top:4px;border-top:1px dashed #cbd5e1"><b>Wilayah kelurahan</b><br>' + villages + '</div></details>';
             return div;
         };
@@ -1318,6 +1505,7 @@
                     result.reports.forEach(rep => { globalReportsByKey[rep.hotspotKey] = rep; });
                 }
                 globalManualReports = (result && Array.isArray(result.manualReports)) ? result.manualReports : [];
+                if (result && Array.isArray(result.waterSources)) globalWaterSources = result.waterSources; // titik sumber air (SumberAir.gs)
                 globalDailyStats = (result && Array.isArray(result.dailyStats)) ? result.dailyStats : [];
                 globalReportDates = (result && result.reportDates && typeof result.reportDates === 'object') ? result.reportDates : {};
                 // ISPU & cuaca yang sudah disimpan server (Udara.gs). Bila tidak ada/basi, dashboard ambil sendiri dari browser.
@@ -1343,6 +1531,7 @@
 
             hotspotGroup.clearLayers();
             renderManualReports();
+            if (typeof renderWaterSources === 'function') renderWaterSources();
             globalRawHotspotData = rawHotspotData;
 
             let filtered = buildHotspotList(rawHotspotData, selectedVillage, selectedSat, selectedTimeRange);
@@ -3134,42 +3323,109 @@
         map.on('moveend zoomend resize', () => { if (windFlow.raf) windFlowRebuild_(); });
         window.addEventListener('resize', () => { if (windFlow.raf) windFlowRebuild_(); });
 
-        // ---------- Kartu angin (kompas) ----------
+        // ---------- Kartu angin (kompas) — tampilan modern, bisa diciutkan ----------
+        let windCardCollapsed = window.innerWidth <= 640;
+        function windHdColor_(sp) { return sp < 3 ? '#0ea5e9' : (sp < 6 ? '#16a34a' : (sp < 10 ? '#d99a06' : '#dc2626')); }
+        // Kompas SVG: panah menunjuk arah angin BERTIUP (to, derajat)
+        function compassSvg_(to, col, size) {
+            let ticks = '';
+            for (let i = 0; i < 16; i++) {
+                const a = i * 22.5 * Math.PI / 180, big = i % 4 === 0, r1 = big ? 40 : 42, r2 = 45;
+                ticks += `<line x1="${(50 + r1 * Math.sin(a)).toFixed(1)}" y1="${(50 - r1 * Math.cos(a)).toFixed(1)}" x2="${(50 + r2 * Math.sin(a)).toFixed(1)}" y2="${(50 - r2 * Math.cos(a)).toFixed(1)}" stroke="#94a3b8" stroke-width="${big ? 1.6 : 1}"/>`;
+            }
+            return `<svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true">
+                <circle cx="50" cy="50" r="47" fill="rgba(148,163,184,.1)" stroke="#94a3b8" stroke-width="1.5"/>${ticks}
+                <g font-size="9" font-weight="800" fill="currentColor" text-anchor="middle"><text x="50" y="22">U</text><text x="79" y="53">T</text><text x="50" y="84">S</text><text x="21" y="53">B</text></g>
+                <g transform="rotate(${Math.round(to)} 50 50)"><path d="M50 14L61 66L50 58L39 66Z" fill="${col}" stroke="#0f172a" stroke-width="2" stroke-linejoin="round"/></g>
+                <circle cx="50" cy="50" r="3.2" fill="#0f172a"/></svg>`;
+        }
+        const WIND_ICON_ = '<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8h10a3 3 0 10-3-3M3 12h15a3 3 0 11-3 3M3 16h7"/></svg>';
         function updateWindCard_() {
             const el = document.getElementById('wind-card');
             const vecs = layerState.wind ? windVectors_() : [];
             if (!layerState.wind) { el.classList.add('hidden'); return; }
             el.classList.remove('hidden');
-            if (!vecs.length) { el.innerHTML = '<b>Angin</b><div class="sub">Data angin belum tersedia.</div>'; return; }
+            el.classList.toggle('collapsed', windCardCollapsed);
+            const colBtn = `<button type="button" class="wc-ib" data-wact="collapse" aria-expanded="${!windCardCollapsed}" title="${windCardCollapsed ? 'Perluas' : 'Ciutkan'}">${windCardCollapsed ? '+' : '–'}</button>`;
+            const head = (mini) => `<div class="wc-hd"><span class="wc-ico">${WIND_ICON_}</span><div class="wc-ttl"><b>Angin</b><span>Rata-rata Kec. Rakumpit</span></div>${mini}${colBtn}</div>`;
+            if (!vecs.length) { el.innerHTML = head('') + '<div class="wc-body"><div class="wc-kmh" style="margin:0">Data angin belum tersedia.</div></div>'; return; }
             let u = 0, v = 0, mx = 0;
             vecs.forEach(a => { u += a.u; v += a.v; mx = Math.max(mx, a.sp); });
             u /= vecs.length; v /= vecs.length;
             const sp = Math.sqrt(u * u + v * v);
             const to = (Math.atan2(u, v) * 180 / Math.PI + 360) % 360, from = (to + 180) % 360;
-            const t = globalWeather.updatedAt;
-            el.innerHTML =
-                `<div class="row"><svg width="58" height="58" viewBox="0 0 58 58" aria-hidden="true">
-                    <circle cx="29" cy="29" r="26" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
-                    <text x="29" y="10" text-anchor="middle" font-size="8" font-weight="700" fill="currentColor">U</text>
-                    <text x="50" y="32" text-anchor="middle" font-size="8" font-weight="700" fill="currentColor">T</text>
-                    <text x="29" y="54" text-anchor="middle" font-size="8" font-weight="700" fill="currentColor">S</text>
-                    <text x="8" y="32" text-anchor="middle" font-size="8" font-weight="700" fill="currentColor">B</text>
-                    <g transform="rotate(${to.toFixed(0)} 29 29)"><path d="M29 14L35 40L29 35L23 40Z" fill="${windColor_(sp)}" stroke="#0f172a" stroke-width="1.2" stroke-linejoin="round"/></g>
-                </svg>
-                <div><div class="big">${sp.toFixed(1)} <span style="font-size:11px;font-weight:700">m/s</span></div>
-                <div class="sub">${(sp * 3.6).toFixed(1)} km/jam</div></div></div>
-                <div style="margin-top:6px;font-weight:700">${windCat_(sp)}</div>
-                <div class="sub">dari ${dirName_(from)} (${Math.round(from)}°) → menuju ${dirName_(to)}</div>
-                <div class="sub">Rata-rata 7 kelurahan · maks ${mx.toFixed(1)} m/s</div>
-                <div class="wx-seg"><button type="button" data-wmode="flow" class="${windMode === 'flow' ? 'on' : ''}">Aliran</button><button type="button" data-wmode="arrow" class="${windMode === 'arrow' ? 'on' : ''}">Panah</button></div>
-                <div class="wx-scale"></div><div class="wx-scale-l"><span>0</span><span>5</span><span>10</span><span>14+ m/s</span></div>
-                <div class="sub" style="margin-top:4px;display:flex;justify-content:space-between;align-items:center"><span>${t ? 'Diperbarui ' + t.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' }).replace(':', '.') + ' WIB' : ''}</span><button type="button" data-wact="refresh" class="ib" style="width:auto;padding:0 8px;height:22px;border:1px solid #cbd5e1;border-radius:7px;background:transparent;color:inherit;cursor:pointer;font-size:11px" title="Muat ulang data angin">↻</button></div>`;
+            const col = windHdColor_(sp), t = globalWeather.updatedAt;
+            const cell = (l, val) => `<div class="wc-cell"><span>${l}</span><b>${val}</b></div>`;
+            el.innerHTML = head(`<span class="wc-mini">${sp.toFixed(1)} m/s · ${compass_(to)}</span>`) +
+                `<div class="wc-body">
+                    <div class="wc-main">${compassSvg_(to, windColor_(sp), 84)}
+                        <div><div class="wc-speed">${sp.toFixed(1)}<small>m/s</small></div><div class="wc-kmh">${(sp * 3.6).toFixed(1)} km/jam</div>
+                        <span class="wc-cat" style="--c:${col}"><i></i>${windCat_(sp)}</span></div></div>
+                    <div class="wc-cells">${cell('Dari arah', esc(dirName_(from)) + ' ' + Math.round(from) + '°')}${cell('Menuju', esc(dirName_(to)))}${cell('Maks. kelurahan', mx.toFixed(1) + ' m/s')}${cell('Cakupan', vecs.length + ' kelurahan')}</div>
+                    <div class="wx-seg"><button type="button" data-wmode="flow" class="${windMode === 'flow' ? 'on' : ''}">Aliran</button><button type="button" data-wmode="arrow" class="${windMode === 'arrow' ? 'on' : ''}">Panah</button></div>
+                    <div class="wx-scale"></div><div class="wx-scale-l"><span>0</span><span>5</span><span>10</span><span>14+ m/s</span></div>
+                    <div class="wc-foot"><span>${t ? 'Diperbarui ' + t.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' }).replace(':', '.') + ' WIB' : ''}</span><button type="button" class="wc-rf" data-wact="refresh" title="Muat ulang data angin">↻</button></div>
+                </div>`;
         }
         document.getElementById('wind-card').addEventListener('click', (e) => {
+            if (e.target.closest('[data-wact="collapse"]')) { windCardCollapsed = !windCardCollapsed; updateWindCard_(); return; }
             const m = e.target.closest('[data-wmode]');
             if (m) { windMode = m.dataset.wmode; renderWeatherLayers(); return; }
             if (e.target.closest('[data-wact="refresh"]')) { fetchWeatherData(); }
         });
+
+        // ---------- Popup penanda Angin & Awan (modern, responsif; gaya sama dengan popup ISPU/Hujan) ----------
+        function windPopup_(name, v) {
+            const w = v.wind, sp = w.speed, col = windHdColor_(sp), to = (w.dir + 180) % 360;
+            const cell = (l, val) => `<div class="rp-c"><span>${l}</span><b>${val}</b></div>`;
+            const pct = Math.max(2, Math.min(100, sp / 14 * 100));
+            const t = globalWeather.updatedAt ? fmtWxTime_(globalWeather.updatedAt) : '-';
+            return `<div class="ip">
+                <div class="ip-hd" style="background:linear-gradient(135deg,${col},${col}cc)">
+                    <div class="ip-num"><b>${sp.toFixed(1)}</b><span>M/S</span></div>
+                    <div><div class="ip-ttl">Kel. ${esc(name)}</div><div class="ip-cat">${windCat_(sp)}</div><div class="ip-ttl" style="margin-top:2px">${(sp * 3.6).toFixed(1)} km/jam</div></div>
+                </div>
+                <div class="ip-body">
+                    <div class="wp-wind">${compassSvg_(to, windColor_(sp), 84)}<div class="col">${cell('Dari arah', esc(dirName_(w.dir)) + ' · ' + Math.round(w.dir) + '°')}${cell('Bertiup menuju', esc(dirName_(to)))}</div></div>
+                    <div class="wp-scale"><i style="left:${pct}%"></i></div>
+                    <div class="wx-scale-l"><span>0</span><span>5</span><span>10</span><span>14+ m/s</span></div>
+                    <div class="wp-g2">${cell('Kecepatan', sp.toFixed(1) + ' m/s')}${cell('Sumber', esc(w.src || '-'))}</div>
+                </div>
+                <div class="ip-msg">Api dan asap cenderung terbawa ke arah <b>${esc(dirName_(to))}</b>.</div>
+                <div class="ip-ft">${esc(t)} · Angin 10 m</div>
+            </div>`;
+        }
+        function cloudCat_(c) {
+            if (c < 10) return 'Cerah';
+            if (c < 30) return 'Cerah berawan';
+            if (c < 60) return 'Berawan sebagian';
+            if (c < 85) return 'Berawan';
+            return 'Mendung';
+        }
+        function cloudPopup_(name, v) {
+            const c = v.cloud, col = c < 25 ? '#0ea5e9' : (c < 60 ? '#64748b' : '#334155');
+            const cell = (l, val) => `<div class="rp-c"><span>${l}</span><b>${val}</b></div>`;
+            let fc = '';
+            if (v.series && v.series.length) {
+                const nxt = v.series.filter(x => x[0] * 1000 >= Date.now() - 3600e3).slice(0, 5);
+                if (nxt.length) fc = '<div class="ip-body" style="padding-top:2px"><div class="rp-h">Prakiraan tutupan awan</div>' + nxt.map(x =>
+                    `<div class="ip-row" style="grid-template-columns:64px 1fr auto"><span class="n" style="font-size:10.5px">${esc(new Date(x[0] * 1000).toLocaleString('id-ID', { weekday: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Jakarta' }).replace(':', '.'))}</span>
+                        <span class="bar"><i style="width:${Math.max(3, Math.min(100, x[2]))}%;background:${x[2] < 25 ? '#0ea5e9' : (x[2] < 60 ? '#64748b' : '#334155')}"></i></span>
+                        <span class="v"><b>${Math.round(x[2])}</b> <small>%</small></span></div>`).join('') + '</div>';
+            }
+            const t = globalWeather.updatedAt ? fmtWxTime_(globalWeather.updatedAt) : '-';
+            return `<div class="ip">
+                <div class="ip-hd" style="background:linear-gradient(135deg,${col},${col}cc)">
+                    <div class="ip-num"><b>${Math.round(c)}</b><span>% AWAN</span></div>
+                    <div><div class="ip-ttl">Kel. ${esc(name)}</div><div class="ip-cat">${cloudCat_(c)}</div><div class="ip-ttl" style="margin-top:2px">${esc(v.weatherDesc || 'Tutupan awan')}</div></div>
+                </div>
+                <div class="ip-body"><div class="wp-gauge"><i style="width:${Math.max(2, Math.min(100, c))}%;background:${col}"></i></div>
+                    <div class="rp-g">${cell('Cuaca', esc(v.weatherDesc || '-'))}${cell('Curah hujan', v.rain != null ? fmtN_(v.rain, 1) + ' mm' : '-')}${cell('Suhu', fmtN_(v.temp, 1) + ' °C')}${cell('Kelembapan', fmtN_(v.hum, 0) + '%')}</div></div>
+                ${fc}
+                <div class="ip-msg">Citra awan bergerak tersedia pada panel <b>Awan</b> (Himawari-9).</div>
+                <div class="ip-ft">${globalWeather.bmkgOk > 0 ? 'Prakiraan BMKG' : 'Open-Meteo (cadangan)'} · ${esc(t)}</div>
+            </div>`;
+        }
 
         // ---------- Panel Awan (citra Himawari-9 via NASA GIBS) ----------
         const GIBS_LAYER = 'Himawari_AHI_Band13_Clean_Infrared';
@@ -3209,17 +3465,18 @@
             st.tile.on('tileload', () => { st.ok++; const n = document.getElementById('cp-warn'); if (n) n.classList.add('hidden'); });
             st.tile.on('tileerror', () => { st.err++; if (st.err >= 3 && !st.ok) { const n = document.getElementById('cp-warn'); if (n) n.classList.remove('hidden'); } });
             const el = document.getElementById('cloud-panel');
-            el.innerHTML = `<div class="hd"><b>Awan · Himawari-9</b><span class="pill">JMA</span><button type="button" class="ib" data-collapse="cloud-panel" title="Ciutkan">–</button></div>
+            el.innerHTML = `<div class="hd"><span class="wp-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 18a4 4 0 01-.5-7.97A5.5 5.5 0 0117 9.5 4.25 4.25 0 0116.75 18H7z"/></svg></span><div class="wp-ttl"><b>Citra Awan</b><span>Himawari-9 · NASA GIBS</span></div><span class="pill">JMA</span><button type="button" class="ib" data-collapse="cloud-panel" title="Ciutkan">–</button></div>
                 <div class="body">
-                <div class="time" id="cp-time">-</div><div class="muted" id="cp-age"></div>
-                <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+                <div class="cp-timebox"><div><div class="time" id="cp-time">-</div><div class="muted" id="cp-age"></div></div><span class="cp-live">TERBARU</span></div>
+                <div class="cp-ctl">
                     <button type="button" class="ib" id="cp-play" title="Putar / jeda">❚❚</button>
                     <input type="range" id="cp-slider" min="0" max="${st.frames.length - 1}" value="${st.idx}" aria-label="Waktu citra awan" />
                 </div>
+                <div class="cp-ends"><span>−2 jam</span><span>sekarang</span></div>
                 <div class="wx-grad"></div>
                 <div class="wx-scale-l"><span>Cerah</span><span>Awan</span><span>Awan tebal / hujan</span><span>Badai</span></div>
-                <div id="cp-warn" class="muted hidden" style="color:#b45309;margin-top:4px">Citra untuk waktu ini belum tersedia di NASA GIBS. Geser slider ke waktu lebih awal.</div>
-                <div class="muted" style="margin-top:4px">Inframerah Band 13 · NASA GIBS · tiap 10 menit</div></div>`;
+                <div id="cp-warn" class="muted hidden" style="color:#b45309;margin-top:6px">Citra untuk waktu ini belum tersedia di NASA GIBS. Geser slider ke waktu lebih awal.</div>
+                <div class="muted" style="margin-top:6px">Inframerah Band 13 · NASA GIBS · tiap 10 menit</div></div>`;
             cloudPlay_(true);
         }
         function cloudStop_() {
@@ -3359,8 +3616,7 @@
                 }
                 if (layerState.cloud && v.cloud !== null && v.cloud !== undefined) {
                     const c = v.cloud, col = c < 25 ? '#0ea5e9' : (c < 60 ? '#64748b' : '#334155');
-                    weatherGroup.addLayer(wxBadge_(ll, Math.round(c) + '%', col, slot++,
-                        wxPopup_('Tutupan awan Kel. ' + p.name, [['Tutupan awan', Math.round(c) + '%'], ['Cuaca', v.weatherDesc || '-'], ['Suhu', fmtN_(v.temp, 1) + ' °C'], ['Kelembapan', fmtN_(v.hum, 0) + '%'], ['Citra', 'Himawari-9 (panel Awan)']])));
+                    weatherGroup.addLayer(wxBadge_(ll, Math.round(c) + '%', col, slot++, cloudPopup_(p.name, v)));
                 }
                 if (layerState.rain) {
                     const r = rainAt_(v, rsel);
@@ -3372,7 +3628,7 @@
                 if (layerState.wind && v.wind) {
                     const sp = v.wind.speed, rot = (v.wind.dir + 180) % 360; // menuju
                     const col = sp < 3 ? '#0ea5e9' : (sp < 6 ? '#16a34a' : (sp < 10 ? '#d99a06' : '#dc2626'));
-                    const popup = wxPopup_('Angin Kel. ' + p.name, [['Kecepatan', sp.toFixed(1) + ' m/s (' + (sp * 3.6).toFixed(1) + ' km/jam)'], ['Dari arah', Math.round(v.wind.dir) + '° (' + dirName_(v.wind.dir) + ')'], ['Bertiup menuju', dirName_(rot)], ['Kategori', windCat_(sp)], ['Sumber', v.wind.src]]);
+                    const popup = windPopup_(p.name, v);
                     if (windMode === 'arrow') {
                         const offset = slot === 0 ? 0 : 28 * slot + 5;
                         weatherGroup.addLayer(L.marker(ll, {
@@ -3382,9 +3638,9 @@
                                 iconSize: [34, 34], iconAnchor: [17, 17 - offset]
                             }),
                             zIndexOffset: 400
-                        }).bindPopup(popup));
+                        }).bindPopup(popup, POPUP_OPTS_));
                     } else {
-                        weatherGroup.addLayer(L.circleMarker(ll, { radius: 6, color: '#fff', weight: 2, fillColor: col, fillOpacity: 1 }).bindPopup(popup)
+                        weatherGroup.addLayer(L.circleMarker(ll, { radius: 6, color: '#fff', weight: 2, fillColor: col, fillOpacity: 1 }).bindPopup(popup, POPUP_OPTS_)
                             .bindTooltip(sp.toFixed(1) + ' m/s ' + compass_(rot)));
                     }
                 }
@@ -3420,6 +3676,7 @@
         function setLayer_(name, on) {
             if (name === 'villages') { on ? map.addLayer(geoJsonLayer) : map.removeLayer(geoJsonLayer); }
             else if (name === 'hotspots') { on ? map.addLayer(hotspotGroup) : map.removeLayer(hotspotGroup); }
+            else if (name === 'water') { on ? map.addLayer(waterGroup) : map.removeLayer(waterGroup); }
             else { layerState[name] = on; renderWeatherLayers(); }
             const btn = document.querySelector(`#layer-chips [data-layer="${name}"]`);
             if (btn) btn.classList.toggle('on', on);
@@ -3475,6 +3732,396 @@
         document.getElementById('ispu-card').addEventListener('click', openIspuModal_);
         document.getElementById('ispu-card').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openIspuModal_(); } });
 
+        // ================= SUMBER AIR TERDEKAT (sungai, kolam, sumur, embung) =================
+        // Tambah titik: semua pengguna. Edit/hapus: hanya admin (kode admin, diperiksa ulang di server).
+        // Jarak = garis lurus (haversine) dari lokasi GPS pengguna ke titik sumber air.
+        const WATER_TYPES = {
+            Sungai: { c: '#0e7490', g: '<path d="M3 9c2-2 4-2 6 0s4 2 6 0 4-2 6 0M3 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/>' },
+            Kolam:  { c: '#0d9488', g: '<ellipse cx="12" cy="12" rx="9" ry="5"/><path d="M8 12c1.5 1.2 6.5 1.2 8 0"/>' },
+            Sumur:  { c: '#6d28d9', g: '<ellipse cx="12" cy="7" rx="6" ry="2.5"/><path d="M6 7v10c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V7"/>' },
+            Embung: { c: '#1d4ed8', g: '<path d="M12 3c3 4 6 7 6 10.5a6 6 0 01-12 0C6 10 9 7 12 3z"/>' }
+        };
+        const wsType_ = (j) => WATER_TYPES[j] || WATER_TYPES.Embung;
+        const wsGlyph_ = (j, color, size) => `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${wsType_(j).g}</svg>`;
+        function wsIcon_(j) {
+            const t = wsType_(j);
+            return L.divIcon({
+                className: 'ws-pin', iconSize: [32, 42], iconAnchor: [16, 41], popupAnchor: [0, -38],
+                html: `<svg viewBox="0 0 32 42" width="32" height="42" style="filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))"><path d="M16 41S3 26 3 15a13 13 0 0126 0c0 11-13 26-13 26z" fill="${t.c}" stroke="#fff" stroke-width="2"/><circle cx="16" cy="15" r="9.5" fill="#fff"/><g transform="translate(6 5) scale(.83)" fill="none" stroke="${t.c}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${t.g}</g></svg>`
+            });
+        }
+
+        let globalWaterSources = [];
+        const waterGroup = L.layerGroup().addTo(map);
+        const waterUserGroup = L.layerGroup().addTo(map);   // penanda lokasi pengguna + garis ke sumber air terdekat
+        const waterMarkers = {};
+        let userLoc = null;             // {lat,lng,acc,src:'gps'|'pick',ts}
+        let waterPickMode = false;      // true = ketuk peta untuk menandai lokasi sendiri (cadangan bila GPS gagal)
+        let nearOpen = false;
+        let waterAdminCode = null;
+        try { waterAdminCode = sessionStorage.getItem('rk_water_admin') || null; } catch (e) {}
+
+        function wsToast_(msg) {
+            const old = document.querySelector('.ws-toast'); if (old) old.remove();
+            const d = document.createElement('div'); d.className = 'ws-toast'; d.textContent = msg;
+            document.body.appendChild(d); setTimeout(() => d.remove(), 4200);
+        }
+        function distKm_(la1, ln1, la2, ln2) {
+            const r = Math.PI / 180, dLa = (la2 - la1) * r, dLn = (ln2 - ln1) * r;
+            const a = Math.sin(dLa / 2) ** 2 + Math.cos(la1 * r) * Math.cos(la2 * r) * Math.sin(dLn / 2) ** 2;
+            return 2 * 6371 * Math.asin(Math.sqrt(a));
+        }
+        function fmtDist_(km) {
+            if (km < 1) return Math.round(km * 1000) + ' m';
+            return km.toFixed(km < 10 ? 2 : 1).replace('.', ',') + ' km';
+        }
+        function waterRanking_() {
+            if (!userLoc) return [];
+            return globalWaterSources.map(w => ({ w: w, km: distKm_(userLoc.lat, userLoc.lng, w.lat, w.lng) })).sort((a, b) => a.km - b.km);
+        }
+        function wsRouteUrl_(w) {
+            return userLoc
+                ? `https://www.google.com/maps/dir/?api=1&origin=${userLoc.lat},${userLoc.lng}&destination=${w.lat},${w.lng}&travelmode=driving`
+                : `https://www.google.com/maps/dir/?api=1&destination=${w.lat},${w.lng}&travelmode=driving`;
+        }
+        function fmtDateShort_(iso) {
+            const d = new Date(iso); if (isNaN(d.getTime())) return '';
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' });
+        }
+
+        // ---------- Lokasi pengguna ----------
+        function drawUserLoc_() {
+            waterUserGroup.clearLayers();
+            if (!userLoc) return;
+            if (userLoc.acc > 0 && userLoc.acc < 3000) waterUserGroup.addLayer(L.circle([userLoc.lat, userLoc.lng], { radius: userLoc.acc, color: '#2563eb', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.12, interactive: false }));
+            const mk = L.marker([userLoc.lat, userLoc.lng], {
+                draggable: true, zIndexOffset: 900, title: 'Lokasi Anda (geser untuk mengoreksi)',
+                icon: L.divIcon({ className: '', iconSize: [22, 22], iconAnchor: [11, 11], html: '<div style="width:22px;height:22px;border-radius:50%;background:#2563eb;border:3px solid #fff;box-shadow:0 0 0 4px rgba(37,99,235,.28),0 2px 8px rgba(0,0,0,.4)"></div>' })
+            }).bindTooltip(userLoc.src === 'pick' ? 'Lokasi yang Anda tandai · geser untuk mengoreksi' : 'Lokasi Anda · geser untuk mengoreksi', { direction: 'top', offset: [0, -10] });
+            mk.on('dragend', () => { const q = mk.getLatLng(); setUserLoc_(q.lat, q.lng, 0, 'pick'); if (nearOpen) renderNear_(false); });
+            waterUserGroup.addLayer(mk);
+        }
+        function setUserLoc_(lat, lng, acc, src) {
+            userLoc = { lat: lat, lng: lng, acc: acc || 0, src: src, ts: Date.now() };
+            drawUserLoc_();
+        }
+        function getUserLoc_(force) {
+            return new Promise((resolve, reject) => {
+                if (!force && userLoc && (userLoc.src === 'pick' || Date.now() - userLoc.ts < 300000)) return resolve(userLoc);
+                if (!navigator.geolocation) return reject(new Error('unsupported'));
+                navigator.geolocation.getCurrentPosition(
+                    (p) => { setUserLoc_(p.coords.latitude, p.coords.longitude, p.coords.accuracy, 'gps'); resolve(userLoc); },
+                    (err) => reject(err),
+                    { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 });
+            });
+        }
+        function enterPickMode_() {
+            waterPickMode = true;
+            document.getElementById('gis-map').classList.add('ws-picking');
+            wsToast_('Ketuk titik di peta untuk menandai lokasi Anda.');
+        }
+        map.on('click', (ev) => {
+            if (!waterPickMode) return;
+            waterPickMode = false;
+            document.getElementById('gis-map').classList.remove('ws-picking');
+            setUserLoc_(ev.latlng.lat, ev.latlng.lng, 0, 'pick');
+            if (!globalWaterSources.length) return;
+            renderNear_(true);
+        });
+
+        // ---------- Popup titik sumber air ----------
+        function waterPopup_(w) {
+            const t = wsType_(w.jenis), c = t.c;
+            const rank = waterRanking_(), idx = rank.findIndex(r => r.w.id === w.id);
+            let dist = '', reco = '';
+            if (idx >= 0) {
+                dist = `<div class="ws-dist"><div><small>Jarak dari ${userLoc.src === 'pick' ? 'lokasi yang Anda tandai' : 'lokasi Anda saat ini'}</small><b>${fmtDist_(rank[idx].km)}</b> <span>garis lurus</span></div>` +
+                    (idx === 0 ? '<em class="ws-best">Terdekat</em>' : `<em class="ws-rank">Ke-${idx + 1} terdekat</em>`) + '</div>';
+                if (idx > 0) reco = `<div class="ws-reco">Rekomendasi sumber air terdekat: <button type="button" data-ws-act="goto" data-id="${esc(rank[0].w.id)}">${esc(rank[0].w.nama)} · ${fmtDist_(rank[0].km)}</button></div>`;
+            } else {
+                dist = `<button type="button" class="ws-locate" data-ws-act="locate" data-id="${esc(w.id)}">📍 Hitung jarak dari lokasi saya</button>`;
+            }
+            const admin = waterAdminCode
+                ? `<div class="ws-act"><button type="button" class="ghost" data-ws-act="edit" data-id="${esc(w.id)}">✎ Edit</button><button type="button" class="danger" data-ws-act="delete" data-id="${esc(w.id)}">🗑 Hapus</button></div>` : '';
+            const tgl = fmtDateShort_(w.timestamp);
+            return `<div class="ip">
+                <div class="ip-hd" style="background:linear-gradient(135deg,${c},${c}cc)">
+                    <div class="ip-num">${wsGlyph_(w.jenis, '#fff', 30)}</div>
+                    <div style="min-width:0"><div class="ip-ttl">Sumber air · ${esc(w.jenis)}</div><div class="ip-cat" style="word-break:break-word">${esc(w.nama)}</div><div class="ip-ttl" style="margin-top:2px">${w.kelurahan ? 'Kel. ' + esc(w.kelurahan) : 'Di luar batas kelurahan'}</div></div>
+                </div>
+                ${dist}${reco}
+                ${w.keterangan ? `<div class="ip-msg">${esc(w.keterangan)}</div>` : ''}
+                <div class="ws-act"><a href="${esc(wsRouteUrl_(w))}" target="_blank" rel="noopener" style="background:${c}">Rute di Google Maps</a></div>
+                ${admin}
+                <div class="ip-ft" style="padding-top:8px">${w.lat.toFixed(5)}, ${w.lng.toFixed(5)} · ${esc(w.pelapor || '-')}${tgl ? ' · ' + esc(tgl) : ''}</div>
+            </div>`;
+        }
+        function refreshWaterPopup_(id) {
+            const m = waterMarkers[id], w = globalWaterSources.find(x => x.id === id);
+            if (m && w && m.isPopupOpen()) m.getPopup().setContent(waterPopup_(w));
+        }
+        function focusWater_(id) {
+            const m = waterMarkers[id], w = globalWaterSources.find(x => x.id === id);
+            if (!w) return;
+            if (!map.hasLayer(waterGroup)) setLayer_('water', true);
+            map.setView([w.lat, w.lng], Math.max(map.getZoom(), 14));
+            setTimeout(() => { const mm = waterMarkers[id]; if (mm) mm.openPopup(); }, 250);
+        }
+        function renderWaterSources() {
+            waterGroup.clearLayers();
+            Object.keys(waterMarkers).forEach(k => delete waterMarkers[k]);
+            globalWaterSources.forEach(w => {
+                if (isNaN(w.lat) || isNaN(w.lng)) return;
+                const m = L.marker([w.lat, w.lng], { icon: wsIcon_(w.jenis), title: w.nama, zIndexOffset: 300 });
+                m.bindPopup(() => waterPopup_(w), POPUP_OPTS_);
+                waterMarkers[w.id] = m;
+                waterGroup.addLayer(m);
+            });
+            if (nearOpen && userLoc) renderNear_(false);
+        }
+
+        // Tombol di dalam popup (Leaflet menghentikan klik di popup, jadi dipasang langsung pada elemen popup)
+        map.on('popupopen', (ev) => {
+            const el = ev.popup.getElement();
+            if (!el || el._wsBound) return;
+            el._wsBound = true;
+            el.addEventListener('click', async (e) => {
+                const b = e.target.closest('[data-ws-act]'); if (!b) return;
+                const act = b.dataset.wsAct, id = b.dataset.id, w = globalWaterSources.find(x => x.id === id);
+                if (act === 'goto') { focusWater_(id); return; }
+                if (!w) return;
+                if (act === 'locate') {
+                    b.disabled = true; b.textContent = 'Mencari lokasi Anda...';
+                    try { await getUserLoc_(true); refreshWaterPopup_(id); if (nearOpen) renderNear_(false); }
+                    catch (err) { b.disabled = false; b.textContent = '📍 Hitung jarak dari lokasi saya'; map.closePopup(); wsToast_('Lokasi GPS tidak terbaca.'); enterPickMode_(); }
+                } else if (act === 'edit') { map.closePopup(); openWaterModal_(w); }
+                else if (act === 'delete') { deleteWater_(w); }
+            });
+        });
+
+        // ---------- Panel "Sumber air terdekat" ----------
+        function nearPanelEl_() { return document.getElementById('ws-near-panel'); }
+        function closeNear_() { nearOpen = false; nearPanelEl_().classList.add('hidden'); nearPanelEl_().innerHTML = ''; waterUserGroup.eachLayer(l => { if (l._wsLine) waterUserGroup.removeLayer(l); }); }
+        function nearShell_(inner) {
+            nearPanelEl_().classList.remove('hidden');
+            nearPanelEl_().innerHTML = `<div class="wn-card"><div class="wn-hd"><b>Sumber air terdekat</b><button type="button" data-wn="refresh" title="Perbarui lokasi">↻</button><button type="button" data-wn="close" title="Tutup">✕</button></div>${inner}</div>`;
+        }
+        function renderNear_(focus) {
+            const rank = waterRanking_();
+            if (!rank.length) return;
+            nearOpen = true;
+            const top = rank.slice(0, 3), best = top[0];
+            waterUserGroup.eachLayer(l => { if (l._wsLine) waterUserGroup.removeLayer(l); });
+            const line = L.polyline([[userLoc.lat, userLoc.lng], [best.w.lat, best.w.lng]], { color: wsType_(best.w.jenis).c, weight: 4, dashArray: '8 8', opacity: 0.9, interactive: false });
+            line._wsLine = true; waterUserGroup.addLayer(line);
+            const accTxt = userLoc.src === 'pick' ? 'Lokasi yang Anda tandai (geser penanda biru untuk mengoreksi)' : 'Lokasi GPS Anda' + (userLoc.acc ? ' · akurasi ±' + Math.round(userLoc.acc) + ' m' : '');
+            const items = top.map((r, i) => {
+                const t = wsType_(r.w.jenis);
+                return `<button type="button" class="wn-item${i === 0 ? ' best' : ''}" style="--c:${t.c}" data-wn-focus="${esc(r.w.id)}"><span class="wn-ico">${wsGlyph_(r.w.jenis, '#fff', 20)}</span>
+                    <span class="wn-t"><b>${esc(r.w.nama)}${i === 0 ? '<span class="wn-tag">TERDEKAT</span>' : ''}</b><small>${esc(r.w.jenis)}${r.w.kelurahan ? ' · Kel. ' + esc(r.w.kelurahan) : ''}</small></span><span class="wn-d">${fmtDist_(r.km)}</span></button>`;
+            }).join('');
+            nearShell_(`<div class="wn-sub">${esc(accTxt)} · jarak garis lurus</div><div class="wn-list">${items}</div>
+                <div class="wn-act"><a class="pri" href="${esc(wsRouteUrl_(best.w))}" target="_blank" rel="noopener">Rute ke yang terdekat</a><button type="button" data-wn="pick">Tandai lokasi di peta</button></div>`);
+            if (focus) {
+                if (!map.hasLayer(waterGroup)) setLayer_('water', true);
+                map.fitBounds(L.latLngBounds([[userLoc.lat, userLoc.lng], [best.w.lat, best.w.lng]]), { padding: [70, 70], maxZoom: 16 });
+                setTimeout(() => { const m = waterMarkers[best.w.id]; if (m) m.openPopup(); }, 350);
+            }
+        }
+        async function findNearestWater_(force) {
+            if (!globalWaterSources.length) { wsToast_('Belum ada titik sumber air. Tambahkan lewat tombol “Sumber Air”.'); return; }
+            document.getElementById('peta-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            nearOpen = true;
+            nearShell_('<div class="wn-msg">Mencari lokasi Anda...</div>');
+            try { await getUserLoc_(force); renderNear_(true); }
+            catch (err) {
+                nearShell_('<div class="wn-msg">Lokasi GPS tidak dapat dibaca (izin lokasi ditolak atau sinyal lemah). Anda tetap bisa menandai lokasi sendiri di peta untuk melihat sumber air terdekat.</div><div class="wn-act"><button type="button" class="pri" data-wn="pick" style="background:#0d9488;color:#fff">Tandai lokasi di peta</button><button type="button" data-wn="refresh">Coba GPS lagi</button></div>');
+            }
+        }
+        nearPanelEl_().addEventListener('click', (e) => {
+            const f = e.target.closest('[data-wn-focus]');
+            if (f) { focusWater_(f.dataset.wnFocus); return; }
+            const b = e.target.closest('[data-wn]'); if (!b) return;
+            if (b.dataset.wn === 'close') closeNear_();
+            else if (b.dataset.wn === 'refresh') findNearestWater_(true);
+            else if (b.dataset.wn === 'pick') enterPickMode_();
+        });
+        document.getElementById('btn-water-near').addEventListener('click', () => findNearestWater_(false));
+
+        // ---------- API ----------
+        async function postWs_(payload) {
+            const res = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(payload) });
+            const result = await res.json();
+            if (result.status !== 'success') {
+                if (result.code === 'AUTH') setWaterAdmin_(null);
+                const err = new Error(result.message || 'Permintaan gagal.'); err.auth = result.code === 'AUTH'; throw err;
+            }
+            return result;
+        }
+        function upsertWater_(item) {
+            const i = globalWaterSources.findIndex(x => x.id === item.id);
+            if (i >= 0) globalWaterSources[i] = item; else globalWaterSources.push(item);
+            renderWaterSources();
+        }
+        async function deleteWater_(w) {
+            if (!confirm(`Hapus titik sumber air "${w.nama}"? Tindakan ini tidak dapat dibatalkan.`)) return;
+            try {
+                await postWs_({ action: 'deleteWaterSource', id: w.id, kode: waterAdminCode });
+                globalWaterSources = globalWaterSources.filter(x => x.id !== w.id);
+                map.closePopup(); renderWaterSources(); wsToast_('Titik sumber air dihapus.');
+                fetchRealtimeData(false);
+            } catch (err) { wsToast_('Gagal menghapus: ' + err.message); }
+        }
+
+        // ---------- Mode admin ----------
+        function setWaterAdmin_(code) {
+            waterAdminCode = code || null;
+            try { code ? sessionStorage.setItem('rk_water_admin', code) : sessionStorage.removeItem('rk_water_admin'); } catch (e) {}
+            const btn = document.getElementById('btn-water-admin');
+            btn.classList.toggle('on', !!waterAdminCode);
+            document.getElementById('water-admin-label').textContent = waterAdminCode ? 'Admin aktif · Keluar' : 'Admin';
+            map.closePopup();
+        }
+        function openAdminLogin_() {
+            const old = document.getElementById('ws-admin-modal'); if (old) old.remove();
+            const m = document.createElement('div'); m.id = 'ws-admin-modal';
+            m.innerHTML = `<div class="box" role="dialog" aria-modal="true" aria-label="Masuk admin">
+                <div style="padding:14px 16px;color:#fff;background:linear-gradient(135deg,#0e7490,#0d9488);font-weight:800">Masuk Admin Sumber Air</div>
+                <div style="padding:14px 16px" class="space-y-2">
+                    <p style="font-size:12px;opacity:.8">Hanya admin (pemilik Google Spreadsheet) yang dapat mengedit dan menghapus titik sumber air. Masukkan kode admin.</p>
+                    <input type="password" id="ws-admin-code" autocomplete="current-password" placeholder="Kode admin" class="w-full text-xs border border-slate-200 rounded-lg p-2.5 focus:outline-none focus:ring-2 focus:ring-teal-500" />
+                    <p id="ws-admin-err" class="hidden text-[11px] text-rose-600 font-medium"></p>
+                    <div style="display:flex;gap:8px;padding-top:4px"><button type="button" data-x="cancel" class="flex-1 text-xs font-bold py-2.5 rounded-xl bg-slate-100 text-slate-700">Batal</button><button type="button" data-x="ok" class="flex-1 text-xs font-bold py-2.5 rounded-xl text-white" style="background:linear-gradient(135deg,#0e7490,#0d9488)">Masuk</button></div>
+                </div></div>`;
+            document.body.appendChild(m);
+            const inp = m.querySelector('#ws-admin-code'), err = m.querySelector('#ws-admin-err'), ok = m.querySelector('[data-x="ok"]');
+            setTimeout(() => inp.focus(), 50);
+            const submit = async () => {
+                const code = inp.value.trim(); if (!code) return;
+                ok.disabled = true; ok.textContent = 'Memeriksa...'; err.classList.add('hidden');
+                try {
+                    await postWs_({ action: 'verifyWaterAdmin', kode: code });
+                    setWaterAdmin_(code); m.remove(); wsToast_('Mode admin aktif: Anda dapat mengedit/menghapus titik sumber air.');
+                } catch (e) { err.textContent = e.message; err.classList.remove('hidden'); ok.disabled = false; ok.textContent = 'Masuk'; }
+            };
+            m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-x="cancel"]')) m.remove(); else if (e.target.closest('[data-x="ok"]')) submit(); });
+            inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+        }
+        document.getElementById('btn-water-admin').addEventListener('click', () => {
+            if (waterAdminCode) { setWaterAdmin_(null); wsToast_('Keluar dari mode admin.'); } else openAdminLogin_();
+        });
+        setWaterAdmin_(waterAdminCode);
+
+        // ---------- Form tambah / edit ----------
+        const wsOverlay = document.getElementById('water-modal-overlay');
+        const wsLat = document.getElementById('ws-lat'), wsLng = document.getElementById('ws-lng');
+        const wsNama = document.getElementById('ws-nama'), wsKet = document.getElementById('ws-ket'), wsPelapor = document.getElementById('ws-pelapor');
+        const wsKel = document.getElementById('ws-kel'), wsErr = document.getElementById('ws-error'), wsSubmit = document.getElementById('ws-submit');
+        const wsStatus = document.getElementById('ws-locate-status'), wsLocateBtn = document.getElementById('ws-locate-btn');
+        const wsTypeGroup = document.getElementById('ws-type-group');
+        let wsPicker = null, wsPickerMarker = null, wsEditId = null, wsSelType = '';
+        wsKel.innerHTML = '<option value="">Otomatis / di luar Rakumpit</option>' +
+            GEOJSON.features.map(f => f.properties.village).sort().map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+        wsTypeGroup.innerHTML = Object.keys(WATER_TYPES).map(j => `<button type="button" class="ws-type" data-type="${j}" style="--c:${WATER_TYPES[j].c}">${wsGlyph_(j, WATER_TYPES[j].c, 24)}<span>${j}</span></button>`).join('');
+        function setWsType_(j) {
+            wsSelType = j;
+            wsTypeGroup.querySelectorAll('.ws-type').forEach(b => b.classList.toggle('on', b.dataset.type === j));
+        }
+        wsTypeGroup.addEventListener('click', (e) => { const b = e.target.closest('[data-type]'); if (b) setWsType_(b.dataset.type); });
+
+        function initWsPicker_() {
+            if (wsPicker) return;
+            const gStd = L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&hl=id&x={x}&y={y}&z={z}', { subdomains: '0123', maxZoom: 20, attribution: 'Map data &copy; Google' });
+            const gHyb = L.tileLayer('https://mt{s}.google.com/vt/lyrs=y&hl=id&x={x}&y={y}&z={z}', { subdomains: '0123', maxZoom: 20, attribution: 'Imagery &copy; Google' });
+            const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap' });
+            wsPicker = L.map('water-picker-map', { layers: [gStd] });
+            L.control.layers({ 'Google Maps': gStd, 'Google Satelit': gHyb, 'OpenStreetMap': osm }).addTo(wsPicker);
+            L.geoJSON(GEOJSON, { style: { color: '#0d9488', weight: 2, fillOpacity: 0.05, dashArray: '4' }, interactive: false }).addTo(wsPicker);
+            wsPicker.fitBounds(geoJsonLayer.getBounds());
+            wsPicker.on('click', (ev) => setWsPoint_(ev.latlng.lat, ev.latlng.lng));
+        }
+        function setWsPoint_(lat, lng, pan) {
+            initWsPicker_();
+            wsLat.value = lat.toFixed(6); wsLng.value = lng.toFixed(6);
+            if (!wsPickerMarker) {
+                wsPickerMarker = L.marker([lat, lng], { draggable: true }).addTo(wsPicker);
+                wsPickerMarker.on('dragend', () => { const q = wsPickerMarker.getLatLng(); setWsPoint_(q.lat, q.lng); });
+            } else wsPickerMarker.setLatLng([lat, lng]);
+            if (pan) wsPicker.setView([lat, lng], Math.max(wsPicker.getZoom(), 16));
+            const village = villageOfPoint_(lat, lng);
+            wsStatus.textContent = `Lokasi dipilih: ${lat.toFixed(5)}, ${lng.toFixed(5)} • ` + (village ? `Kel. ${village}` : 'di luar batas Kecamatan Rakumpit');
+            wsStatus.className = 'text-[11px] font-medium ' + (village ? 'text-emerald-700' : 'text-amber-600');
+            wsKel.value = village || '';
+        }
+        [wsLat, wsLng].forEach(el => el.addEventListener('change', () => {
+            const la = parseFloat(wsLat.value), ln = parseFloat(wsLng.value);
+            if (!isNaN(la) && !isNaN(ln)) setWsPoint_(la, ln, true);
+        }));
+        function openWaterModal_(w) {
+            wsEditId = w ? w.id : null;
+            wsErr.classList.add('hidden'); wsErr.textContent = '';
+            document.getElementById('water-modal-title').textContent = w ? 'Edit Titik Sumber Air (Admin)' : 'Tambah Titik Sumber Air';
+            wsSubmit.disabled = false; wsSubmit.textContent = w ? 'Simpan Perubahan' : 'Simpan Titik Sumber Air';
+            setWsType_(w ? w.jenis : '');
+            wsNama.value = w ? w.nama : ''; wsKet.value = w ? w.keterangan : ''; wsPelapor.value = w && w.pelapor !== '-' ? w.pelapor : '';
+            wsLat.value = ''; wsLng.value = ''; wsKel.value = '';
+            document.getElementById('ws-gmaps-paste').value = '';
+            wsStatus.textContent = 'Belum ada lokasi dipilih.'; wsStatus.className = 'text-[11px] text-slate-500 font-medium';
+            wsOverlay.classList.remove('hidden'); wsOverlay.classList.add('flex');
+            initWsPicker_();
+            if (wsPickerMarker) { wsPicker.removeLayer(wsPickerMarker); wsPickerMarker = null; }
+            setTimeout(() => {
+                wsPicker.invalidateSize();
+                if (w) { setWsPoint_(w.lat, w.lng, true); wsKel.value = w.kelurahan || ''; } else wsPicker.fitBounds(geoJsonLayer.getBounds());
+            }, 250);
+        }
+        function closeWaterModal_() { wsOverlay.classList.add('hidden'); wsOverlay.classList.remove('flex'); }
+        document.getElementById('btn-water-report').addEventListener('click', () => openWaterModal_(null));
+        document.getElementById('water-modal-close').addEventListener('click', closeWaterModal_);
+        wsOverlay.addEventListener('click', (e) => { if (e.target === wsOverlay) closeWaterModal_(); });
+        document.getElementById('ws-gmaps-btn').addEventListener('click', () => {
+            const la = parseFloat(wsLat.value), ln = parseFloat(wsLng.value);
+            if (isNaN(la) || isNaN(ln)) { wsStatus.textContent = 'Pilih lokasi di peta dulu.'; return; }
+            window.open(`https://www.google.com/maps/search/?api=1&query=${la},${ln}`, '_blank');
+        });
+        document.getElementById('ws-gmaps-apply').addEventListener('click', () => {
+            const p = parseGoogleMapsCoordText_(document.getElementById('ws-gmaps-paste').value);
+            if (!p || isNaN(p.lat) || isNaN(p.lng)) { wsStatus.textContent = 'Format tidak dikenali. Salin koordinat (lat,lng) atau link lokasi dari Google Maps.'; return; }
+            setWsPoint_(p.lat, p.lng, true);
+        });
+        wsLocateBtn.addEventListener('click', () => {
+            if (!navigator.geolocation) { wsStatus.textContent = 'Perangkat/browser ini tidak mendukung deteksi lokasi.'; return; }
+            wsStatus.textContent = 'Mendeteksi lokasi...'; wsLocateBtn.disabled = true;
+            navigator.geolocation.getCurrentPosition(
+                (pos) => { setWsPoint_(pos.coords.latitude, pos.coords.longitude, true); wsStatus.textContent += ` (akurasi ±${Math.round(pos.coords.accuracy)} m)`; wsLocateBtn.disabled = false; },
+                () => { wsStatus.textContent = 'Gagal mendeteksi lokasi. Izinkan akses lokasi, atau pilih di peta.'; wsLocateBtn.disabled = false; },
+                { enableHighAccuracy: true, timeout: 10000 });
+        });
+        wsSubmit.addEventListener('click', async () => {
+            const lat = parseFloat(wsLat.value), lng = parseFloat(wsLng.value), nama = wsNama.value.trim();
+            const fail = (m) => { wsErr.textContent = m; wsErr.classList.remove('hidden'); };
+            wsErr.classList.add('hidden');
+            if (!wsSelType) return fail('Pilih jenis sumber air (sungai, kolam, sumur, atau embung).');
+            if (!nama) return fail('Nama sumber air wajib diisi.');
+            if (isNaN(lat) || isNaN(lng)) return fail('Lokasi wajib diisi (pilih di peta, gunakan lokasi saya, atau ketik koordinat).');
+            if (wsEditId && !waterAdminCode) return fail('Sesi admin berakhir. Masuk admin lagi.');
+            wsSubmit.disabled = true; wsSubmit.textContent = 'Menyimpan...';
+            const payload = { action: wsEditId ? 'updateWaterSource' : 'submitWaterSource', jenis: wsSelType, nama: nama, lat: lat, lng: lng,
+                kelurahan: wsKel.value, keterangan: wsKet.value.trim(), pelapor: wsPelapor.value.trim() || '-' };
+            if (wsEditId) { payload.id = wsEditId; payload.kode = waterAdminCode; }
+            try {
+                const r = await postWs_(payload);
+                const isNew = !wsEditId;
+                closeWaterModal_();
+                if (r.item) { upsertWater_(r.item); document.getElementById('peta-section').scrollIntoView({ behavior: 'smooth', block: 'start' }); focusWater_(r.item.id); }
+                wsToast_(isNew ? 'Titik sumber air tersimpan.' : 'Perubahan tersimpan.');
+                fetchRealtimeData(false);
+            } catch (err) {
+                fail((err.auth ? 'Akses admin ditolak: ' : 'Gagal menyimpan: ') + err.message);
+                wsSubmit.disabled = false; wsSubmit.textContent = wsEditId ? 'Simpan Perubahan' : 'Simpan Titik Sumber Air';
+            }
+        });
+
         // Data server ikut terbaca tiap fetchRealtimeData (2 menit). Interval ini hanya
         // untuk mode cadangan, saat data cuaca diambil langsung dari browser.
         setInterval(() => { if (!globalWeather.fromServer) fetchWeatherData(); }, 600000);
@@ -3493,7 +4140,8 @@
             const reportOpen = !reportOverlay.classList.contains('hidden');
             const manualOpen = !manualOverlay.classList.contains('hidden');
             const pdfOpen = !pdfOverlay.classList.contains('hidden');
-            if (reportOpen || manualOpen || pdfOpen || popupIsOpen) return;
+            const waterOpen = !wsOverlay.classList.contains('hidden') || !!document.getElementById('ws-admin-modal');
+            if (reportOpen || manualOpen || pdfOpen || popupIsOpen || waterOpen) return;
             fetchRealtimeData(false);
         }, 120000);
     </script>
