@@ -279,6 +279,30 @@
         #wx-table-modal th, #wx-table-modal td { padding:6px 8px; border-bottom:1px solid rgba(148,163,184,.35); text-align:left; }
         @media (max-width:640px) { .wx-float { width:170px; top:6px; right:6px; padding:8px 10px; } #wx-panels { left:6px; bottom:22px; } }
 
+        /* popup ISPU modern & responsif */
+        .ispu-popup .leaflet-popup-content-wrapper { padding:0; border-radius:16px; overflow:hidden; box-shadow:0 12px 32px rgba(15,23,42,.28); }
+        .ispu-popup .leaflet-popup-content { margin:0; width:min(300px, 78vw) !important; }
+        .ispu-popup .leaflet-popup-close-button { color:#fff !important; top:8px; right:8px; font-size:20px; text-shadow:0 1px 2px rgba(0,0,0,.35); }
+        .ip { font:12px/1.45 system-ui,'Plus Jakarta Sans',sans-serif; color:#0f172a; background:#fff; }
+        html.dark .ip { background:#0f172a; color:#e2e8f0; }
+        .ip-hd { padding:12px 40px 12px 14px; color:#fff; display:flex; align-items:center; gap:12px; }
+        .ip-num { min-width:58px; height:58px; border-radius:16px; background:rgba(255,255,255,.2); border:1.5px solid rgba(255,255,255,.55); display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .ip-num b { font-size:24px; line-height:1; font-weight:800; }
+        .ip-num span { font-size:8.5px; font-weight:700; letter-spacing:.06em; opacity:.9; margin-top:2px; }
+        .ip-ttl { font-size:11px; opacity:.9; } .ip-cat { font-size:15px; font-weight:800; line-height:1.2; }
+        .ip-body { padding:10px 14px 4px; }
+        .ip-dom { display:inline-block; font-size:10.5px; font-weight:700; padding:2px 9px; border-radius:999px; background:rgba(148,163,184,.18); margin-bottom:6px; }
+        .ip-row { display:grid; grid-template-columns:42px 1fr auto; align-items:center; gap:8px; padding:4px 0; }
+        .ip-row .n { font-weight:700; font-size:11.5px; }
+        .ip-row .bar { height:7px; border-radius:99px; background:rgba(148,163,184,.25); overflow:hidden; }
+        .ip-row .bar i { display:block; height:100%; border-radius:99px; }
+        .ip-row .v { font-size:11px; text-align:right; white-space:nowrap; }
+        .ip-row .v small { opacity:.65; font-size:9.5px; }
+        .ip-row.top .n::after { content:' ★'; color:#d99a06; }
+        .ip-ft { padding:6px 14px 11px; font-size:10px; opacity:.65; }
+        .ip-msg { margin:6px 14px 0; padding:7px 10px; border-radius:10px; font-size:11px; background:rgba(148,163,184,.14); }
+        @media (max-width:380px) { .ip-num { min-width:50px; height:50px; } .ip-num b { font-size:20px; } .ip-row { grid-template-columns:38px 1fr auto; gap:6px; } }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation:none !important; transition:none !important; }
             html { scroll-behavior:auto; }
@@ -2896,7 +2920,7 @@
                     iconSize: [54, 24], iconAnchor: [27, 12 - 28 * slot]
                 }),
                 zIndexOffset: 500
-            }).bindPopup(popupHtml);
+            }).bindPopup(popupHtml, { className: popupHtml.indexOf('class="ip"') >= 0 ? 'ispu-popup' : '', maxWidth: 320, minWidth: 220, autoPanPadding: [16, 16] });
         }
         function wxPopup_(title, rows) {
             return `<div class="wx-pop"><b class="t">${esc(title)}</b><table>` +
@@ -3250,6 +3274,36 @@
             if (layerState.wind && windMode === 'flow') windFlowStart_(); else windFlowStop_();
         }
 
+        function ispuMsg_(v) {
+            if (v <= 50) return 'Kualitas udara baik. Aman untuk seluruh aktivitas luar ruangan.';
+            if (v <= 100) return 'Dapat diterima, namun kelompok sensitif sebaiknya mengurangi aktivitas berat di luar.';
+            if (v <= 200) return 'Tidak sehat bagi kelompok sensitif. Kurangi aktivitas luar ruangan, gunakan masker.';
+            if (v <= 300) return 'Sangat tidak sehat. Hindari aktivitas luar ruangan dan gunakan masker.';
+            return 'Berbahaya bagi semua orang. Tetap di dalam ruangan dan ikuti arahan petugas.';
+        }
+        function ispuPopup_(name, v) {
+            const cat = ispuCat_(v.ispu.value), aq = v.aq || {};
+            const keys = Object.keys(ISPU_LABEL);
+            const rows = keys.map(k => {
+                const sub = ispuSub_(k, aq[k]), sc = sub === null ? null : ispuCat_(sub);
+                const w = sub === null ? 0 : Math.max(3, Math.min(100, sub / 200 * 100));
+                const unit = k === 'co' ? 'µg/m³' : 'µg/m³';
+                return `<div class="ip-row${v.ispu.dom === k ? ' top' : ''}"><span class="n">${ISPU_LABEL[k]}</span>
+                    <span class="bar"><i style="width:${w}%;background:${sc ? sc.c : '#94a3b8'}"></i></span>
+                    <span class="v"><b>${fmtN_(aq[k], k === 'co' ? 0 : 1)}</b> <small>${unit}</small></span></div>`;
+            }).join('');
+            const t = globalWeather.updatedAt ? fmtWxTime_(globalWeather.updatedAt) : '-';
+            return `<div class="ip">
+                <div class="ip-hd" style="background:linear-gradient(135deg,${cat.c},${cat.c}cc)">
+                    <div class="ip-num"><b>${esc(v.ispu.value)}</b><span>ISPU</span></div>
+                    <div><div class="ip-ttl">Kel. ${esc(name)}</div><div class="ip-cat">${esc(cat.t)}</div></div>
+                </div>
+                <div class="ip-body"><span class="ip-dom">Parameter dominan: ${esc(ISPU_LABEL[v.ispu.dom])}</span>${rows}</div>
+                <div class="ip-msg">${esc(ispuMsg_(v.ispu.value))}</div>
+                <div class="ip-ft">Model CAMS (Copernicus) · Permen LHK No. 14/2020 · ${esc(t)}. Bukan data stasiun resmi DLH.</div>
+            </div>`;
+        }
+
         function renderWeatherLayers() {
             weatherGroup.clearLayers();
             const W = globalWeather.byVillage;
@@ -3270,9 +3324,7 @@
                 let slot = 0;
                 if (layerState.ispu && v.ispu) {
                     const cat = ispuCat_(v.ispu.value);
-                    const aqRows = Object.keys(ISPU_LABEL).map(k => [ISPU_LABEL[k], fmtN_(v.aq && v.aq[k], 1) + ' µg/m³']);
-                    weatherGroup.addLayer(wxBadge_(ll, String(v.ispu.value), cat.c, slot++,
-                        wxPopup_('ISPU Kel. ' + p.name + ' — ' + cat.t, [['Indeks ISPU', v.ispu.value], ['Parameter dominan', ISPU_LABEL[v.ispu.dom]]].concat(aqRows))));
+                    weatherGroup.addLayer(wxBadge_(ll, String(v.ispu.value), cat.c, slot++, ispuPopup_(p.name, v)));
                 }
                 if (layerState.cloud && v.cloud !== null && v.cloud !== undefined) {
                     const c = v.cloud, col = c < 25 ? '#0ea5e9' : (c < 60 ? '#64748b' : '#334155');
