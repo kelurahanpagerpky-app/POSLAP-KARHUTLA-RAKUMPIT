@@ -545,8 +545,8 @@
             <nav class="hidden md:flex items-center gap-1 text-sm font-semibold">
                 <a href="#dashboard" data-nav="0" class="nav-link">Dashboard</a>
                 <a href="#peta-section" data-nav="1" class="nav-link">Peta</a>
-                <a href="#stats-section" data-nav="2" class="nav-link">Statistik</a>
-                <a href="#daftar-hotspot" data-nav="3" class="nav-link">Daftar Hotspot</a>
+                <a href="#daftar-hotspot" data-nav="2" class="nav-link">Daftar Hotspot</a>
+                <a href="#stats-section" data-nav="3" class="nav-link">Statistik</a>
                 <a href="#report-history" data-nav="4" class="nav-link">Riwayat Laporan</a>
             </nav>
 
@@ -570,7 +570,7 @@
                 </button>
             </div>
         </div>
-        <nav class="md:hidden flex gap-1 overflow-x-auto px-3 pb-2 text-xs font-semibold"><a href="#dashboard" data-nav="0" class="nav-link">Dashboard</a><a href="#peta-section" data-nav="1" class="nav-link">Peta</a><a href="#stats-section" data-nav="2" class="nav-link">Statistik</a><a href="#daftar-hotspot" data-nav="3" class="nav-link">Daftar Hotspot</a><a href="#report-history" data-nav="4" class="nav-link">Riwayat Laporan</a></nav>
+        <nav class="md:hidden flex gap-1 overflow-x-auto px-3 pb-2 text-xs font-semibold"><a href="#dashboard" data-nav="0" class="nav-link">Dashboard</a><a href="#peta-section" data-nav="1" class="nav-link">Peta</a><a href="#daftar-hotspot" data-nav="2" class="nav-link">Daftar Hotspot</a><a href="#stats-section" data-nav="3" class="nav-link">Statistik</a><a href="#report-history" data-nav="4" class="nav-link">Riwayat Laporan</a></nav>
     </header>
 
     <!-- Main Container -->
@@ -704,16 +704,7 @@
             <p id="wx-note" class="text-[11px] text-slate-400 leading-relaxed px-2 pt-3 pb-1">Pilih tombol <b>ISPU</b>, <b>Angin</b>, <b>Awan</b>, atau <b>Hujan</b> untuk menampilkan data cuaca &amp; kualitas udara per kelurahan. Klik penanda untuk melihat rincian.</p>
         </div>
 
-        <!-- 1. Statistik Hotspot per Kelurahan (Hari Ini) -->
-        <section id="stats-section" class="space-y-4">
-            <div>
-                <h3 class="text-base font-bold text-slate-800">Statistik Hotspot per Kelurahan (Hari Ini)</h3>
-                <p class="text-[11px] text-slate-400 mt-0.5">Jumlah titik panas hari ini per kelurahan, lengkap dengan rincian satelit yang mendeteksi.</p>
-            </div>
-            <div id="stats-village-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
-        </section>
-
-        <!-- 2. Daftar Titik Panas -->
+        <!-- 1. Daftar Titik Panas -->
         <!-- Tabel -->
         <div id="daftar-hotspot" class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs overflow-hidden space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-3">
@@ -745,14 +736,14 @@
             <div id="table-pagination" class="flex items-center justify-between flex-wrap gap-2 pt-1"></div>
         </div>
 
-        <!-- 3. Ketersediaan Sumber Air -->
+        <!-- 2. Ketersediaan Sumber Air -->
         <div id="ketersediaan-air" class="cc-card">
             <div class="flex items-center justify-between gap-2 flex-wrap"><h4>Ketersediaan Sumber Air</h4><span id="chart-water-meta" class="chip"></span></div>
             <p class="cc-sub">Jumlah titik sumber air terdata per jenis dan sebarannya per kelurahan. Kelurahan tanpa titik perlu dilengkapi datanya.</p>
             <div id="chart-water"></div>
         </div>
 
-        <!-- 4. Daftar Titik Sumber Air -->
+        <!-- 3. Daftar Titik Sumber Air -->
         <!-- Tabel Daftar Titik Sumber Air -->
         <div id="daftar-sumber-air" class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs overflow-hidden space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-3">
@@ -790,7 +781,16 @@
             <div id="ws-tbl-pagination" class="flex items-center justify-between flex-wrap gap-2 pt-1"></div>
         </div>
 
-        <!-- 5-9. Statistik periode & grafik -->
+        <!-- 4. Statistik Hotspot per Kelurahan (Hari Ini) -->
+        <section id="stats-section" class="space-y-4">
+            <div>
+                <h3 class="text-base font-bold text-slate-800">Statistik Hotspot per Kelurahan (Hari Ini)</h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">Jumlah titik panas hari ini per kelurahan, lengkap dengan rincian satelit yang mendeteksi.</p>
+            </div>
+            <div id="stats-village-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+        </section>
+
+        <!-- 5+. Statistik periode & grafik -->
         <section id="stats-period-section" class="space-y-4">
             <div id="stats-period-cards" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3"></div>
 
@@ -3252,7 +3252,7 @@
         // --- MENU AKTIF SESUAI POSISI SCROLL ---
         (function () {
             const links = Array.from(document.querySelectorAll('.nav-link'));
-            const ids = ['dashboard', 'peta-section', 'stats-section', 'daftar-hotspot', 'report-history'];
+            const ids = ['dashboard', 'peta-section', 'daftar-hotspot', 'stats-section', 'report-history'];
             let queued = false;
             function spy() {
                 queued = false;
