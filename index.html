@@ -453,9 +453,6 @@
         .ws-type.on { border-color:var(--c); background:color-mix(in srgb, var(--c) 12%, #fff); color:var(--c); box-shadow:0 0 0 2px color-mix(in srgb, var(--c) 25%, transparent); }
         html.dark .ws-type { background:var(--card); border-color:var(--line); color:var(--ink); }
         html.dark .ws-type.on { background:color-mix(in srgb, var(--c) 28%, var(--card)); color:#fff; }
-        #ws-admin-modal { position:fixed; inset:0; z-index:5000; background:rgba(15,23,42,.55); display:flex; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(2px); }
-        #ws-admin-modal .box { background:#fff; color:#0f172a; border-radius:18px; width:min(340px,100%); overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,.35); font:13px/1.45 system-ui,sans-serif; }
-        html.dark #ws-admin-modal .box { background:#0f172a; color:#e2e8f0; }
         @media (max-width:640px) { #ws-near-panel { bottom:10px; } .wn-card { max-height:52vh; } }
     
         /* ===== KARTU STATISTIK PERIODE & GRAFIK MODERN ===== */
@@ -469,29 +466,6 @@
         .sc-num { font-size:2.2rem; font-weight:800; line-height:1; color:var(--ink); letter-spacing:-.02em; }
         .sc-num small { font-size:.7rem; font-weight:700; color:var(--mut); margin-left:4px; letter-spacing:0; }
         .sc-spark { width:46%; max-width:140px; height:38px; flex:none; }
-        .sc-head { display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
-        .sc-chart { margin-top:.75rem; min-height:104px; display:flex; flex-direction:column; justify-content:center; }
-        .sc-chart > svg { width:100%; height:auto; display:block; color:var(--mut); }
-        .sc-cap { font-size:.62rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--mut); margin-bottom:.35rem; }
-        .sc-hb { display:grid; grid-template-columns:78px 1fr 22px; align-items:center; gap:.45rem; height:14px; font-size:.66rem; }
-        .sc-hb + .sc-hb { margin-top:2px; }
-        .sc-hb .n { font-weight:700; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .sc-hb .n.z { color:var(--mut); font-weight:600; }
-        .sc-hb .t { height:8px; border-radius:99px; background:rgba(148,163,184,.2); overflow:hidden; }
-        .sc-hb .t b { display:block; height:100%; border-radius:99px; min-width:0; }
-        .sc-hb .v { text-align:right; font-weight:800; color:var(--ink); }
-        .sc-hb .v.z { color:var(--mut); font-weight:600; }
-        .sc-donut { display:flex; align-items:center; gap:.8rem; }
-        .sc-donut svg { width:92px; height:92px; flex:none; }
-        .sc-leg { flex:1; min-width:0; display:grid; gap:.3rem; font-size:.68rem; }
-        .sc-leg div { display:flex; align-items:center; gap:.4rem; color:var(--mut); font-weight:600; }
-        .sc-leg i { width:9px; height:9px; border-radius:3px; flex:none; }
-        .sc-leg b { margin-left:auto; color:var(--ink); font-weight:800; }
-        .sc-stack { display:flex; height:8px; border-radius:99px; overflow:hidden; background:rgba(148,163,184,.2); margin-top:.4rem; }
-        .sc-stack span { height:100%; }
-        .sc-stack-l { display:flex; flex-wrap:wrap; gap:.15rem .6rem; margin-top:.3rem; font-size:.62rem; color:var(--mut); font-weight:600; }
-        .sc-stack-l i { display:inline-block; width:7px; height:7px; border-radius:2px; margin-right:3px; }
-        .sc-empty { text-align:center; font-size:.72rem; font-style:italic; color:var(--mut); padding:1.6rem 0; }
         .sc-cmp { display:flex; align-items:center; gap:.4rem; margin-top:.5rem; font-size:.68rem; color:var(--mut); }
         .sc-delta { display:inline-flex; align-items:center; gap:3px; font-size:.68rem; font-weight:800; padding:.12rem .5rem; border-radius:99px; }
         .sc-delta.up { background:rgba(220,38,38,.12); color:#dc2626; }
@@ -537,6 +511,9 @@
         .wt-btn:hover { border-color:var(--em); }
         .wt-btn.danger { color:#dc2626; border-color:rgba(220,38,38,.4); }
         @media (max-width:640px) { .sc-num { font-size:1.8rem; } .bar-row .nm { width:78px; } }
+            .cc-h5 { font-size:.75rem; font-weight:800; color:var(--ink); margin-bottom:.7rem; }
+        .cc-split { display:grid; gap:1.5rem; grid-template-columns:1fr; }
+        @media (min-width:768px) { .cc-split { grid-template-columns:1fr 1fr; } .cc-split > div + div { border-left:1px solid var(--line); padding-left:1.5rem; } }
     </style>
     <script>
         // Terapkan tema tersimpan SEBELUM body dirender, supaya tidak "berkedip"
@@ -560,7 +537,7 @@
                     PR
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight leading-tight"> POSLAPDU KARHUTLA</h1>
+                    <h1 class="font-extrabold text-slate-900 text-sm sm:text-base tracking-tight leading-tight">DASHBOARD TERPADU KARHUTLA</h1>
                     <p class="text-xs rk-sub font-semibold">Kecamatan Rakumpit</p>
                 </div>
             </div>
@@ -727,16 +704,16 @@
             <p id="wx-note" class="text-[11px] text-slate-400 leading-relaxed px-2 pt-3 pb-1">Pilih tombol <b>ISPU</b>, <b>Angin</b>, <b>Awan</b>, atau <b>Hujan</b> untuk menampilkan data cuaca &amp; kualitas udara per kelurahan. Klik penanda untuk melihat rincian.</p>
         </div>
 
-        <!-- Statistik & Grafik (di bawah peta) -->
+        <!-- 1. Statistik Hotspot per Kelurahan (Hari Ini) -->
         <section id="stats-section" class="space-y-4">
-            <!-- DISEMBUNYIKAN: kartu grafik periode (hapus atribut style="display:none" untuk menampilkan lagi) -->
-            <div id="stats-period-cards" style="display:none" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3"></div>
             <div>
                 <h3 class="text-base font-bold text-slate-800">Statistik Hotspot per Kelurahan (Hari Ini)</h3>
                 <p class="text-[11px] text-slate-400 mt-0.5">Jumlah titik panas hari ini per kelurahan, lengkap dengan rincian satelit yang mendeteksi.</p>
             </div>
             <div id="stats-village-cards" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+        </section>
 
+        <!-- 2. Daftar Titik Panas -->
         <!-- Tabel -->
         <div id="daftar-hotspot" class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs overflow-hidden space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-3">
@@ -768,6 +745,14 @@
             <div id="table-pagination" class="flex items-center justify-between flex-wrap gap-2 pt-1"></div>
         </div>
 
+        <!-- 3. Ketersediaan Sumber Air -->
+        <div id="ketersediaan-air" class="cc-card">
+            <div class="flex items-center justify-between gap-2 flex-wrap"><h4>Ketersediaan Sumber Air</h4><span id="chart-water-meta" class="chip"></span></div>
+            <p class="cc-sub">Jumlah titik sumber air terdata per jenis dan sebarannya per kelurahan. Kelurahan tanpa titik perlu dilengkapi datanya.</p>
+            <div id="chart-water"></div>
+        </div>
+
+        <!-- 4. Daftar Titik Sumber Air -->
         <!-- Tabel Daftar Titik Sumber Air -->
         <div id="daftar-sumber-air" class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs overflow-hidden space-y-4">
             <div class="flex items-center justify-between flex-wrap gap-3">
@@ -805,6 +790,9 @@
             <div id="ws-tbl-pagination" class="flex items-center justify-between flex-wrap gap-2 pt-1"></div>
         </div>
 
+        <!-- 5-9. Statistik periode & grafik -->
+        <section id="stats-period-section" class="space-y-4">
+            <div id="stats-period-cards" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3"></div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div class="cc-card">
@@ -827,43 +815,19 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <!-- DISEMBUNYIKAN (hapus class "hidden" untuk menampilkan lagi) -->
-                <div class="cc-card hidden">
-                    <div class="flex items-center justify-between gap-2 flex-wrap"><h4>Titik Panas per Kelurahan</h4><span id="chart-village-meta" class="chip"></span></div>
-                    <p class="cc-sub">Akumulasi 7 hari terakhir, diurutkan dari yang terbanyak, beserta porsinya.</p>
-                    <div id="chart-village"></div>
-                </div>
-                <div class="cc-card">
-                    <div class="flex items-center justify-between gap-2 flex-wrap"><h4>Tingkat Keyakinan (Confidence)</h4><span id="chart-conf-meta" class="chip"></span></div>
-                    <p class="cc-sub">Sebaran deteksi menurut tingkat keyakinan satelit (<span id="chart-conf-range">Hari Ini</span>). Keyakinan tinggi (≥80%) paling mungkin api nyata.</p>
-                    <div id="chart-conf" class="donut-wrap"></div>
-                </div>
-                <div class="cc-card">
-                    <h4>Per Satelit (<span id="chart-sat-range">Hari Ini</span>)</h4>
-                    <p class="cc-sub">Satelit yang mendeteksi titik panas pada rentang waktu aktif.</p>
-                    <div id="chart-satellite" class="space-y-2"></div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                <div class="cc-card lg:col-span-3">
-                    <div class="flex items-center justify-between gap-2 flex-wrap"><h4>Peta Panas Kelurahan × Hari (7 Hari)</h4><span id="chart-heat-meta" class="chip"></span></div>
-                    <p class="cc-sub">Semakin pekat warnanya, semakin banyak titik panas pada kelurahan dan hari itu. Kolom hari ini ditandai.</p>
-                    <div id="chart-heat" class="hm-scroll"></div>
-                </div>
-                <!-- DISEMBUNYIKAN (hapus class "hidden" untuk menampilkan lagi) -->
-                <div class="cc-card hidden">
-                    <div class="flex items-center justify-between gap-2 flex-wrap"><h4>Intensitas Api (FRP)</h4><span id="chart-frp-meta" class="chip"></span></div>
-                    <p class="cc-sub">Sebaran daya radiasi api (MW) pada rentang waktu aktif. FRP besar menandakan api lebih intens.</p>
-                    <div id="chart-frp" class="chart-wrap"></div>
+            <div class="cc-card">
+                <div class="flex items-center justify-between gap-2 flex-wrap"><h4>Tingkat Keyakinan &amp; Per Satelit (<span id="chart-sat-range">Hari Ini</span>)</h4><span id="chart-conf-meta" class="chip"></span></div>
+                <p class="cc-sub">Kiri: sebaran deteksi menurut keyakinan satelit (<span id="chart-conf-range">Hari Ini</span>); keyakinan tinggi (≥80%) paling mungkin api nyata. Kanan: satelit yang mendeteksi pada rentang waktu aktif.</p>
+                <div class="cc-split">
+                    <div><div class="cc-h5">Tingkat Keyakinan</div><div id="chart-conf" class="donut-wrap"></div></div>
+                    <div><div class="cc-h5">Per Satelit</div><div id="chart-satellite" class="space-y-2"></div></div>
                 </div>
             </div>
 
             <div class="cc-card">
-                <div class="flex items-center justify-between gap-2 flex-wrap"><h4>Ketersediaan Sumber Air</h4><span id="chart-water-meta" class="chip"></span></div>
-                <p class="cc-sub">Jumlah titik sumber air terdata per jenis dan sebarannya per kelurahan. Kelurahan tanpa titik perlu dilengkapi datanya.</p>
-                <div id="chart-water"></div>
+                <div class="flex items-center justify-between gap-2 flex-wrap"><h4>Peta Panas Kelurahan × Hari (7 Hari)</h4><span id="chart-heat-meta" class="chip"></span></div>
+                <p class="cc-sub">Semakin pekat warnanya, semakin banyak titik panas pada kelurahan dan hari itu. Kolom hari ini ditandai.</p>
+                <div id="chart-heat" class="hm-scroll"></div>
             </div>
         </section>
 
@@ -1114,7 +1078,7 @@
         </div>
     </div>
 
-    <!-- Modal Sumber Air: input titik sumber air terdekat (sungai, kolam, sumur, embung). Admin memakai modal ini juga untuk edit. -->
+    <!-- Modal Sumber Air: input titik sumber air terdekat (sungai, kolam, sumur, embung). -->
     <div id="water-modal-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[2000] hidden items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
             <div class="px-5 py-4 flex items-center justify-between" style="background:linear-gradient(135deg,#0e7490,#0d9488)">
@@ -2159,38 +2123,41 @@
             });
             return { labels, tips, series };
         }
-        const ISPU_BANDS_ = [[0, 50, '#16a34a'], [50, 100, '#2563eb'], [100, 200, '#d99a06'], [200, 300, '#dc2626'], [300, 500, '#111827']];
         function ispuSvg_(b, vis) {
-            const W = 560, H = 250, L = 34, R = 10, T = 12, B = 26, n = b.labels.length;
+            const W = 560, H = 220, L = 32, R = 14, T = 26, B = 28, n = b.labels.length;
             let mx = 0; vis.forEach(s => s.vals.forEach(v => { if (v !== null && v > mx) mx = v; }));
-            const top = Math.max(100, Math.ceil(mx / 50) * 50);
+            const top = Math.max(100, Math.ceil(mx / 40) * 40);
             const X = (i) => L + i * (W - L - R) / (n - 1), Y = (v) => T + (H - T - B) * (1 - v / top);
-            let g = '';
-            ISPU_BANDS_.forEach(([lo, hi, c]) => { if (lo >= top) return; const h2 = Math.min(hi, top); g += `<rect x="${L}" y="${Y(h2)}" width="${W - L - R}" height="${Y(lo) - Y(h2)}" fill="${c}" opacity=".07"/>`; });
-            [0, 50, 100, 200, 300, 400, 500].filter(v => v <= top).forEach(v => {
-                g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="currentColor" stroke-dasharray="${v ? '3 4' : ''}" opacity="${v ? .18 : .35}"/><text x="${L - 5}" y="${Y(v) + 3}" text-anchor="end" font-size="9.5" fill="currentColor" opacity=".65">${v}</text>`;
-            });
+            let g = '<defs>' + vis.map((s, i) => `<linearGradient id="grad-ispu-${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${s.color}" stop-opacity="${vis.length === 1 ? .38 : .14}"/><stop offset="1" stop-color="${s.color}" stop-opacity="0"/></linearGradient>`).join('') + '</defs>';
+            for (let k = 0; k <= 4; k++) {
+                const v = top * k / 4, y = Y(v);
+                g += `<line x1="${L}" x2="${W - R}" y1="${y}" y2="${y}" stroke="currentColor" stroke-dasharray="${k ? '3 4' : ''}" opacity="${k ? .13 : .3}"/><text x="${L - 6}" y="${y + 3}" text-anchor="end" font-size="9.5" fill="currentColor" opacity=".6">${Math.round(v)}</text>`;
+            }
             const every = ispuMode === 'hour' ? 6 : 1;
             b.labels.forEach((l, i) => { if (i % every === 0 || i === n - 1) g += `<text x="${X(i)}" y="${H - 8}" text-anchor="middle" font-size="9.5" fill="currentColor" opacity=".7">${esc(l)}</text>`; });
-            vis.forEach(s => {
+            vis.forEach((s, si) => {
                 let run = [];
                 const flush = () => {
-                    if (run.length >= 2) g += `<path d="${smoothPath_(run.map(i => [X(i), Y(s.vals[i])]))}" fill="none" stroke="${s.color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
-                    else if (run.length === 1) g += `<circle cx="${X(run[0])}" cy="${Y(s.vals[run[0]])}" r="3" fill="${s.color}" stroke="#fff" stroke-width="1.2"/>`;
+                    if (run.length >= 2) {
+                        const line = smoothPath_(run.map(i => [X(i), Y(s.vals[i])]));
+                        g += `<path d="${line} L${X(run[run.length - 1]).toFixed(1)},${Y(0)} L${X(run[0]).toFixed(1)},${Y(0)} Z" fill="url(#grad-ispu-${si})"/><path d="${line}" fill="none" stroke="${s.color}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+                    }
+                    if (ispuMode === 'day' || run.length === 1) run.forEach(i => { g += `<circle cx="${X(i)}" cy="${Y(s.vals[i])}" r="3.6" fill="#fff" stroke="${s.color}" stroke-width="2.2"/>`; });
                     run = [];
                 };
                 s.vals.forEach((v, i) => { if (v === null) flush(); else run.push(i); }); flush();
             });
-            g += `<line id="ispu-guide" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="currentColor" stroke-dasharray="3 3" opacity="0"/>`;
-            return { svg: `<svg viewBox="0 0 ${W} ${H}" class="w-full h-auto text-slate-500" role="img">${g}</svg>`, W, L, R, n, X };
+            g += `<line id="ispu-guide" x1="0" x2="0" y1="${T - 6}" y2="${Y(0)}" stroke="currentColor" stroke-dasharray="3 3" opacity="0"/>`;
+            vis.forEach((s, si) => { g += `<circle class="ispu-hv" data-i="${si}" r="4.8" fill="#fff" stroke="${s.color}" stroke-width="2.4" opacity="0"/>`; });
+            return { svg: `<svg viewBox="0 0 ${W} ${H}" class="w-full h-auto text-slate-500" role="img">${g}</svg>`, W, L, R, n, X, Y };
         }
         function renderIspuTrend_() {
             const wrap = document.getElementById('chart-ispu'); if (!wrap) return;
             const b = ispuBuckets_(), vis = b.series.filter(s => !ispuHidden.has(s.name));
             const hasAny = b.series.some(s => s.vals.some(v => v !== null));
             document.getElementById('chart-ispu-sub').textContent = ispuMode === 'hour'
-                ? 'Nilai ISPU tiap jam selama 48 jam terakhir (WIB). Latar warna = kategori ISPU. Ketuk legenda untuk menyembunyikan kelurahan.'
-                : 'Rata-rata ISPU harian selama 7 hari terakhir. Latar warna = kategori ISPU. Ketuk legenda untuk menyembunyikan kelurahan.';
+                ? 'Nilai ISPU tiap jam selama 48 jam terakhir (WIB), satu garis per kelurahan. Arahkan atau ketuk grafik untuk melihat nilainya; ketuk nama kelurahan untuk menyembunyikannya.'
+                : 'Rata-rata ISPU harian selama 7 hari terakhir, satu garis per kelurahan. Arahkan atau ketuk titik untuk melihat nilainya; ketuk nama kelurahan untuk menyembunyikannya.';
             document.getElementById('chart-ispu-legend').innerHTML = b.series.map(s => `<button type="button" class="lg-chip${ispuHidden.has(s.name) ? ' off' : ''}" style="--c:${s.color}" data-ispu-v="${esc(s.name)}"><i></i>${esc(s.name)}</button>`).join('');
             document.querySelectorAll('#ispu-mode-toggle .ispu-mode-btn').forEach(x => x.classList.toggle('on', x.dataset.ispuMode === ispuMode));
             if (!hasAny) {
@@ -2201,19 +2168,20 @@
             wrap.innerHTML = r.svg + '<div class="chart-tip"></div>';
             let best = null; vis.forEach(s => s.vals.forEach((v, i) => { if (v !== null && (!best || v > best.v)) best = { v, name: s.name, tip: b.tips[i] }; }));
             document.getElementById('chart-ispu-meta').innerHTML = best ? `Tertinggi: <b>${best.v}</b> (${esc(ispuCat_(best.v).t)}) · Kel. ${esc(best.name)} · ${esc(best.tip)}` : 'Semua kelurahan disembunyikan.';
-            const tip = wrap.querySelector('.chart-tip'), svg = wrap.querySelector('svg'), guide = svg.querySelector('#ispu-guide');
+            const tip = wrap.querySelector('.chart-tip'), svg = wrap.querySelector('svg'), guide = svg.querySelector('#ispu-guide'), hvs = svg.querySelectorAll('.ispu-hv');
+            const hide = () => { tip.classList.remove('show'); guide.setAttribute('opacity', '0'); hvs.forEach(c => c.setAttribute('opacity', '0')); };
             const show = (e) => {
                 const pt = e.touches ? e.touches[0] : e, rect = svg.getBoundingClientRect(), sc = rect.width / r.W;
                 const idx = Math.max(0, Math.min(r.n - 1, Math.round(((pt.clientX - rect.left) / sc - r.L) / (r.W - r.L - r.R) * (r.n - 1))));
                 const rows = vis.map(s => ({ s, v: s.vals[idx] })).filter(o => o.v !== null).sort((a, c) => c.v - a.v);
                 guide.setAttribute('x1', r.X(idx)); guide.setAttribute('x2', r.X(idx)); guide.setAttribute('opacity', '.6');
+                hvs.forEach(c => { const v = vis[+c.dataset.i].vals[idx]; if (v === null) c.setAttribute('opacity', '0'); else { c.setAttribute('cx', r.X(idx)); c.setAttribute('cy', r.Y(v)); c.setAttribute('opacity', '1'); } });
                 tip.innerHTML = `<div style="font-weight:800;margin-bottom:3px">${esc(b.tips[idx])}</div>` + (rows.length ? rows.map(o => `<div><span style="color:${o.s.color}">●</span> ${esc(o.s.name)}: <b>${o.v}</b> <span style="opacity:.7">${esc(ispuCat_(o.v).t)}</span></div>`).join('') : '<div style="opacity:.7">Tidak ada data</div>');
                 const wr = wrap.getBoundingClientRect();
                 tip.style.left = Math.max(80, Math.min(wr.width - 80, r.X(idx) * sc)) + 'px'; tip.style.top = '2px'; tip.style.transform = 'translate(-50%,0)';
                 tip.classList.add('show');
             };
-            wrap.onmousemove = show; wrap.onclick = show; wrap.ontouchstart = show; wrap.ontouchmove = show;
-            wrap.onmouseleave = () => { tip.classList.remove('show'); guide.setAttribute('opacity', '0'); };
+            wrap.onmousemove = show; wrap.onclick = show; wrap.ontouchstart = show; wrap.ontouchmove = show; wrap.onmouseleave = hide;
         }
         document.getElementById('ispu-mode-toggle').addEventListener('click', (e) => { const b = e.target.closest('[data-ispu-mode]'); if (b) { ispuMode = b.dataset.ispuMode; renderIspuTrend_(); } });
         document.getElementById('chart-ispu-legend').addEventListener('click', (e) => {
@@ -2229,13 +2197,7 @@
             const matrix = {}; villages.forEach(v => { matrix[v] = days.map(() => 0); });
             days.forEach((d, i) => { const br = villageBreakdown_(d); Object.keys(br).forEach(v => { if (matrix[v]) matrix[v][i] = Object.values(br[v]).reduce((a, b) => a + b, 0); }); });
 
-            // 1) Per kelurahan (7 hari)
-            const tot = villages.map(v => ({ v, n: matrix[v].reduce((a, b) => a + b, 0), td: matrix[v][matrix[v].length - 1] })).sort((a, b) => b.n - a.n);
-            const grand = tot.reduce((a, o) => a + o.n, 0), mxv = Math.max(1, ...tot.map(o => o.n));
-            document.getElementById('chart-village').innerHTML = grand
-                ? tot.map(o => `<div class="bar-row"><span class="nm"><i style="background:${getVillageColor(codeOf[o.v])}"></i>${esc(o.v)}</span><div class="tr"><b style="width:${o.n / mxv * 100}%;background:${getVillageColor(codeOf[o.v])}"></b></div><span class="vl">${o.n}<small>${Math.round(o.n / grand * 100)}%</small></span></div>`).join('')
-                : '<p class="text-xs text-slate-400 italic">Belum ada deteksi dalam 7 hari terakhir.</p>';
-            document.getElementById('chart-village-meta').textContent = grand ? `Terbanyak: ${tot[0].v}` : 'Belum ada deteksi';
+            const grand = villages.reduce((acc, v) => acc + matrix[v].reduce((x, y) => x + y, 0), 0);
 
             // 2) Donut confidence
             const hi = inRangeList.filter(h => h.confidence >= 80).length, mid = inRangeList.filter(h => h.confidence >= 50 && h.confidence < 80).length, lo = inRangeList.length - hi - mid;
@@ -2250,14 +2212,7 @@
                 : '<p class="text-xs text-slate-400 italic">Tidak ada deteksi pada rentang ini.</p>';
             document.getElementById('chart-conf-meta').textContent = N ? `${Math.round(hi / N * 100)}% keyakinan tinggi` : 'Tidak ada data';
 
-            // 3) Intensitas FRP
-            const frps = inRangeList.map(h => h.frp || 0);
-            const bk = [['<1', 0, 1, '#fbbf24'], ['1–5', 1, 5, '#f59e0b'], ['5–15', 5, 15, '#f97316'], ['15–50', 15, 50, '#ef4444'], ['≥50', 50, Infinity, '#991b1b']];
-            document.getElementById('chart-frp').innerHTML = frps.length
-                ? barChartSvg_(bk.map(([l, a, b2, c]) => ({ label: l + ' MW', value: frps.filter(x => x >= a && x < b2).length, color: c })), '#f59e0b') : '<p class="text-xs text-slate-400 italic">Tidak ada deteksi pada rentang ini.</p>';
-            document.getElementById('chart-frp-meta').textContent = frps.length ? `Rata-rata ${(frps.reduce((a, b) => a + b, 0) / frps.length).toFixed(1).replace('.', ',')} · maks ${Math.max(...frps).toFixed(1).replace('.', ',')} MW` : 'Tidak ada data';
-
-            // 4) Peta panas kelurahan x hari
+            // 3) Peta panas kelurahan x hari
             const mxH = Math.max(1, ...villages.flatMap(v => matrix[v]));
             const head = '<div></div>' + days.map(d => `<div class="hm-h${d === today ? ' today' : ''}">${d.slice(8)}/${d.slice(5, 7)}</div>`).join('') + '<div class="hm-h">Σ</div>';
             const body = villages.map(v => {
@@ -2330,6 +2285,16 @@
                 else { const p = Math.round((cur - prev) / prev * 100); if (p > 0) { cls = 'up'; txt = '▲ ' + p + '%'; } else if (p < 0) { cls = 'down'; txt = '▼ ' + Math.abs(p) + '%'; } }
                 return `<div class="sc-cmp"><span class="sc-delta ${cls}">${txt}</span><span>${label}</span></div>`;
             };
+            const sparkSvg_ = (vals, color, uid, hi) => {
+                const W = 120, H = 38, n = vals.length, mx = Math.max(1, ...vals);
+                const X = (i) => 3 + i * (W - 6) / (n - 1), Y = (v) => 4 + (H - 10) * (1 - v / mx);
+                const pts = vals.map((v, i) => [X(i), Y(v)]);
+                const line = smoothPath_(pts), area = `${line} L${X(n - 1).toFixed(1)},${H - 2} L${X(0).toFixed(1)},${H - 2} Z`;
+                const hp = pts[hi === undefined ? n - 1 : hi];
+                return `<svg viewBox="0 0 ${W} ${H}" class="sc-spark" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="sp-${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${color}" stop-opacity=".35"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></linearGradient></defs>
+                    <path d="${area}" fill="url(#sp-${uid})"/><path d="${line}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
+                    <circle cx="${hp[0]}" cy="${hp[1]}" r="3" fill="#fff" stroke="${color}" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`;
+            };
             const chip_ = (l, v) => `<span class="sc-chip">${l} <b>${v}</b></span>`;
             const icon_ = (p) => `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
             const ICO = {
@@ -2339,58 +2304,19 @@
                 chart: icon_('<path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/>')
             };
             const periodCard_ = (o) => `<div class="sc" style="--c:${o.color}"><div class="sc-top"><span class="sc-ico">${ICO[o.icon]}</span><span class="sc-lab">${o.label}</span></div>
-                <div class="sc-main"><div class="sc-num">${o.value}<small>titik</small></div></div>
-                ${o.delta || ''}<div class="sc-chart">${o.chart}</div><div class="sc-chips">${o.chips.join('')}</div></div>`;
+                <div class="sc-main"><div class="sc-num">${o.value}<small>titik</small></div>${sparkSvg_(dailyVals, o.color, o.uid, o.hi)}</div>
+                ${o.delta || ''}<div class="sc-chips">${o.chips.join('')}</div></div>`;
             const fx = (v) => (Math.round(v * 10) / 10).toString().replace('.', ',');
             const rich = (m) => [chip_('Conf ≥80%', m.hi), chip_('FRP total', fx(m.frp) + ' MW')];
             const peakIdx = dailyVals.indexOf(Math.max(...dailyVals));
-
-            // ---- Grafik di dalam kartu periode ----
-            // Hari ini / Kemarin: batang horizontal per kelurahan. 24 jam: donat keyakinan + komposisi satelit.
-            // 7 hari: kolom harian dengan puncak ditandai dan garis rata-rata.
-            const hbars_ = (d) => {
-                const br = villageBreakdown_(d);
-                const rows = GEOJSON.features.map(f => { const nm = f.properties.village; return { nm: nm, n: Object.values(br[nm] || {}).reduce((a, b) => a + b, 0), c: getVillageColor(f.properties.village_code) }; }).sort((a, b) => b.n - a.n);
-                const tot = rows.reduce((a, r) => a + r.n, 0), mx = Math.max(1, ...rows.map(r => r.n));
-                if (!tot) return '<div class="sc-empty">Belum ada titik panas</div>';
-                return '<div class="sc-cap">Per kelurahan</div>' + rows.map(r => `<div class="sc-hb" title="${esc(r.nm)}: ${r.n} titik"><span class="n${r.n ? '' : ' z'}">${esc(r.nm)}</span><div class="t"><b style="width:${r.n / mx * 100}%;background:${r.c}"></b></div><span class="v${r.n ? '' : ' z'}">${r.n}</span></div>`).join('');
-            };
-            const donut24_ = (list) => {
-                const N = list.length;
-                if (!N) return '<div class="sc-empty">Tidak ada deteksi dalam 24 jam terakhir</div>';
-                const hi = list.filter(h => h.confidence >= 80).length, mid = list.filter(h => h.confidence >= 50 && h.confidence < 80).length, lo = N - hi - mid;
-                const segs = [['Tinggi ≥80%', hi, '#dc2626'], ['Sedang 50–79%', mid, '#f59e0b'], ['Rendah <50%', lo, '#94a3b8']];
-                const C = 2 * Math.PI * 34; let off = 0, arcs = '';
-                segs.forEach(([, v, c]) => { if (!v) return; const len = v / N * C; arcs += `<circle cx="46" cy="46" r="34" fill="none" stroke="${c}" stroke-width="12" stroke-dasharray="${len.toFixed(2)} ${(C - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 46 46)"/>`; off += len; });
-                const bySat = {}; list.forEach(h => { bySat[h.satellite] = (bySat[h.satellite] || 0) + 1; });
-                const sats = Object.entries(bySat).sort((a, b) => b[1] - a[1]);
-                return `<div class="sc-cap">Tingkat keyakinan</div><div class="sc-donut"><svg viewBox="0 0 92 92" role="img" aria-label="Tingkat keyakinan 24 jam"><circle cx="46" cy="46" r="34" fill="none" stroke="rgba(148,163,184,.2)" stroke-width="12"/>${arcs}<text x="46" y="47" text-anchor="middle" font-size="17" font-weight="800" fill="currentColor" style="color:var(--ink)">${Math.round(hi / N * 100)}%</text><text x="46" y="59" text-anchor="middle" font-size="7.5" fill="currentColor" opacity=".7">keyakinan tinggi</text></svg>
-                    <div class="sc-leg">${segs.map(([l, v, c]) => `<div><i style="background:${c}"></i>${l}<b>${v}</b></div>`).join('')}</div></div>
-                    <div class="sc-stack" title="Komposisi satelit">${sats.map(([n, v]) => `<span style="width:${v / N * 100}%;background:${getSatelliteColor(n)}" title="${esc(n)}: ${v}"></span>`).join('')}</div>
-                    <div class="sc-stack-l">${sats.map(([n, v]) => `<span><i style="background:${getSatelliteColor(n)}"></i>${esc(n)} ${v}</span>`).join('')}</div>`;
-            };
-            const col7_ = () => {
-                if (!c7) return '<div class="sc-empty">Belum ada deteksi dalam 7 hari</div>';
-                const W = 230, H = 112, T = 16, B = 18, n = dailyVals.length, mx = Math.max(1, ...dailyVals), slot = (W - 8) / n, bw = slot * 0.58;
-                const Y = (v) => T + (H - T - B) * (1 - v / mx), base = Y(0), avgY = Y(c7 / n);
-                let g = `<line x1="4" x2="${W - 4}" y1="${base}" y2="${base}" stroke="currentColor" opacity=".3"/>`;
-                dailyVals.forEach((v, i) => {
-                    const x = 4 + i * slot + (slot - bw) / 2, y = Y(v), h = Math.max(base - y, v ? 2 : 0), isP = i === peakIdx, isT = days[i] === today;
-                    g += `<g><title>${esc(fmtDateId_(days[i]))}: ${v} titik</title><rect x="${x.toFixed(1)}" y="${(base - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3.5" fill="#059669" opacity="${isP ? 1 : .5}"${isT ? ' stroke="#065f46" stroke-width="1.4"' : ''}/>`
-                        + (v ? `<text x="${(x + bw / 2).toFixed(1)}" y="${(base - h - 3).toFixed(1)}" text-anchor="middle" font-size="8.5" font-weight="800" fill="currentColor" style="color:var(--ink)">${v}</text>` : '')
-                        + `<text x="${(x + bw / 2).toFixed(1)}" y="${H - 5}" text-anchor="middle" font-size="8" fill="currentColor" opacity="${isT ? 1 : .7}"${isT ? ' font-weight="800"' : ''}>${days[i].slice(8)}</text></g>`;
-                });
-                g += `<line x1="4" x2="${W - 4}" y1="${avgY.toFixed(1)}" y2="${avgY.toFixed(1)}" stroke="#d99a06" stroke-width="1.2" stroke-dasharray="4 3"/>`;
-                return `<div class="sc-cap">Per hari · garis putus = rata-rata ${fx(c7 / n)}</div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Titik panas 7 hari">${g}</svg>`;
-            };
             document.getElementById('stats-period-cards').innerHTML =
-                periodCard_({ uid: 'p1', color: '#dc2626', icon: 'flame', label: 'Hari ini', value: todayN, chart: hbars_(today),
+                periodCard_({ uid: 'p1', color: '#dc2626', icon: 'flame', label: 'Hari ini', value: todayN, hi: days.length - 1,
                     delta: deltaHtml_(todayN, yestN, 'dibanding kemarin'), chips: [chip_('Kelurahan', dayKel_(today) + '/' + totalKel)].concat(mToday.n ? rich(mToday) : []) }) +
-                periodCard_({ uid: 'p2', color: '#0ea5e9', icon: 'clock', label: '24 jam terakhir (deteksi)', value: c24, chart: donut24_(l24),
-                    delta: deltaHtml_(c24, p24.length || (allStats.length ? 0 : null), 'dibanding 24 jam sebelumnya'), chips: [chip_('Kelurahan', m24.kel + '/' + totalKel)].concat(m24.n ? rich(m24) : []) }) +
-                periodCard_({ uid: 'p3', color: '#f59e0b', icon: 'cal', label: 'Kemarin', value: yestN, chart: hbars_(yesterday),
+                periodCard_({ uid: 'p3', color: '#f59e0b', icon: 'cal', label: 'Kemarin', value: yestN, hi: Math.max(0, days.length - 2),
                     delta: deltaHtml_(yestN, yestPrev, 'dibanding sehari sebelumnya'), chips: [chip_('Kelurahan', dayKel_(yesterday) + '/' + totalKel)].concat(mYest.n ? rich(mYest) : []) }) +
-                periodCard_({ uid: 'p4', color: '#059669', icon: 'chart', label: '7 hari terakhir', value: c7, chart: col7_(),
+                periodCard_({ uid: 'p2', color: '#0ea5e9', icon: 'clock', label: '24 jam terakhir (deteksi)', value: c24, hi: days.length - 1,
+                    delta: deltaHtml_(c24, p24.length || (allStats.length ? 0 : null), 'dibanding 24 jam sebelumnya'), chips: [chip_('Kelurahan', m24.kel + '/' + totalKel)].concat(m24.n ? rich(m24) : []) }) +
+                periodCard_({ uid: 'p4', color: '#059669', icon: 'chart', label: '7 hari terakhir', value: c7, hi: peakIdx < 0 ? days.length - 1 : peakIdx,
                     delta: deltaHtml_(c7, prev7, 'dibanding 7 hari sebelumnya'),
                     chips: [chip_('Rata-rata', fx(c7 / 7) + '/hari'), chip_('Puncak', c7 ? dailyVals[peakIdx] + ' (' + days[peakIdx].slice(8) + '/' + days[peakIdx].slice(5, 7) + ')' : '-'), chip_('Kelurahan', new Set(days.flatMap(d => Object.keys(villageBreakdown_(d)))).size + '/' + totalKel)] });
 
@@ -4153,8 +4079,6 @@
         let userLoc = null;             // {lat,lng,acc,src:'gps'|'pick',ts}
         let waterPickMode = false;      // true = ketuk peta untuk menandai lokasi sendiri (cadangan bila GPS gagal)
         let nearOpen = false;
-        let waterAdminCode = null;
-        // Fitur admin (edit/hapus) dihapus: waterAdminCode selalu null sehingga tombol Edit/Hapus tidak pernah tampil.
 
         function wsToast_(msg) {
             const old = document.querySelector('.ws-toast'); if (old) old.remove();
@@ -4236,8 +4160,6 @@
             } else {
                 dist = `<button type="button" class="ws-locate" data-ws-act="locate" data-id="${esc(w.id)}">📍 Hitung jarak dari lokasi saya</button>`;
             }
-            const admin = waterAdminCode
-                ? `<div class="ws-act"><button type="button" class="ghost" data-ws-act="edit" data-id="${esc(w.id)}">✎ Edit</button><button type="button" class="danger" data-ws-act="delete" data-id="${esc(w.id)}">🗑 Hapus</button></div>` : '';
             const tgl = fmtDateShort_(w.timestamp);
             return `<div class="ip">
                 <div class="ip-hd" style="background:linear-gradient(135deg,${c},${c}cc)">
@@ -4247,7 +4169,6 @@
                 ${dist}${reco}
                 ${w.keterangan ? `<div class="ip-msg">${esc(w.keterangan)}</div>` : ''}
                 <div class="ws-act"><a href="${esc(wsRouteUrl_(w))}" target="_blank" rel="noopener" style="background:${c}">Rute di Google Maps</a></div>
-                ${admin}
                 <div class="ip-ft" style="padding-top:8px">${w.lat.toFixed(5)}, ${w.lng.toFixed(5)} · ${esc(w.pelapor || '-')}${tgl ? ' · ' + esc(tgl) : ''}</div>
             </div>`;
         }
@@ -4290,8 +4211,7 @@
                     b.disabled = true; b.textContent = 'Mencari lokasi Anda...';
                     try { await getUserLoc_(true); refreshWaterPopup_(id); if (nearOpen) renderNear_(false); }
                     catch (err) { b.disabled = false; b.textContent = '📍 Hitung jarak dari lokasi saya'; map.closePopup(); wsToast_('Lokasi GPS tidak terbaca.'); enterPickMode_(); }
-                } else if (act === 'edit') { map.closePopup(); openWaterModal_(w); }
-                else if (act === 'delete') { deleteWater_(w); }
+                }
             });
         });
 
@@ -4348,9 +4268,7 @@
         async function postWs_(payload) {
             const res = await fetch(GAS_API_URL, { method: 'POST', body: JSON.stringify(payload) });
             const result = await res.json();
-            if (result.status !== 'success') {
-                const err = new Error(result.message || 'Permintaan gagal.'); err.auth = result.code === 'AUTH'; throw err;
-            }
+            if (result.status !== 'success') throw new Error(result.message || 'Permintaan gagal.');
             return result;
         }
         function upsertWater_(item) {
@@ -4358,25 +4276,14 @@
             if (i >= 0) globalWaterSources[i] = item; else globalWaterSources.push(item);
             renderWaterSources();
         }
-        async function deleteWater_(w) {
-            if (!confirm(`Hapus titik sumber air "${w.nama}"? Tindakan ini tidak dapat dibatalkan.`)) return;
-            try {
-                await postWs_({ action: 'deleteWaterSource', id: w.id, kode: waterAdminCode });
-                globalWaterSources = globalWaterSources.filter(x => x.id !== w.id);
-                map.closePopup(); renderWaterSources(); wsToast_('Titik sumber air dihapus.');
-                fetchRealtimeData(false);
-            } catch (err) { wsToast_('Gagal menghapus: ' + err.message); }
-        }
-
-
-        // ---------- Form tambah / edit ----------
+        // ---------- Form tambah titik sumber air ----------
         const wsOverlay = document.getElementById('water-modal-overlay');
         const wsLat = document.getElementById('ws-lat'), wsLng = document.getElementById('ws-lng');
         const wsNama = document.getElementById('ws-nama'), wsKet = document.getElementById('ws-ket'), wsPelapor = document.getElementById('ws-pelapor');
         const wsKel = document.getElementById('ws-kel'), wsErr = document.getElementById('ws-error'), wsSubmit = document.getElementById('ws-submit');
         const wsStatus = document.getElementById('ws-locate-status'), wsLocateBtn = document.getElementById('ws-locate-btn');
         const wsTypeGroup = document.getElementById('ws-type-group');
-        let wsPicker = null, wsPickerMarker = null, wsEditId = null, wsSelType = '';
+        let wsPicker = null, wsPickerMarker = null, wsSelType = '';
         wsKel.innerHTML = '<option value="">Otomatis / di luar Rakumpit</option>' +
             GEOJSON.features.map(f => f.properties.village).sort().map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
         wsTypeGroup.innerHTML = Object.keys(WATER_TYPES).map(j => `<button type="button" class="ws-type" data-type="${j}" style="--c:${WATER_TYPES[j].c}">${wsGlyph_(j, WATER_TYPES[j].c, 24)}<span>${j}</span></button>`).join('');
@@ -4414,26 +4321,21 @@
             const la = parseFloat(wsLat.value), ln = parseFloat(wsLng.value);
             if (!isNaN(la) && !isNaN(ln)) setWsPoint_(la, ln, true);
         }));
-        function openWaterModal_(w) {
-            wsEditId = w ? w.id : null;
+        function openWaterModal_() {
             wsErr.classList.add('hidden'); wsErr.textContent = '';
-            document.getElementById('water-modal-title').textContent = w ? 'Edit Titik Sumber Air (Admin)' : 'Tambah Titik Sumber Air';
-            wsSubmit.disabled = false; wsSubmit.textContent = w ? 'Simpan Perubahan' : 'Simpan Titik Sumber Air';
-            setWsType_(w ? w.jenis : '');
-            wsNama.value = w ? w.nama : ''; wsKet.value = w ? w.keterangan : ''; wsPelapor.value = w && w.pelapor !== '-' ? w.pelapor : '';
+            wsSubmit.disabled = false; wsSubmit.textContent = 'Simpan Titik Sumber Air';
+            setWsType_('');
+            wsNama.value = ''; wsKet.value = ''; wsPelapor.value = '';
             wsLat.value = ''; wsLng.value = ''; wsKel.value = '';
             document.getElementById('ws-gmaps-paste').value = '';
             wsStatus.textContent = 'Belum ada lokasi dipilih.'; wsStatus.className = 'text-[11px] text-slate-500 font-medium';
             wsOverlay.classList.remove('hidden'); wsOverlay.classList.add('flex');
             initWsPicker_();
             if (wsPickerMarker) { wsPicker.removeLayer(wsPickerMarker); wsPickerMarker = null; }
-            setTimeout(() => {
-                wsPicker.invalidateSize();
-                if (w) { setWsPoint_(w.lat, w.lng, true); wsKel.value = w.kelurahan || ''; } else wsPicker.fitBounds(geoJsonLayer.getBounds());
-            }, 250);
+            setTimeout(() => { wsPicker.invalidateSize(); wsPicker.fitBounds(geoJsonLayer.getBounds()); }, 250);
         }
         function closeWaterModal_() { wsOverlay.classList.add('hidden'); wsOverlay.classList.remove('flex'); }
-        document.getElementById('btn-water-report').addEventListener('click', () => openWaterModal_(null));
+        document.getElementById('btn-water-report').addEventListener('click', () => openWaterModal_());
         document.getElementById('water-modal-close').addEventListener('click', closeWaterModal_);
         wsOverlay.addEventListener('click', (e) => { if (e.target === wsOverlay) closeWaterModal_(); });
         document.getElementById('ws-gmaps-btn').addEventListener('click', () => {
@@ -4461,21 +4363,18 @@
             if (!wsSelType) return fail('Pilih jenis sumber air (sungai, kolam, sumur, atau embung).');
             if (!nama) return fail('Nama sumber air wajib diisi.');
             if (isNaN(lat) || isNaN(lng)) return fail('Lokasi wajib diisi (pilih di peta, gunakan lokasi saya, atau ketik koordinat).');
-            if (wsEditId && !waterAdminCode) return fail('Sesi admin berakhir. Masuk admin lagi.');
             wsSubmit.disabled = true; wsSubmit.textContent = 'Menyimpan...';
-            const payload = { action: wsEditId ? 'updateWaterSource' : 'submitWaterSource', jenis: wsSelType, nama: nama, lat: lat, lng: lng,
+            const payload = { action: 'submitWaterSource', jenis: wsSelType, nama: nama, lat: lat, lng: lng,
                 kelurahan: wsKel.value, keterangan: wsKet.value.trim(), pelapor: wsPelapor.value.trim() || '-' };
-            if (wsEditId) { payload.id = wsEditId; payload.kode = waterAdminCode; }
             try {
                 const r = await postWs_(payload);
-                const isNew = !wsEditId;
                 closeWaterModal_();
                 if (r.item) { upsertWater_(r.item); document.getElementById('peta-section').scrollIntoView({ behavior: 'smooth', block: 'start' }); focusWater_(r.item.id); }
-                wsToast_(isNew ? 'Titik sumber air tersimpan.' : 'Perubahan tersimpan.');
+                wsToast_('Titik sumber air tersimpan.');
                 fetchRealtimeData(false);
             } catch (err) {
-                fail((err.auth ? 'Akses admin ditolak: ' : 'Gagal menyimpan: ') + err.message);
-                wsSubmit.disabled = false; wsSubmit.textContent = wsEditId ? 'Simpan Perubahan' : 'Simpan Titik Sumber Air';
+                fail('Gagal menyimpan: ' + err.message);
+                wsSubmit.disabled = false; wsSubmit.textContent = 'Simpan Titik Sumber Air';
             }
         });
 
@@ -4515,7 +4414,6 @@
                         <td class="py-3 px-4"><div class="flex flex-wrap gap-1.5">
                             <button type="button" class="wt-btn" data-wt="focus" data-id="${esc(w.id)}">Lihat di peta</button>
                             <a class="wt-btn" href="${esc(wsRouteUrl_(w))}" target="_blank" rel="noopener">Rute</a>
-                            ${waterAdminCode ? `<button type="button" class="wt-btn" data-wt="edit" data-id="${esc(w.id)}">Edit</button><button type="button" class="wt-btn danger" data-wt="delete" data-id="${esc(w.id)}">Hapus</button>` : ''}
                         </div></td></tr>`;
                 }).join('');
             const pag = document.getElementById('ws-tbl-pagination');
@@ -4533,7 +4431,7 @@
         });
         document.getElementById('ws-tbl-q').addEventListener('input', (e) => { wsTbl.q = e.target.value; wsTbl.page = 1; renderWaterTable(); });
         document.getElementById('ws-tbl-jenis').addEventListener('change', (e) => { wsTbl.jenis = e.target.value; wsTbl.page = 1; renderWaterTable(); });
-        document.getElementById('ws-tbl-add').addEventListener('click', () => openWaterModal_(null));
+        document.getElementById('ws-tbl-add').addEventListener('click', () => openWaterModal_());
         document.getElementById('ws-tbl-near').addEventListener('click', async () => {
             const b = document.getElementById('ws-tbl-near');
             if (wsTbl.near && userLoc) { wsTbl.near = false; renderWaterTable(); return; }
@@ -4545,8 +4443,6 @@
             const b = e.target.closest('[data-wt]'); if (!b) return;
             const w = globalWaterSources.find(x => x.id === b.dataset.id); if (!w) return;
             if (b.dataset.wt === 'focus') { document.getElementById('peta-section').scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(() => focusWater_(w.id), 400); }
-            else if (b.dataset.wt === 'edit') openWaterModal_(w);
-            else if (b.dataset.wt === 'delete') deleteWater_(w);
         });
 
         function renderWaterStats_() {
@@ -4582,7 +4478,7 @@
             const reportOpen = !reportOverlay.classList.contains('hidden');
             const manualOpen = !manualOverlay.classList.contains('hidden');
             const pdfOpen = !pdfOverlay.classList.contains('hidden');
-            const waterOpen = !wsOverlay.classList.contains('hidden') || !!document.getElementById('ws-admin-modal');
+            const waterOpen = !wsOverlay.classList.contains('hidden');
             if (reportOpen || manualOpen || pdfOpen || popupIsOpen || waterOpen) return;
             fetchRealtimeData(false);
         }, 120000);
